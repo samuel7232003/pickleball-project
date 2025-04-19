@@ -1,0 +1,111 @@
+.header{
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100vw;
+}
+
+.headerInner{
+  background-color: var(--color-white);
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border-radius: 1000px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Module button weather */
+
+.buttonWeather{
+  height: 100%;
+  border-radius: 1000px;
+  background-color: var(--color-default);
+  color: var(--color-black);
+  font-size: var(--fontSizeMedium);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 20px 5px 10px;
+  box-sizing: border-box;
+}
+
+.iconWeather{
+  height: 100%;
+}
+
+.iconWeather img{
+  height: 100%;
+  width: auto;
+}
+
+.textCity{
+  font-weight: var(--fontWeightBold);
+}
+
+/* Module button circle */
+
+.buttonCirclePre,
+.buttonCircle{
+  box-sizing: border-box;
+  height: 100%;
+  aspect-ratio: 1;
+  background-color: var(--color-default);
+  border-radius: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.buttonCirclePre{
+  background-color: var(--color-primary);
+}
+
+.buttonCircle:hover{
+  background-color: var(--color-primary);
+}
+
+.buttonCirclePre img,
+.buttonCircle img{
+  height: 60%;
+  width: auto;
+}
+
+/* Module button login */
+
+.buttonLogin{
+  box-sizing: border-box;
+  height: 100%;
+  background-color: var(--color-default);
+  border-radius: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px 20px;
+  font-weight: var(--fontWeightBold);
+  transition: color 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.buttonLogin:hover{
+  color: var(--color-primary);
+}
+
+.avatar{
+  height: 100%;
+  aspect-ratio: 1;
+  border-radius: 1000px;
+  overflow: hidden;
+}
+
+.avatar img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
