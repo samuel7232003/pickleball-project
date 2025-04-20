@@ -4,13 +4,22 @@ import home from "../assets/icons/Home_light (1).png";
 import homePre from "../assets/icons/Home_light.png";
 import search from "../assets/icons/search-02.png";
 import searchPre from "../assets/icons/search-02 (1).png";
+import check from "../assets/icons/check-broken.png";
+import arrowLink from "../assets/icons/arrow-up-right.png"
 import background from "../assets/images/background.png";
 import avatar_test from "../assets/images/avatar_test.png";
+import welcome_1 from "../assets/images/welcome1.png";
+import welcome_2 from "../assets/images/welcome2.png";
+import welcome_3 from "../assets/images/welcome3.png";
 import { tagsDefault } from "../constants/common";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
-export const iconsName = { ...tagsDefault } as const;
+export const iconsName = { 
+  ...tagsDefault,
+  CHECK: "check",
+  ARROW_LINK: "arrowLink",
+} as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
 
@@ -23,6 +32,8 @@ const iconMap: Record<IconName, string> = {
   feed,
   home,
   search,
+  check,
+  arrowLink,
 };
 
 const iconPreMap: Record<IconName, string> = {
@@ -54,6 +65,9 @@ export function getIconValueByKey(props: GetIconsNameKeyProps) {
 export const imagesName = {
   BACKGROUND: "background",
   AVATAR_TEST: "avatar_test",
+  WELCOME1: "welcome_1",
+  WELCOME2: "welcome_2",
+  WELCOME3: "welcome_3",
 } as const;
 
 type ImageKey = typeof imagesName[keyof typeof imagesName];
@@ -61,6 +75,9 @@ type ImageKey = typeof imagesName[keyof typeof imagesName];
 const imageMap: Record<ImageKey, string> = {
   background,
   avatar_test,
+  welcome_1,
+  welcome_2,
+  welcome_3,
 };
 
 export function getImage(nameImage: ImageKey): string {

@@ -1,6 +1,131 @@
 .main{
   background-image: url("../../assets/images/background.png");
   background-position: center;
+  background-size: cover;
   height: 100vh;
   width: 100vw;
+  padding: 90px 10px 10px 10px;
+  box-sizing: border-box;
+}
+
+.mainInner{
+  max-width: 1200px;
+  margin: 50px auto 0;
+  position: relative;
+}
+
+/* Welcome panel */
+
+.panel{
+  background-color: var(--color-white-opa);
+  border-radius: 10px;
+  padding: 40px 70px;
+  max-width: 660px;
+}
+
+.panelTitle{
+  font-size: var(--fontSizeMainTitle);
+  color: var(--color-white);
+  margin-bottom: 30px;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+.panelContent{
+  color: var(--color-white);
+}
+
+.panelContent > div{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: var(--fontSizeMedium);
+  font-style: italic;
+  margin-bottom: 30px;
+}
+
+.panelIcon{
+  height: 24px;
+}
+
+.panelIcon img{
+  height: 100%;
+  width: auto;
+}
+
+/* button link */
+
+.buttonLink{
+  height: 70px;
+  width: fit-content;
+  padding: 0 20px 0 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 1000px;
+  border: 1px solid white;
+  background-color: var(--color-primary);
+  position: absolute;
+  bottom: -45px;
+  left: 650px;
+  cursor: pointer;
+}
+
+.buttonLink:hover img{
+  transform: rotate(360deg);
+}
+
+.buttonContent{
+  color: var(--color-white);
+  font-size: var(--fontSizeBig);
+  font-weight: var(--fontWeightBold);
+}
+
+.buttonIcon{
+  height: 37px;
+}
+
+.buttonIcon img{
+  height: 100%;
+  width: auto;
+  transition: transform 0.25s ease-in-out;
+}
+
+/* list image */
+
+.listImage{
+  position: absolute;
+  bottom: -115px;
+  left: -20px;
+}
+
+.listImage figure{
+  border: 7px solid white;
+  height: 115px;
+  width: 200px;
+  position: absolute;
+}
+
+.listImage figure:nth-child(1){
+  transform: rotate(1deg);
+  bottom: 20px;
+  left: -30px;
+}
+
+.listImage figure:nth-child(2){
+  transform: rotate(9deg);
+  bottom: -70px;
+  left: 50px;
+}
+
+.listImage figure:nth-child(3){
+  transform: rotate(-5deg);
+  bottom: 20px;
+  right: -340px;
+}
+
+.listImage figure img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }

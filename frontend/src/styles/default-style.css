@@ -4,19 +4,16 @@
   --color-primary: #983A2E;
   --color-black: black;
   --color-default: #D9D9D9;
+  --color-white-opa: #ffffff59;
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
   'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 
-  --fontWeightRegular: 400;
-  --fontWeightMedium: 500;
-  --fontWeightSemiBold: 600;
   --fontWeightBold: 700;
-  --fontWeightHeavy: 800;
-  --fontWeightBlack: 900;
 
   --fontSizeDefault: 16px;
   --fontSizeMedium: 20px;
   --fontSizeBig: 24px;
+  --fontSizeMainTitle: 32px;
 }
