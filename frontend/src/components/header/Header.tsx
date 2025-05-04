@@ -50,7 +50,7 @@ export default function Header(props: any) {
   };
 
   function handleClickLogin() {
-    navigateToPage(pages.LOGIN_PAGE);
+    navigateToPage(pages.LOGIN_PAGE_LOGIN);
   }
 
   return (

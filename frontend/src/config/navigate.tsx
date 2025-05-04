@@ -2,6 +2,7 @@ export default function navigateToPage(page:string){
   switch (page) {
     case "FEED": return "./newFeed";
     case "SEARCH": return "./search";
+    case "LOGIN": return "./login";
     default: return "./";
   }
 }

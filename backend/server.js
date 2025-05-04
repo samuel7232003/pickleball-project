@@ -1,0 +1,37 @@
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
+const express = require("express");
+const configViewEngine = require("./config/viewEngine");
+const apiRoutes = require("./routes/api");
+const connection = require("./config/database");
+
+const cors = require("cors");
+
+const app = express();
+const port = process.env.PORT || 3001;
+
+const http = require("http");
+const server = http.createServer(app);
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+configViewEngine(app);
+
+const webAPI = express.Router();
+
+app.use("/", webAPI);
+
+app.use("/", apiRoutes);
+
+connection();
+server.listen(port, () =>
+  console.log(`WebSocket server chạy tại http://localhost:${port}`)
+);
