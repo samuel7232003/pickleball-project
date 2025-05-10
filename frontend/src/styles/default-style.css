@@ -5,6 +5,8 @@
   --color-black: black;
   --color-default: #D9D9D9;
   --color-white-opa: #ffffff59;
+  --color-gray: #828080;
+  --color-error: #D00D0D;
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,
@@ -12,8 +14,14 @@
 
   --fontWeightBold: 700;
 
+  --fontSizeSmall: 12px;
   --fontSizeDefault: 16px;
   --fontSizeMedium: 20px;
   --fontSizeBig: 24px;
   --fontSizeMainTitle: 32px;
+
+  /* ================ Box shadow ================ */
+  --box-shadow-shine: 0 10px 15px rgba(0, 0, 0, 0.05),
+                      0 4px 6px rgba(0, 0, 0, 0.05);
+
 }

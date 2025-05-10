@@ -1,4 +1,3 @@
-// thunk
 import { locations } from "../../constants/common";
 import { getCurrentWeather } from "../../services/weather";
 
@@ -18,15 +17,17 @@ export const fetchWeatherFailure = (error: any) => ({
   payload: error,
 });
 
-export const fetchWeather = (location: string = locations.DEFAULT) => async (dispatch: any) => {
-  try {
-    dispatch(fetchWeatherRequest());
-    const data = await getCurrentWeather(location);
-    dispatch(fetchWeatherSuccess(data));
-  } catch (error) {
-    dispatch(fetchWeatherFailure(error));
-  }
-};
+export const fetchWeather =
+  (location: string = locations.DEFAULT) =>
+  async (dispatch: any) => {
+    try {
+      dispatch(fetchWeatherRequest());
+      const data = await getCurrentWeather(location);
+      dispatch(fetchWeatherSuccess(data));
+    } catch (error) {
+      dispatch(fetchWeatherFailure(error));
+    }
+  };
 
 // reducer
 const initialState = {

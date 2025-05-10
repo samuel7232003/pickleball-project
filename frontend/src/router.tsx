@@ -11,32 +11,33 @@ export const pages = {
   SEARCH_PAGE: "SEARCH",
   LOGIN_PAGE_LOGIN: "LOGIN",
   LOGIN_PAGE_SIGNUP: "SIGNUP",
-}
+};
 
-export const router = createBrowserRouter(
-  [
-    {
-      path:"/",
-      element: <Home/>,
-      children:[
-        {
-          path: "",
-          element: <Welcome/>
-        },
-        {
-          path: "newFeed",
-          element: <NewFeed/>
-        },
-        {
-          path: "search",
-          element: <SearchPage/>
-        }
-        ,
-        {
-          path: "login",
-          element: <LoginPage/>
-        }
-      ]
-    }
-  ]
-)
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    children: [
+      {
+        path: "",
+        element: <Welcome />,
+      },
+      {
+        path: "newFeed",
+        element: <NewFeed />,
+      },
+      {
+        path: "search",
+        element: <SearchPage />,
+      },
+      {
+        path: "login",
+        element: <LoginPage isLoginPage={true} />,
+      },
+      {
+        path: "signup",
+        element: <LoginPage isLoginPage={false} />,
+      },
+    ],
+  },
+]);

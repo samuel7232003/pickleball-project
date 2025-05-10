@@ -4,11 +4,12 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  width: 100vw;
+  width: 100%;
 }
 
 .headerInner{
-  background-color: var(--color-white);
+  background-color: var(--color-white-opa);
+  backdrop-filter: blur(5px);
   justify-content: center;
   align-items: center;
   height: 50px;
@@ -78,6 +79,7 @@
 
 /* Module button login */
 
+.buttonLoginPre,
 .buttonLogin{
   box-sizing: border-box;
   height: 100%;
@@ -91,6 +93,11 @@
   font-weight: var(--fontWeightBold);
   transition: color 0.25s ease-in-out;
   cursor: pointer;
+}
+
+.buttonLoginPre {
+  background-color: var(--color-primary);
+  color: var(--color-white);
 }
 
 .buttonLogin:hover{

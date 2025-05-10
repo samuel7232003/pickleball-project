@@ -11,7 +11,9 @@ import avatar_test from "../assets/images/avatar_test.png";
 import welcome_1 from "../assets/images/welcome1.png";
 import welcome_2 from "../assets/images/welcome2.png";
 import welcome_3 from "../assets/images/welcome3.png";
+import google from "../assets/icons/google.png";
 import { tagsDefault } from "../constants/common";
+import avatar from "../assets/images/avatar.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -19,6 +21,7 @@ export const iconsName = {
   ...tagsDefault,
   CHECK: "check",
   ARROW_LINK: "arrowLink",
+  GOOGLE: "google"
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -34,6 +37,7 @@ const iconMap: Record<IconName, string> = {
   search,
   check,
   arrowLink,
+  google,
 };
 
 const iconPreMap: Record<IconName, string> = {
@@ -82,4 +86,8 @@ const imageMap: Record<ImageKey, string> = {
 
 export function getImage(nameImage: ImageKey): string {
   return imageMap[nameImage];
+}
+
+export function getImageAvatar(urlImg: string|undefined){
+  return !urlImg ? avatar : urlImg;
 }

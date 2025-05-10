@@ -13,9 +13,12 @@ const port = process.env.PORT || 3001;
 const http = require("http");
 const server = http.createServer(app);
 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3002",
     credentials: true,
   })
 );
