@@ -4,50 +4,45 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const accountModel = require("../models/Account");
+const { ERROR_LOGIN_CODE } = require('../common/constant');
 const saltRounds = 10;
 
-const createAccountService = async (email, password, first_name, last_name) => {
+const createAccountService = async (username, password, first_name, last_name) => {
   try {
-    //check user exist
-    const user = await accountModel.findOne({ email });
+    const user = await accountModel.findOne({ username });
     if (user) {
-      return null;
+      return {EC: 1};
     }
-
-    //hash user password
     const hashPassword = await bcrypt.hash(password, saltRounds);
 
-    //save user to datebase
-    let result = await accountModel.create({
-      email: email,
+    await accountModel.create({
+      username: username,
       password: hashPassword,
       first_name: first_name,
       last_name: last_name,
     });
-    return result;
+    return {EC: 0};
   } catch (error) {
     console.log(error);
-    return null;
+    return {EC: 1};
   }
 };
 
-const loginService = async (email, password) => {
+const loginService = async (username, password) => {
   try {
-    //fetch email
-    const user = await accountModel.findOne({ email: email });
+    const user = await accountModel.findOne({ username: username });
     if (user) {
-      //compare password
       const isMatchPassword = await bcrypt.compare(password, user.password);
       if (!isMatchPassword) {
         return {
           EC: 2,
-          EM: "Email/Password không hợp lệ",
+          EM: ERROR_LOGIN_CODE,
         };
       } else {
-        //create access token
         const payload = {
-          email: user.email,
-          name: user.last_name,
+          username: user.username,
+          first_name: user.first_name,
+          avatar: user.avatar,
         };
 
         const access_token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -56,16 +51,13 @@ const loginService = async (email, password) => {
         return {
           EC: 0,
           access_token,
-          user: {
-            email: user.email,
-            name: user.last_name,
-          },
+          user: user
         };
       }
     } else {
       return {
         EC: 1,
-        EM: "Email/Password không hợp lệ",
+        EM: ERROR_LOGIN_CODE,
       };
     }
   } catch (error) {
@@ -74,11 +66,11 @@ const loginService = async (email, password) => {
   }
 };
 
-const getUserService = async (id, email) => {
+const getUserService = async (id, username) => {
   try {
     let query = {};
     if (id) query._id = id;
-    if (email) query.email = email;
+    if (username) query.username = username;
 
     const user = await accountModel.findOne(query);
     return user;

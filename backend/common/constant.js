@@ -1,0 +1,1 @@
+exports.ERROR_LOGIN_CODE = "errorLogin";

@@ -1,0 +1,7 @@
+.error{
+  color: var(--color-error);
+  font-style: italic;
+  width: 100%;
+  font-size: var(--fontSizeSmall);
+  margin-bottom: calc(-2 * var(--fontSizeSmall));
+}
