@@ -1,0 +1,22 @@
+.main{
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.icon img{
+  height: 100%;
+  width: auto;
+}
+
+.iconInfo{
+  position: absolute;
+  top: 0px;
+  right: -20px;
+  height: 16px;
+}
+
+.iconInfo img{
+  height: 100%;
+  width: auto;
+}

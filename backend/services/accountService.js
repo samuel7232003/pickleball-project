@@ -1,8 +1,9 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
+const { SignJWT } = require("jose");
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const accountModel = require("../models/Account");
 const { ERROR_LOGIN_CODE } = require('../common/constant');
 const saltRounds = 10;
@@ -45,9 +46,12 @@ const loginService = async (username, password) => {
           avatar: user.avatar,
         };
 
-        const access_token = jwt.sign(payload, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRE,
-        });
+        const jwtConstructor = new SignJWT(payload);
+        const access_token = await jwtConstructor
+          .setProtectedHeader({ alg: "HS256" })
+          .setExpirationTime(process.env.JWT_EXPIRE || "1h")
+          .sign(secret);
+
         return {
           EC: 0,
           access_token,

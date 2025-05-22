@@ -1,0 +1,184 @@
+.main{
+  background-image: url("../../assets/images/background.png");
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  padding-top: 90px;
+  box-sizing: border-box;
+}
+
+.inner{
+  position: relative;
+  max-width: 1024px;
+  margin: 0 auto;
+  background-color: var(--color-white-opa);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+  padding: 20px 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.left{
+  width: 50%;
+}
+
+.right{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* input name */
+
+.name{
+  width: 350px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.inputName input{
+  width: 100%;
+  height: 48px;
+  border-radius: 5px;
+  border: none;
+  padding: 0 30px;
+  box-sizing: border-box;
+  font-weight: var(--fontWeightBold);
+}
+
+.inputName input::placeholder{
+  color: var(--color-gray);
+  font-size: var(--fontSizeDefault);
+}
+
+/* title */
+
+.title{
+  align-items: center;
+  min-width: 125px;
+}
+
+.titleSub{
+  align-items: center;
+  width: fit-content;
+}
+
+.titleSub p,
+.title p {
+  font-weight: var(--fontWeightBold);
+}
+
+.icon{
+  height: 24px;
+}
+
+
+.address{
+  display: flex;
+}
+
+.description{
+  display: flex;
+  align-items: start;
+}
+
+.inputDescription,
+.inputAddress{
+  flex-grow: 1;
+  position: relative;
+}
+
+.inputDescription textarea,
+.inputAddress input{
+  width: 100%;
+  height: 42px;
+  border-radius: 5px;
+  border: none;
+  padding: 0 20px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.inputDescription textarea{
+  padding: 20px;
+  height: auto;
+  resize: none;
+}
+
+.inputDescription textarea::placeholder,
+.inputAddress input::placeholder{
+  color: var(--color-gray);
+  font-size: var(--fontSizeDefault);
+  font-size: 14px;
+  font-style: italic;
+  font-family: var(--fontFamily);
+}
+
+/* timeslot */
+
+.timeslotTitle{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.number{
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+.timeslotContent{
+  display: flex;
+  gap: 10px;
+  height: 160px;
+}
+
+.btnSubmitBlock{
+  display: flex;
+  justify-content: end;
+}
+
+.btnSubmit{
+  display: flex;
+  gap: 5px;
+  background-color: var(--color-success);
+  border-radius: 5px;
+  align-items: center;
+  padding: 10px;
+  height: fit-content;
+  width: fit-content;
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1),
+              0 4px 6px rgba(0, 0, 0, 0.1);
+  filter: brightness(1.05);
+}
+
+.btnSubmit p{
+  color: var(--color-white);
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.btnSubmit figure{
+  height: 24px;
+}
+
+.btnSubmit figure img{
+  height: 100%;
+  width: auto;
+  transition: transform 0.25s ease-in-out;
+}
+
+.btnSubmit:hover img{
+  transform: rotate(360deg);
+}

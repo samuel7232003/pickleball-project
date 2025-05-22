@@ -3,11 +3,13 @@ import { thunk } from "redux-thunk";
 import weatherReducer from "../components/header/Header.duck";
 import userSlice from "./user/user.slice";
 import loginPageReducer from "../pages/login/LoginPage.duck";
+import createCourtReducer from "../pages/createCourt/CreateCourt.duck";
 
 export const store = configureStore({
     reducer: {
         weather: weatherReducer,
         loginPage: loginPageReducer,
+        createCourt: createCourtReducer,
         user: userSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),

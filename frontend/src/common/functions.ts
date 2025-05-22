@@ -1,0 +1,1 @@
+export const formattedPrice = (price:number) => new Intl.NumberFormat('vi-VN').format(price);
