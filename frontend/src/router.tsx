@@ -4,6 +4,7 @@ import { Welcome } from "./pages/welcome/Welcome";
 import NewFeed from "./pages/newFeed/NewFeed";
 import SearchPage from "./pages/search/SearchPage";
 import LoginPage from "./pages/login/LoginPage";
+import CreateCourt from "./pages/createCourt/CreateCourt";
 
 export const pages = {
   NEW_FEED_PAGE: "FEED",
@@ -11,6 +12,7 @@ export const pages = {
   SEARCH_PAGE: "SEARCH",
   LOGIN_PAGE_LOGIN: "LOGIN",
   LOGIN_PAGE_SIGNUP: "SIGNUP",
+  CREATE_COURT_PAGE: "CREATE_COURT",
 };
 
 export const router = createBrowserRouter([
@@ -37,6 +39,10 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         element: <LoginPage isLoginPage={false} />,
+      },
+      {
+        path: "createCourt",
+        element: <CreateCourt />,
       },
     ],
   },

@@ -1,0 +1,33 @@
+.cardElement{
+  display: flex;
+  border-radius: 5px;
+  border: 1px solid var(--color-default);
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.cardElement figure{
+  height: 100%;
+  width: 105px;
+  overflow: hidden;
+}
+
+.cardElement figure img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.inforElement{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inforElement h3{
+  font-weight: var(--fontWeightBold);
+}
+
+.addressElement{
+  font-size: 12px;
+}

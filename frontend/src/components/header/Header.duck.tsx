@@ -1,4 +1,4 @@
-import { locations } from "../../constants/common";
+import { locations } from "../../common/constants";
 import { getCurrentWeather } from "../../services/weather";
 
 // actions

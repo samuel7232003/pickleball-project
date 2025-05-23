@@ -1,0 +1,55 @@
+.main{
+  display: flex;
+  gap: 10px;
+  height: 24px;
+  margin-bottom: 5px;
+  align-items: center;
+  padding: 1px 0;
+}
+
+.main p{
+  border: 1px solid var(--color-gray);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  height: 100%;
+}
+
+.time{
+  font-style: italic;
+  font-size: 14px;
+  width: 120px;
+}
+
+.price{
+  font-size: 14px;
+  width: 72px;
+}
+
+.unavailable p{
+  border: none;
+  background-color: var(--color-error);
+  color: var(--color-white);
+}
+
+.pending p{
+  border: none;
+  background-color: var(--color-pending);
+  color: var(--color-white);
+}
+
+.success p{
+  border: none;
+  background-color: var(--color-success);
+  color: var(--color-white);
+}
+
+.editIcon{
+  height: 16px;
+}
+
+.editIcon img{
+  height: 100%;
+  width: auto;
+}

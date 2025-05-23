@@ -1,7 +1,7 @@
 export default function ButtonTextLink(props: any) {
   const {
     buttonElement,
-    content,
+    content = "",
     contentElement,
     icon,
     iconElement,
@@ -10,7 +10,7 @@ export default function ButtonTextLink(props: any) {
   
   return (
     <div className={buttonElement} onClick={handleOnClick}>
-      <p className={contentElement}>{content}</p>
+      {content && <p className={contentElement}>{content}</p>}
       <figure className={iconElement}>
         <img src={icon} alt="" />
       </figure>

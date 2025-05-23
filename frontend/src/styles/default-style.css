@@ -7,6 +7,8 @@
   --color-white-opa: #ffffff59;
   --color-gray: #828080;
   --color-error: #D00D0D;
+  --color-pending: #FFB800;
+  --color-success: #4CAF50;
 
   /* ================ Font ================ */
   --fontFamily: -apple-system, BlinkMacSystemFont, 'Inter', Helvetica, Arial, sans-serif,

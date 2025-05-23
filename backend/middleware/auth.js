@@ -1,35 +1,37 @@
-const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
-const jwt = require("jsonwebtoken");
+require("dotenv");
+const { jwtVerify } = require("jose");
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   const white_lists = ["/", "/login", "/signup"];
 
-  if (white_lists.includes(req.originalUrl)) {
+  const url = req.originalUrl.split("?")[0]; 
+  if (white_lists.includes(url)) {
     return next();
   }
 
   const token =
-    req?.cookies?.token || // Lấy token từ cookie (tên cookie là 'token')
-    req?.headers?.authorization?.split(" ")?.[1]; // fallback: từ Authorization header
+    req?.cookies?.token ||
+    req?.headers?.authorization?.split(" ")?.[1] ||
+    req?.query?.token;
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = {
-        username: decoded.username,
-        first_name: decoded.first_name,
-        avatar: decoded.avatar,
-      };
-      next();
-    } catch (error) {
-      return res.status(401).json({
-        message: "Token không hợp lệ hoặc đã hết hạn!",
-      });
-    }
-  } else {
+  if (!token) {
     return res.status(401).json({
       message: "Bạn chưa đăng nhập hoặc token đã hết hạn!",
+    });
+  }
+
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
+    req.user = {
+      username: payload.username,
+      first_name: payload.first_name,
+      avatar: payload.avatar,
+    };
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      message: "Token không hợp lệ hoặc đã hết hạn!",
     });
   }
 };

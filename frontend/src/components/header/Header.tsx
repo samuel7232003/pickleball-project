@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import navigateToPage from "../../config/navigate";
-import { tagsDefault } from "../../constants/common";
+import { tagsDefault } from "../../common/constants";
 import { pages } from "../../router";
 import { getIconValueByKey, getImageAvatar} from "../../util/getAssets";
 import { ButtonCircleIcon } from "../buttons/ButtonCircleIcon";

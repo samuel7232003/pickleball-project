@@ -12,8 +12,19 @@ import welcome_1 from "../assets/images/welcome1.png";
 import welcome_2 from "../assets/images/welcome2.png";
 import welcome_3 from "../assets/images/welcome3.png";
 import google from "../assets/icons/google.png";
-import { tagsDefault } from "../constants/common";
+import { tagsDefault } from "../common/constants";
 import avatar from "../assets/images/avatar.png";
+import searchGray from "../assets/icons/search-gray.png";
+import map from "../assets/icons/Map_light.png";
+import imageAdd from "../assets/icons/image-add.png";
+import info from "../assets/icons/information-circle-contained.png";
+import infoBlack from "../assets/icons/information-circle-contained (1).png";
+import description from "../assets/icons/file-02.png";
+import calendar from "../assets/icons/calendar-06.png";
+import number from "../assets/icons/grid-01.png";
+import trash from "../assets/icons/trash-03.png";
+import add from "../assets/icons/x-circle-contained.png"
+import send from "../assets/icons/send-02.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -21,7 +32,18 @@ export const iconsName = {
   ...tagsDefault,
   CHECK: "check",
   ARROW_LINK: "arrowLink",
-  GOOGLE: "google"
+  GOOGLE: "google",
+  SEARCH_GRAY: "searchGray",
+  MAP: "map",
+  IMAGE_ADD: "imageAdd",
+  INFO: "info",
+  INFO_BLACK: "infoBlack",
+  DESCRIPTION: "description",
+  CALENDAR: "calendar",
+  NUMBER: "number",
+  TRASH: "trash",
+  ADD: "add",
+  SEND: "send",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -38,6 +60,17 @@ const iconMap: Record<IconName, string> = {
   check,
   arrowLink,
   google,
+  searchGray,
+  map,
+  imageAdd,
+  info,
+  infoBlack,
+  description,
+  calendar,
+  number,
+  trash,
+  add,
+  send,
 };
 
 const iconPreMap: Record<IconName, string> = {

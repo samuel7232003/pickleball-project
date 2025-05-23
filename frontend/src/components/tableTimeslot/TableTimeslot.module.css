@@ -1,0 +1,49 @@
+.main{
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  border-radius: 5px;
+  padding: 0 10px 10px;
+  background-color: var(--color-white);
+}
+
+.header{
+  display: flex;
+  gap: 10px;
+  position: relative;
+}
+
+.header::after{
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: var(--color-gray);
+  height: 1px;
+  width: 100%;
+  bottom: 0;
+}
+
+.header p{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 30px;
+  font-size: 14px;
+}
+
+.header p:nth-child(1){
+  width: 120px;
+}
+
+.header p:nth-child(2){
+  width: 72px;
+}
+
+.editMode p:nth-child(2){
+  margin-right: 40px;
+}
+
+.list{
+  flex-grow: 1;
+  overflow: auto;
+}
