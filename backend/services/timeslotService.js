@@ -1,14 +1,16 @@
 const timeslotCourtModel = require("../models/TimeslotCourt");
 
-const createTimeslotService = async (timeslot) => {
+const createTimeslotService = async (timeslot, courtId) => {
   try {
-    const newTimeslot = await timeslotCourtModel.create(timeslot);
+    const newTimeslot = await timeslotCourtModel.insertMany(
+      timeslot.map((item) => ({ ...item, courtId }))
+    );
     return newTimeslot;
   } catch (error) {
     console.log(error);
     return null;
   }
-}
+};
 
 const getTimeslotService = async (id) => {
   try {
@@ -28,7 +30,7 @@ const getTimeslotsByCourtIdService = async (courtId) => {
     console.log(error);
     return null;
   }
-}
+};
 
 module.exports = {
   createTimeslotService,

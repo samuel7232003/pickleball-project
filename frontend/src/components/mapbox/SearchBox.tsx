@@ -4,6 +4,7 @@ import FieldSearch from "../fields/FieldSearch";
 import css from "./SearchBox.module.css";
 import { searchMapbox } from "../../services/mapbox";
 import { getIcon, iconsName } from "../../util/getAssets";
+import classNames from "classnames";
 
 type Feature = {
   properties: {
@@ -18,11 +19,13 @@ const SearchBox = (props: any) => {
   const { 
     onAddressSelect, 
     placeholder = "Type to search...",
-
+    isTitle = true,
+    inputElement,
+    isIcon = true,
   } = props;
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Feature[]>([]);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const fetchSearch = async (text: string) => {
     const search = async () => {
@@ -42,36 +45,41 @@ const SearchBox = (props: any) => {
       return;
     }
 
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
-    timeoutRef.current = setTimeout(() => {
-      fetchSearch(query.trim());
-    }, 300);
+    fetchSearch(query.trim());
   }, [query]);
 
   const handleSelect = (feature: Feature) => {
     const [lng, lat] = feature.geometry.coordinates;
-    onAddressSelect(lng, lat);
+    const address = feature.properties.full_address;
+    onAddressSelect({lng, lat, address});
     setResults([]);
-    setQuery(feature.properties.full_address);
+    setQuery(address);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   }
 
+  const handleBlur = () => {
+    setTimeout(() => {
+      setResults([]);
+    }, 150);
+  }
+
   return (
-    <div className={css.searchBox}>
-      <div className={css.searchBoxTitle}>
+    <div className={inputElement ? undefined : css.searchBox}>
+      {isTitle && <div className={css.searchBoxTitle}>
         <figure><img src={getIcon({nameIcon: iconsName.MAP})} alt="" /></figure>
         <p>{text["SearchPage.searchTitle"]}</p>
-      </div>
+      </div>}
       <FieldSearch
         placeholder={placeholder}
         onChange={onChange}
-        inputElement={css.inputElement}
+        inputElement={inputElement ? inputElement : css.inputElement}
         iconElement={css.iconInputElement}
         query={query}
+        isIcon={isIcon}
+        onBlur={handleBlur}
       />
       {results.length > 0 && (
         <ul className={css.listResult}>

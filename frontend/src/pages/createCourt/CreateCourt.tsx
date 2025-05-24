@@ -4,24 +4,71 @@ import FieldInputText from "../../components/fields/FieldInputText";
 import text from "../../util/text";
 import Title from "../../components/titles/Title";
 import { getIcon, iconsName } from "../../util/getAssets";
-import { InputNumber } from "antd";
+import { InputNumber, message } from "antd";
 import TableTimeslot from "../../components/tableTimeslot/TableTimeslot";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  handleSubmit,
   ON_CHANGE_DESCRIPTION,
+  ON_CHANGE_DISABLED,
   ON_CHANGE_LOCATION,
   ON_CHANGE_NAME,
   ON_CHANGE_NUMBER,
   onChangeField,
+  onChangeImages,
+  onChangeListTimeslot,
 } from "./CreateCourt.duck";
 import FormNewTime from "./formNewTime/FormNewTime";
 import ButtonIcon from "../../components/buttons/ButtonIcon";
+import type { UploadFile } from "antd/es/upload/interface";
+import { timeToMinutes } from "../../common/functions";
+import { useAppSelector } from "../../redux/builder";
+import { AppDispatch } from "../../redux/store";
+import { useEffect } from "react";
 
 export default function CreateCourt() {
-  const { listTimeslot, name, location, description, number } = useSelector(
-    (state: any) => state.createCourt
-  );
-  const dispatch = useDispatch();
+  const { _id: ownerId } = useAppSelector((state: any) => state.user.user);
+  const {
+    listTimeslot,
+    name,
+    location,
+    description,
+    number,
+    images,
+    errorMessage,
+    successMessage,
+    isSubmitting,
+    isDisabled,
+  } = useSelector((state: any) => state.createCourt);
+  const dispatch = useDispatch<AppDispatch>();
+  const [messageApi, contextHolder] = message.useMessage();
+
+  useEffect(() => {
+    if (
+      !listTimeslot ||
+      !name ||
+      !location ||
+      !description ||
+      !number ||
+      images.length === 0
+    ) {
+      dispatch(onChangeField(ON_CHANGE_DISABLED, true));
+    } else {
+      dispatch(onChangeField(ON_CHANGE_DISABLED, false));
+    }
+  }, [listTimeslot, name, location, description, number, images]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      messageApi.error(errorMessage);
+    }
+  }, [errorMessage]);
+
+  useEffect(() => {
+    if (successMessage) {
+      messageApi.success(successMessage);
+    }
+  }, [successMessage]);
 
   const onChangeFieldText = (type: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,11 +83,61 @@ export default function CreateCourt() {
     };
   };
 
+  const handleImagesChange = (fileList: UploadFile[]) => {
+    console.log(fileList);
+    dispatch(onChangeImages(fileList));
+  };
+
+  const handleAddTimeslot = (item: any) => {
+    const newStart = timeToMinutes(item.startTime);
+    const newEnd = timeToMinutes(item.endTime);
+
+    if (newStart >= newEnd) {
+      messageApi.error(text["CreateCourt.timeError"]);
+      return;
+    }
+
+    const isOverlapping = listTimeslot.some((slot: any) => {
+      const existingStart = timeToMinutes(slot.startTime);
+      const existingEnd = timeToMinutes(slot.endTime);
+
+      return newStart < existingEnd && newEnd > existingStart;
+    });
+
+    if (isOverlapping) {
+      messageApi.error(text["CreateCourt.isOverlapping"]);
+      return;
+    }
+
+    dispatch(onChangeListTimeslot([...listTimeslot, item]));
+  };
+
+  const handleRemoveTimeslot = (item: any) => {
+    dispatch(
+      onChangeListTimeslot(
+        listTimeslot.filter(
+          (slot: any) =>
+            slot.startTime !== item.startTime && slot.endTime !== item.endTime
+        )
+      )
+    );
+  };
+
+  const handleChangeAddress = (value: any) => {
+    const { lng, lat, address } = value;
+    dispatch(onChangeField(ON_CHANGE_LOCATION, { lng, lat, address }));
+  };
+
+  const onSubmit = () => {
+    if (ownerId) dispatch(handleSubmit(ownerId));
+  };
+
   return (
     <main className={css.main}>
+      {contextHolder}
       <div className={css.inner}>
         <div className={css.left}>
-          <UploadImages />
+          <UploadImages onChange={handleImagesChange} listImage={images} />
         </div>
         <div className={css.right}>
           <FieldInputText
@@ -62,9 +159,10 @@ export default function CreateCourt() {
               blockElement={css.inputAddress}
               inputElement={css.inputAddress}
               inputPlaceholder={text["CreateCourt.inputAddressPlaceholder"]}
-              onChange={onChangeFieldText(ON_CHANGE_LOCATION)}
+              onChange={handleChangeAddress}
               isIconInfo={true}
               value={location}
+              isAddress={true}
             />
           </div>
           <div className={css.description}>
@@ -110,18 +208,25 @@ export default function CreateCourt() {
               </div>
             </div>
             <div className={css.timeslotContent}>
-              <TableTimeslot data={listTimeslot} isEditMode={true} />
+              <TableTimeslot
+                data={listTimeslot}
+                isEditMode={true}
+                onRemove={handleRemoveTimeslot}
+              />
               <FormNewTime
                 title={text["CreateCourt.inputTimeslotTitle"]}
+                onSubmit={handleAddTimeslot}
               />
             </div>
           </div>
           <div className={css.btnSubmitBlock}>
             <ButtonIcon
-              onClick = {() => {}}
-              mainElement = {css.btnSubmit}
-              icon = {getIcon({nameIcon: iconsName.SEND})}
-              content = {text["CreateCourt.button"]}
+              onClick={onSubmit}
+              mainElement={css.btnSubmit}
+              icon={getIcon({ nameIcon: iconsName.SEND })}
+              content={text["CreateCourt.button"]}
+              isDisabled={isDisabled}
+              isLoading={isSubmitting}
             />
           </div>
         </div>

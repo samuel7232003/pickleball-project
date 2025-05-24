@@ -1,0 +1,12 @@
+const imageCourtModel = require("../models/ImageCourt");
+
+const createImageCourtService = async (images, courtId) => {
+  const newImage = await imageCourtModel.insertMany(
+    images.map((item) => ({ ...item, courtId }))
+  );
+  return newImage;
+};
+
+module.exports = {
+  createImageCourtService,
+};

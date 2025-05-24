@@ -16,6 +16,7 @@ export default function TableTimeslot(props: any) {
     ],
     data = [],
     isEditMode = false,
+    onRemove,
   } = props;
 
   const tableClass = classNames(css.main, tableElement);
@@ -34,21 +35,23 @@ export default function TableTimeslot(props: any) {
     };
 
     const sortedData = [...data].sort((a: any, b: any) => {
-      return parseTime(a.timeStart) - parseTime(b.timeStart);
+      return parseTime(a.startTime) - parseTime(b.startTime);
     });
-
-    if (data.length > 0) {
-      setDataShow(sortedData);
-    }
+    setDataShow(sortedData);
   }, [data]);
 
-  const ListItem = dataShow.map((item: any, index: number) => {
+  const handleRemove = (item: any) => {
+    onRemove(item);
+  };
+
+  const ListItem = dataShow.map((item: any) => {
     return (
       <ItemTimeslot
-        key={index}
+        key={item.startTime + item.endTime}
         item={item}
         tableItemClass={tableItemClass}
         isEditMode={isEditMode}
+        onRemove={handleRemove}
       />
     );
   });

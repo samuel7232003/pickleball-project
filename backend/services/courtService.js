@@ -1,22 +1,9 @@
 const courtModel = require("../models/Court");
 
-const createCourtService = async (
-  name,
-  address,
-  price,
-  image,
-  description,
-  owner_id
-) => {
+const createCourtService = async (data) => {
+
   try {
-    const newCourt = new courtModel({
-      name,
-      address,
-      price,
-      image,
-      description,
-      owner_id,
-    });
+    const newCourt = new courtModel(data);
     const result = await newCourt.save();
     return result;
   } catch (error) {

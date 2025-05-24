@@ -11,9 +11,10 @@ export default function ItemTimeslot(props: any) {
     status = timeslotStatus.AVAILABLE,
     editIcon = getIcon({ nameIcon: iconsName.TRASH }),
     isEditMode = false,
+    onRemove,
   } = props;
 
-  const { timeStart, timeEnd, price } = item;
+  const { startTime, endTime, price } = item;
 
   const mainClass = classNames(css.main, {
     [css.available]: status === timeslotStatus.AVAILABLE,
@@ -22,16 +23,18 @@ export default function ItemTimeslot(props: any) {
     [css.pending]: status === timeslotStatus.PENDING,
   }, tableItemClass);
 
-  
+  const handleRemove = () => {
+    onRemove(item);
+  };
 
   return (
     <div className={mainClass}>
       <p className={css.time}>
-        {timeStart} - {timeEnd}
+        {startTime} - {endTime}
       </p>
       <p className={css.price}>{formattedPrice(price)}</p>
       {isEditMode && (
-        <figure className={css.editIcon}>
+        <figure className={css.editIcon} onClick={handleRemove}>
           <img src={editIcon} alt="Edit" />
         </figure>
       )}

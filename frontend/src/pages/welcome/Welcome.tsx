@@ -7,9 +7,13 @@ import { getIcon, getImage, iconsName, imagesName } from "../../util/getAssets";
 import ButtonTextLink from "../../components/buttons/ButtonTextLink";
 import text from "../../util/text";
 import navigateToPage from "../../config/navigate";
+import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux/builder";
+import { roles } from "../../common/constants";
 
 export function Welcome() {
   const { setCurPage }: any = useOutletContext();
+  const { role } = useAppSelector((state: any) => state.user.user);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,7 +21,8 @@ export function Welcome() {
   }, []);
 
   function handleButtonClick() {
-    navigate(navigateToPage(pages.SEARCH_PAGE)); 
+    if(role===roles.USER) navigate(navigateToPage(pages.SEARCH_PAGE));
+    else navigate(navigateToPage(pages.CREATE_COURT_PAGE)); 
   }
 
   const ListImage = () => {
@@ -42,7 +47,7 @@ export function Welcome() {
         />
         <ButtonTextLink
           buttonElement={css.buttonLink}
-          content={text["Welcome.buttonContent"]}
+          content={text[`Welcome.${role}.buttonContent` as keyof typeof text]}
           contentElement={css.buttonContent}
           icon={getIcon({ nameIcon: iconsName.ARROW_LINK })}
           iconElement={css.buttonIcon}
