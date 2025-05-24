@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const courtSchema = mongoose.Schema({
-  _id: String,
   name: String,
   lat: Number,
   lng: Number,
-  address: String,
+  location: String,
+  number: Number,
   description: String,
   owner_id: String,
 })

@@ -15,6 +15,11 @@ export const timeslotStatus = {
   PENDING: "pending",
 }
 
+export const roles = {
+  USER: "USER",
+  OWNER: "OWNER"
+}
+
 export const initialTimeslot = {
     startTime: '07:00',
     endTime: '08:00',

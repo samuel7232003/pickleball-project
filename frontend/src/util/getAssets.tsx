@@ -25,6 +25,7 @@ import number from "../assets/icons/grid-01.png";
 import trash from "../assets/icons/trash-03.png";
 import add from "../assets/icons/x-circle-contained.png"
 import send from "../assets/icons/send-02.png";
+import edit from "../assets/icons/edit-contained.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -44,6 +45,7 @@ export const iconsName = {
   TRASH: "trash",
   ADD: "add",
   SEND: "send",
+  EDIT: "edit",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -71,6 +73,7 @@ const iconMap: Record<IconName, string> = {
   trash,
   add,
   send,
+  edit,
 };
 
 const iconPreMap: Record<IconName, string> = {

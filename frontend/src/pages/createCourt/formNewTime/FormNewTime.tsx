@@ -1,4 +1,4 @@
-import { InputNumber, TimePicker } from "antd";
+import { InputNumber, message, TimePicker } from "antd";
 import text from "../../../util/text";
 import css from "./FormNewTime.module.css";
 import classNames from "classnames";
@@ -7,7 +7,6 @@ import { getIcon, iconsName } from "../../../util/getAssets";
 import { initialTimeslot } from "../../../common/constants";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { data } from "react-router-dom";
 
 export default function FormNewTime(props: any) {
   const {
@@ -40,7 +39,13 @@ export default function FormNewTime(props: any) {
   }
 
   const handleSubmit = () => {
-    return () => onSubmit(item);
+    const {startTime, endTime, price} = item;
+    if(startTime && endTime && price){
+      onSubmit(item);
+    }
+    else{
+      message.error(text["CreateCourt.inputTimeError"]);
+    }
   };
 
   return (
