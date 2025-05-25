@@ -14,7 +14,7 @@ const createCourtService = async (data) => {
 
 const getCourtService = async (_id) => {
   try {
-    const court = await courtModel.findById(_id);
+    const court = await courtModel.findOne({_id});
     return court;
   } catch (error) {
     console.log(error);

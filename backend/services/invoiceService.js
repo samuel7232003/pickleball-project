@@ -5,4 +5,9 @@ const createInvoiceService = async (invoice) => {
   return newInvoice;
 };
 
-module.exports = { createInvoiceService };
+const getInvoicePendingService = async (userId) => {
+  const invoice = await invoiceModel.findOne({ userId, paymentStatus: "pending" });
+  return invoice;
+};
+
+module.exports = { createInvoiceService, getInvoicePendingService };

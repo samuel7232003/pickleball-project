@@ -16,12 +16,15 @@ import {
   ON_CHANGE_REPASSWORD,
   ON_CHANGE_USERNAME,
   onChangeField,
+  onChangeRole,
 } from "./LoginPage.duck";
 import LoginPageWithGoogle from "./components/LoginPageWithGoogle";
 import ButtonText from "../../components/buttons/ButtonText";
 import ErrorText from "../../components/messages/ErrorText";
 import FieldInputPassword from "../../components/fields/FieldInputPassword";
 import FieldInputName from "../../components/fields/FieldInputName";
+import { Select } from "antd";
+import { roles } from "../../common/constants";
 
 interface Props {
   isLoginPage?: boolean;
@@ -39,20 +42,37 @@ export default function LoginPage(props: Props) {
     firstName,
     lastName,
     rePassword,
+    role,
   } = useSelector((state: any) => state.loginPage);
   const navigate = useNavigate();
 
   useEffect(() => {
     setCurPage(isLoginPage ? pages.LOGIN_PAGE_LOGIN : pages.LOGIN_PAGE_SIGNUP);
     dispatch(loginReset());
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleSubmit();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [isLoginPage]);
 
   const onChangeFieldInput = (type: string) => (e: any) => {
     dispatch(onChangeField(type, e.target.value));
   };
 
+  const handleChangeRole = (value: string) => {
+    dispatch(onChangeRole(value));
+  };
+
   const handleSubmit = () => {
-    if(isLoginPage) dispatch(handleLoginClick(navigate));
+    if (isLoginPage) dispatch(handleLoginClick(navigate));
     else dispatch(handleSignupClick(navigate));
   };
 
@@ -130,6 +150,18 @@ export default function LoginPage(props: Props) {
           handleOnClick={handleSubmit}
           loading={loading}
         />
+        {!isLoginPage && (
+          <div className={css.select}>
+            <Select
+              onChange={handleChangeRole}
+              value={role}
+              options={[
+                { value: roles.OWNER, label: text["Header.role.owner"] },
+                { value: roles.USER, label: text["Header.role.user"] },
+              ]}
+            />
+          </div>
+        )}
       </div>
     </main>
   );

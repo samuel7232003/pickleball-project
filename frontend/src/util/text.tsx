@@ -2,6 +2,10 @@
 export default {
   "Header.login": "Đăng Nhập",
   "Header.signup": "Đăng Kí",
+  "Header.myAccount": "Tài khoản",
+  "Header.logout": "Đăng xuất",
+  "Header.role.owner": "Chủ sân",
+  "Header.role.user": "Người thuê sân",
   "Welcome.title": "Chào mừng bạn đến với website tìm kiếm và cho thuê sân Pickleball",
   "Welcome.content1": "Tìm kiếm và đặt sân nhanh chóng",
   "Welcome.content2": "Quy trình thanh toán an toàn, hiệu quả",
@@ -73,4 +77,10 @@ export default {
   "DetailCourt.pendingTimeslot": "Sân này đang chờ xác nhận!",
   "DetailCourt.errorMessage.owner": "Bạn không thể đặt sân của chính mình!",
   "DetailCourt.errorMessage.timeSlot": "Vui lòng chọn ca thuê!",
+  "PaymentPage.leftTitle": "Thông tin thanh toán",
+  "PaymentPage.title.nameBooking": "Tên người đặt:",
+  "PaymentPage.title.totalPrice": "Tổng thanh toán:",
+  "PaymentPage.buttonSubmit": "Thanh toán ngay",
+  "PaymentPage.title.nameCourt": "Tên sân:",
+  "PaymentPage.title.nameAddress": "Địa chỉ:",
 }

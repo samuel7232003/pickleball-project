@@ -7,12 +7,13 @@ const {
 } = require("../services/accountService");
 
 const createUser = async (req, res) => {
-  const { username, password, first_name, last_name } = req.body;
+  const { username, password, first_name, last_name, role } = req.body;
   const data = await createAccountService(
     username,
     password,
     first_name,
-    last_name
+    last_name,
+    role
   );
   if(data.EC === 0){
     return await handleLogin(req, res);
