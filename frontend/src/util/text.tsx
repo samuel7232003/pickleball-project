@@ -71,4 +71,6 @@ export default {
   "DetailCourt.emptyInvoice": "Bạn chưa chọn ca thuê nào!",
   "DetailCourt.unavailableTimeslot": "Sân này đã được cho thuê!",
   "DetailCourt.pendingTimeslot": "Sân này đang chờ xác nhận!",
+  "DetailCourt.errorMessage.owner": "Bạn không thể đặt sân của chính mình!",
+  "DetailCourt.errorMessage.timeSlot": "Vui lòng chọn ca thuê!",
 }

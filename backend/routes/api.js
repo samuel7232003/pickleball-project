@@ -16,6 +16,7 @@ const {
   getTimeslotCourt,
 } = require("../controllers/timeslotController");
 const { getImageCourt } = require("../controllers/imageCourtController");
+const { createInvoice } = require("../controllers/invoiceController");
 
 const routerAPI = express.Router();
 
@@ -41,5 +42,7 @@ routerAPI.post("/createTimeslot", createTimeslotCourt);
 routerAPI.get("/getTimeslot", getTimeslotCourt);
 
 routerAPI.get("/getImageCourt", getImageCourt);
+
+routerAPI.post("/createInvoice", createInvoice);
 
 module.exports = routerAPI;

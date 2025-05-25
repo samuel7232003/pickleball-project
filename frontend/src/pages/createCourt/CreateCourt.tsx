@@ -25,6 +25,9 @@ import { timeToMinutes } from "../../common/functions";
 import { useAppSelector } from "../../redux/builder";
 import { AppDispatch } from "../../redux/store";
 import { useEffect } from "react";
+import navigateToPage from "../../config/navigate";
+import { pages } from "../../router";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateCourt() {
   const { _id: ownerId } = useAppSelector((state: any) => state.user.user);
@@ -39,9 +42,18 @@ export default function CreateCourt() {
     successMessage,
     isSubmitting,
     isDisabled,
+    isSuccess,
   } = useSelector((state: any) => state.createCourt);
   const dispatch = useDispatch<AppDispatch>();
   const [messageApi, contextHolder] = message.useMessage();
+
+  const navigate = useNavigate();
+
+  useEffect(() =>{
+    if(isSuccess){
+      navigate(navigateToPage(pages.SEARCH_PAGE));
+    }
+  },[isSuccess])
 
   useEffect(() => {
     if (

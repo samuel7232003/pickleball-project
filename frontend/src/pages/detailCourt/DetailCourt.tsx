@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getCourt, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
+import { createInvoice, getCourt, onSubmitFailure, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/builder";
 import css from "./DetailCourt.module.css";
@@ -8,7 +8,7 @@ import UploadImages from "../../components/upload/UploadImages";
 import { getIcon, iconsName } from "../../util/getAssets";
 import Title from "../../components/titles/Title";
 import text from "../../util/text";
-import { DatePicker } from "antd";
+import { DatePicker, message } from "antd";
 import TableTimeslot from "../../components/tableTimeslot/TableTimeslot";
 import classNames from "classnames";
 import NoteTimeslotChoice from "./noteTimeslotChoice/NoteTimeslotChoice";
@@ -51,13 +51,15 @@ export default function DetailCourt() {
     timeslot,
     description,
     numberChoie,
-    timeChoie,
+    timeChoice,
     totalPrice,
     dateChoiced,
     isLoading,
     canSubmit,
+    errorMessage,
   } = useAppSelector((state: any) => state.detailCourt);
   const dispatch = useDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [allowChoiceTimeslot, setAllowChoiceTimeslot] = useState(false);
 
@@ -66,6 +68,16 @@ export default function DetailCourt() {
       dispatch(getCourt(id as string) as any);
     }
   }, [id]);
+
+  useEffect(() => {
+    console.log(timeslot);
+  }, [timeslot]);
+
+  useEffect(() => {
+    if (errorMessage!=="") {
+      messageApi.error(errorMessage);
+    }
+  }, [errorMessage]);
 
   useEffect(() => {
     if (dateChoiced && numberChoie) {
@@ -92,11 +104,12 @@ export default function DetailCourt() {
   };
 
   const onSubmit = () => {
-    console.log("submit");
+    dispatch(createInvoice() as any);
   };
 
   return (
     <main className={css.main}>
+      {contextHolder}
       <div className={css.inner}>
         <div className={css.left}>
           <UploadImages listImage={images} isEdit={false} />
@@ -151,7 +164,7 @@ export default function DetailCourt() {
                 isChoiceMode={true}
                 isEmpty={!allowChoiceTimeslot}
                 onChoose={handleChooseTimeslot}
-                timeChoie={timeChoie}
+                timeChoie={timeChoice}
                 onReChoice={handleReChoice}
                 dateChoiced={dateChoiced}
                 numberChoie={numberChoie}
@@ -167,7 +180,7 @@ export default function DetailCourt() {
               />
               <TableInvoice 
                 mainElement={css.tableInvoice} 
-                data={timeChoie}
+                data={timeChoice}
                 totalPrice={totalPrice}
               />
               <div className={css.btnSubmitBlock}>

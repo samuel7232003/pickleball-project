@@ -1,19 +1,23 @@
+import { delay } from "../../common/functions";
 import { getCourtByIdService } from "../../services/court";
+import { createInvoiceService } from "../../services/invoice";
+import text from "../../util/text";
 
 const initialState = {
   name: "",
   location: "",
   number: "",
   images: [],
-  owner_id: "",
+  ownerId: "",
   timeslot: [],
   description: "",
   numberChoie: 0,
-  timeChoie: [],
+  timeChoice: [],
   totalPrice: 0,
   dateChoiced: "",
   isLoading: false,
   canSubmit: false,
+  errorMessage: "",
 };
 
 export const SET_COURT = "SET_COURT";
@@ -32,17 +36,17 @@ export const detailCourtReducer = (state = initialState, action: any) => {
     case "SET_NUMBER_CHOICED":
       return { ...state, numberChoie: action.payload };
     case "SET_TIME_CHOICED":
-      return { ...state, timeChoie: action.payload };
+      return { ...state, timeChoice: action.payload };
     case "SET_TOTAL_PRICE":
       return { ...state, totalPrice: action.payload };
     case "SET_DATE_CHOICED":
       return { ...state, dateChoiced: action.payload };
     case "ON_SUBMIT_REQUEST":
-      return { ...state, isLoading: true };
+      return { ...state, isLoading: true, errorMessage: "" };
     case "ON_SUBMIT_SUCCESS":
-      return { ...state, isLoading: false, canSubmit: true };
+      return { ...state, isLoading: false, errorMessage: "" };
     case "ON_SUBMIT_FAILURE":
-      return { ...state, isLoading: false, canSubmit: false };
+      return { ...state, isLoading: false, errorMessage: action.payload };
     case "SET_CAN_SUBMIT":
       return { ...state, canSubmit: action.payload };
     case "RESET_STATE":
@@ -67,8 +71,10 @@ export const setNumberChoiced = (number: number) => {
 };
 
 export const onSubmitRequest = () => {
-  return {
-    type: "ON_SUBMIT_REQUEST",
+  return (dispatch: any) => {
+    dispatch({
+      type: "ON_SUBMIT_REQUEST",
+    });
   };
 };
 
@@ -78,11 +84,12 @@ export const onSubmitSuccess = () => {
   };
 };
 
-export const onSubmitFailure = () => {
+export const onSubmitFailure = (errorMessage: string) => {
   return {
     type: "ON_SUBMIT_FAILURE",
+    payload: errorMessage,
   };
-};  
+};
 
 export const setCanSubmit = (canSubmit: boolean) => {
   return {
@@ -96,10 +103,10 @@ export const setTimeChoiced = (time: any) => {
     const state = getState().detailCourt;
     const { dateChoiced, numberChoie } = state;
     const timeItem = { ...time, dateChoiced, numberChoie };
-    const timeChoie = [...state.timeChoie, timeItem];
+    const timeChoice = [...state.timeChoice, timeItem];
     dispatch({
       type: "SET_TIME_CHOICED",
-      payload: timeChoie,
+      payload: timeChoice,
     });
     dispatch(calculateTotalPrice());
   };
@@ -109,7 +116,7 @@ export const setTimeChoicedRe = (time: any) => {
   return (dispatch: any, getState: any) => {
     const state = getState().detailCourt;
     const { startTime, endTime, dateChoiced, numberChoie } = time;
-    const timeChoie = state.timeChoie.filter(
+    const timeChoice = state.timeChoice.filter(
       (item: any) =>
         item.startTime !== startTime &&
         item.endTime !== endTime &&
@@ -118,7 +125,7 @@ export const setTimeChoicedRe = (time: any) => {
     );
     dispatch({
       type: "SET_TIME_CHOICED",
-      payload: timeChoie,
+      payload: timeChoice,
     });
     dispatch(calculateTotalPrice());
   };
@@ -141,7 +148,7 @@ export const setDateChoiced = (date: string) => {
 export const calculateTotalPrice = () => {
   return (dispatch: any, getState: any) => {
     const state = getState().detailCourt;
-    const totalPrice = state.timeChoie.reduce(
+    const totalPrice = state.timeChoice.reduce(
       (acc: number, item: any) => acc + item.price,
       0
     );
@@ -153,8 +160,8 @@ export const calculateTotalPrice = () => {
 export const getCanSubmit = () => {
   return (dispatch: any, getState: any) => {
     const state = getState().detailCourt;
-    const { timeChoie } = state;
-    dispatch(setCanSubmit(timeChoie.length > 0));
+    const { timeChoice } = state;
+    dispatch(setCanSubmit(timeChoice.length > 0));
   };
 };
 
@@ -162,21 +169,14 @@ export const getCourt = (id: string) => async (dispatch: any) => {
   try {
     const response = await getCourtByIdService(id);
     if (response) {
-      const {
-        name,
-        location,
-        number,
-        owner_id,
-        timeslot,
-        images,
-        description,
-      } = response;
+      const { name, location, number, ownerId, timeslot, images, description } =
+        response;
       dispatch(
         setCourt({
           name,
           location,
           number,
-          owner_id,
+          ownerId,
           timeslot,
           images,
           description,
@@ -187,3 +187,28 @@ export const getCourt = (id: string) => async (dispatch: any) => {
     console.log(error);
   }
 };
+
+export const createInvoice = () =>
+  async (dispatch: any, getState: any) => {
+    dispatch(onSubmitRequest());
+    await delay(1000);
+    const { ownerId, timeChoice } = getState().detailCourt;
+    const { _id: userId } = getState().user.user;
+    if(userId === ownerId){
+      dispatch(onSubmitFailure(text["DetailCourt.errorMessage.owner"]));
+      return;
+    }
+    if(timeChoice.length === 0){
+      dispatch(onSubmitFailure(text["DetailCourt.errorMessage.timeSlot"]));
+      return;
+    }
+    try {
+      console.log(userId, ownerId, timeChoice);
+      const response = await createInvoiceService(userId, ownerId, timeChoice);
+      if (response) {
+        dispatch(onSubmitSuccess());
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
