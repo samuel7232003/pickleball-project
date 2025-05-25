@@ -22,3 +22,23 @@ export const createCourtService = async (courtData: any, ownerId: string) => {
   return response;
 };
 
+export const searchCourtsService = async (text: string) => {
+  const response: any = await apiInstance.get(`/getCourt?text=${text}`);
+  return response;
+};
+
+export const getAllCourtService = async () => {
+  const response: any = await apiInstance.get(`/getCourt`);
+  return response;
+}
+
+export const getCourtByIdService = async (id: string) => {
+  const response: any = await apiInstance.get(`/getCourt?_id=${id}`);
+  const { timeslot, images, _doc } = response;
+  return { ..._doc, timeslot, images };
+}
+
+export const getImageCourtService = async (courtId: string) => {
+  const response: any = await apiInstance.get(`/getImageCourt?courtId=${courtId}`);
+  return response;
+}

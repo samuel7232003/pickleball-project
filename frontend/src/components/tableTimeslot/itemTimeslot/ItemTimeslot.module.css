@@ -5,6 +5,7 @@
   margin-bottom: 5px;
   align-items: center;
   padding: 1px 0;
+  transition: background-color 0.3s ease;
 }
 
 .main p{
@@ -27,6 +28,12 @@
   width: 72px;
 }
 
+.available:hover p{
+  border: none;
+  background-color: var(--color-gray-light);
+  color: var(--color-black);
+}
+
 .unavailable p{
   border: none;
   background-color: var(--color-error);
@@ -39,7 +46,7 @@
   color: var(--color-white);
 }
 
-.success p{
+.booked p{
   border: none;
   background-color: var(--color-success);
   color: var(--color-white);

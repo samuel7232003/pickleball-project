@@ -3,9 +3,10 @@ const {
   getCourtService,
   getAllCourtsService,
   getCourtsByOwnerIdService,
+  searchCourtsService,
 } = require("../services/courtService");
-const { createImageCourtService } = require("../services/imageCourtService");
-const { createTimeslotService } = require("../services/timeslotService");
+const { createImageCourtService, getImageCourtService } = require("../services/imageCourtService");
+const { createTimeslotService, getTimeslotsByCourtIdService } = require("../services/timeslotService");
 
 const createCourt = async (req, res) => {
   const { name, lat, lng, location, description, ownerId, number, images , listTimeslot} = req.body;
@@ -21,9 +22,15 @@ const createCourt = async (req, res) => {
 };
 
 const getCourt = async (req, res) => {
-  const { id, ownerId } = req.query;
+  const { _id, ownerId } = req.query;
   let response;
-  if (id) response = await getCourtService(id);
+  if (_id) {
+    response = await getCourtService(_id);
+    const timeslot = await getTimeslotsByCourtIdService(response._id);
+    response.timeslot = timeslot;
+    const images = await getImageCourtService(response._id);
+    response = { ...response, timeslot, images };
+  }
   else if (ownerId) response = await getCourtsByOwnerIdService(ownerId);
   else response = await getAllCourtsService();
 
@@ -33,7 +40,20 @@ const getCourt = async (req, res) => {
   return res.status(404).json({ message: "Court not found" });
 };
 
+const searchCourt = async (req, res) => {
+  const { text } = req.query;
+  const response = await searchCourtsService(text);
+  return res.status(200).json(response);
+};
+
+const getAllCourt = async (req, res) => {
+  const response = await getAllCourtService();
+  return res.status(200).json(response);
+};
+
 module.exports = {
   createCourt,
   getCourt,
+  searchCourt,
+  getAllCourt,
 };

@@ -7,6 +7,12 @@ const createImageCourtService = async (images, courtId) => {
   return newImage;
 };
 
+const getImageCourtService = async(courtId) => {
+  const image = await imageCourtModel.find({ courtId: courtId });
+  return image;
+};
+
 module.exports = {
   createImageCourtService,
+  getImageCourtService,
 };

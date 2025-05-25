@@ -16,6 +16,7 @@ export default function UploadImages(props: any) {
     infoIcon = getIcon({ nameIcon: iconsName.INFO }),
     listImage = [],
     onChange,
+    isEdit = true,
   } = props;
 
   const mainClass = classNames(css.main, mainElement);
@@ -43,9 +44,9 @@ export default function UploadImages(props: any) {
       {listImage.length > 0 ? (
         <div className={css.carouselWrapper}>
           <CarouselBox listImage={listImage} />
-          <figure className={css.iconEdit} onClick={handleUpload}>
+          {isEdit && <figure className={css.iconEdit} onClick={handleUpload}>
             <img src={getIcon({ nameIcon: iconsName.EDIT })} alt="icon" />
-          </figure>
+          </figure>}
         </div>
       ) : (
         <div className={mainClass} onClick={handleUpload}>

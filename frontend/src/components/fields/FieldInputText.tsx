@@ -30,6 +30,7 @@ export default function FieldInputText(props: any) {
           inputElement={inputElement}
           isIcon={false}
           onAddressSelect={onChange}
+          placeholder={inputPlaceholder}
         />
       ) : (
         <fieldset className={inputElement}>

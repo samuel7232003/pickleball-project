@@ -12,9 +12,9 @@ const createCourtService = async (data) => {
   }
 };
 
-const getCourtService = async (id) => {
+const getCourtService = async (_id) => {
   try {
-    const court = await courtModel.findById(id);
+    const court = await courtModel.findById(_id);
     return court;
   } catch (error) {
     console.log(error);
@@ -70,6 +70,28 @@ const deleteCourtService = async (courtId) => {
   }
 };
 
+const searchCourtsService = async (text) => {
+  try {
+    const keyword = text.trim();
+
+    if (!keyword || keyword.length < 1) {
+      return []; // Không tìm nếu không có ký tự đáng kể
+    }
+
+    const courts = await courtModel.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { location: { $regex: keyword, $options: "i" } }
+      ]
+    });
+
+    return courts;
+  } catch (error) {
+    console.log("Search error:", error);
+    return null;
+  }
+};
+
 module.exports = {
   createCourtService,
   getCourtService,
@@ -77,4 +99,5 @@ module.exports = {
   getAllCourtsService,
   updateCourtService,
   deleteCourtService,
+  searchCourtsService,
 };

@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import text from "../../util/text";
 import FieldSearch from "../fields/FieldSearch";
 import css from "./SearchBox.module.css";
 import { searchMapbox } from "../../services/mapbox";
 import { getIcon, iconsName } from "../../util/getAssets";
-import classNames from "classnames";
+import { searchCourtsService } from "../../services/court";
+import CardCourtSearchItem from "../card/CardCourtSearchItem";
 
 type Feature = {
   properties: {
@@ -16,12 +17,14 @@ type Feature = {
 };
 
 const SearchBox = (props: any) => {
-  const { 
-    onAddressSelect, 
+  const {
+    onAddressSelect,
     placeholder = "Type to search...",
     isTitle = true,
     inputElement,
     isIcon = true,
+    isSearchOnMap = true,
+    handleCourtSelect,
   } = props;
 
   const [query, setQuery] = useState("");
@@ -36,7 +39,21 @@ const SearchBox = (props: any) => {
         setResults([]);
       }
     };
-    if (query.trim() !== "") search();
+    const searchOnData = async () => {
+      const data = await searchCourtsService(text);
+      if (data.length > 0) {
+        setResults(data);
+      } else {
+        setResults([]);
+      }
+    };
+    if (query.trim() !== "") {
+      if (isSearchOnMap) {
+        search();
+      } else {
+        searchOnData();
+      }
+    }
   };
 
   useEffect(() => {
@@ -51,27 +68,45 @@ const SearchBox = (props: any) => {
   const handleSelect = (feature: Feature) => {
     const [lng, lat] = feature.geometry.coordinates;
     const address = feature.properties.full_address;
-    onAddressSelect({lng, lat, address});
+    onAddressSelect({ lng, lat, address });
     setResults([]);
     setQuery(address);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
-  }
+  };
 
   const handleBlur = () => {
     setTimeout(() => {
       setResults([]);
     }, 150);
-  }
+  };
+
+  const ListCourtSearchItem = () => {
+    return (
+      <div className={css.listResult}>
+        {results.map((item: any, idx: number) => (
+          <CardCourtSearchItem
+            key={idx}
+            court={item}
+            onClick={handleCourtSelect}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className={inputElement ? undefined : css.searchBox}>
-      {isTitle && <div className={css.searchBoxTitle}>
-        <figure><img src={getIcon({nameIcon: iconsName.MAP})} alt="" /></figure>
-        <p>{text["SearchPage.searchTitle"]}</p>
-      </div>}
+      {isTitle && (
+        <div className={css.searchBoxTitle}>
+          <figure>
+            <img src={getIcon({ nameIcon: iconsName.MAP })} alt="" />
+          </figure>
+          <p>{text["SearchPage.searchTitle"]}</p>
+        </div>
+      )}
       <FieldSearch
         placeholder={placeholder}
         onChange={onChange}
@@ -81,7 +116,7 @@ const SearchBox = (props: any) => {
         isIcon={isIcon}
         onBlur={handleBlur}
       />
-      {results.length > 0 && (
+      {results.length > 0 && isSearchOnMap && (
         <ul className={css.listResult}>
           {results.map((feature, idx) => (
             <li key={idx} onClick={() => handleSelect(feature)}>
@@ -90,6 +125,7 @@ const SearchBox = (props: any) => {
           ))}
         </ul>
       )}
+      {results.length > 0 && !isSearchOnMap && <ListCourtSearchItem />}
     </div>
   );
 };
