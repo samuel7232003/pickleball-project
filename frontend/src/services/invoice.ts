@@ -5,4 +5,10 @@ const createInvoiceService = async (userId: string, ownerId: string, timeChoice:
   return response;
 };
 
-export { createInvoiceService };
+const getInvoicePendingService = async (userId: string) => {
+  console.log(userId);
+  const response = await apiInstance.get(`/getInvoicePending?userId=${userId}`);
+  return response;
+};
+
+export { createInvoiceService, getInvoicePendingService }; 

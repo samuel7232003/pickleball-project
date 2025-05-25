@@ -59,6 +59,7 @@ export default function TableInvoice(props: any) {
     totalElement,
     data = [],
     totalPrice = 0,
+    isHideTotal = false,
   } = props;
 
   const mainClass = classNames(css.main, mainElement);
@@ -110,10 +111,10 @@ export default function TableInvoice(props: any) {
       ) : (
         <p className={css.empty}>{text["DetailCourt.emptyInvoice"]}</p>
       )}
-      <div className={totalClass}>
+      {!isHideTotal && <div className={totalClass}>
         <p>{text["TableInvoice.total"]}</p>
         <p>{formattedPrice(totalPrice)}</p>
-      </div>
+      </div>}
     </div>
   );
 }

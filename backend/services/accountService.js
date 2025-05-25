@@ -93,6 +93,7 @@ const editAccountService = async (newAcc) => {
         last_name: newAcc.last_name,
         email: newAcc.email,
         password: newAcc.password,
+        role: newAcc.role,
       }
     );
     return response;

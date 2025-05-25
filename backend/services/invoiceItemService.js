@@ -5,4 +5,9 @@ const createInvoiceItemsService = async (invoiceItems) => {
   return newInvoiceItem;
 };
 
-module.exports = { createInvoiceItemsService };
+const getInvoiceItemsService = async (invoiceId) => {
+  const invoiceItems = await invoiceItemModel.find({ invoiceId });
+  return invoiceItems;
+};
+
+module.exports = { createInvoiceItemsService, getInvoiceItemsService };

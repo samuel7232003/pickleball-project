@@ -6,6 +6,7 @@ import SearchPage from "./pages/search/SearchPage";
 import LoginPage from "./pages/login/LoginPage";
 import CreateCourt from "./pages/createCourt/CreateCourt";
 import DetailCourt from "./pages/detailCourt/DetailCourt";
+import PaymentPage from "./pages/paymentPage/PaymentPage";
 
 export const pages = {
   NEW_FEED_PAGE: "FEED",
@@ -15,6 +16,7 @@ export const pages = {
   LOGIN_PAGE_SIGNUP: "SIGNUP",
   CREATE_COURT_PAGE: "CREATE_COURT",
   DETAIL_COURT_PAGE: "DETAIL_COURT",
+  PAYMENT_PAGE: "PAYMENT",
 };
 
 export const router = createBrowserRouter([
@@ -49,6 +51,10 @@ export const router = createBrowserRouter([
       {
         path: "detailCourt/:id",
         element: <DetailCourt />,
+      },
+      {
+        path: "payment",
+        element: <PaymentPage />,
       },
     ],
   },

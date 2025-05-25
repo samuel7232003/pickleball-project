@@ -1,0 +1,161 @@
+.main{
+  background-image: url("../../assets/images/background.png");
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  padding-top: 90px;
+  box-sizing: border-box;
+}
+
+.inner{
+  position: relative;
+  max-width: 1024px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.right,
+.left{
+  width: 50%;
+  background-color: var(--color-white-opa);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  padding: 20px 30px;
+}
+
+.leftTitle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: var(--fontWeightBold);
+  margin-bottom: 20px;
+}
+
+.leftIcon{
+  height: 24px;
+}
+
+.courtInfor{
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.userInfor{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-white-opa);
+  border: 1px solid var(--color-gray);
+  border-radius: 5px;
+  padding: 30px 20px;
+  margin-bottom: 20px;
+}
+
+.userInfor figure{
+  height: 24px;
+  position: absolute;
+  background-color: var(--color-white);
+  border-radius: 5px;
+  top: -10px;
+  left: 20px;
+}
+
+.userInfor figure img{
+  height: 100%;
+  width: auto;
+}
+
+.courtInforItem{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--color-white-opa);
+  border: 1px solid var(--color-gray);
+  padding: 30px 20px;
+  width: 45%;
+  border-radius: 5px;
+}
+
+.courtInforItem figure{
+  height: 24px;
+  position: absolute;
+  background-color: var(--color-white);
+  border-radius: 5px;
+  top: -10px;
+  left: 20px;
+}
+
+.courtInforItem figure img{
+  height: 100%;
+  width: auto;
+}
+
+.courtInforItem h3{
+  margin-bottom: 10px;
+}
+
+.tableInvoice{
+  flex-grow: 1;
+}
+
+.total{
+  display: flex;
+  font-size: 20px;
+  font-weight: var(--fontWeightBold);
+  color: var(--color-error);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.btnSubmitBlock{
+  display: flex;
+  justify-content: end;
+}
+
+.btnSubmit{
+  display: flex;
+  gap: 5px;
+  background-color: var(--color-success);
+  border-radius: 5px;
+  align-items: center;
+  padding: 10px;
+  height: fit-content;
+  width: fit-content;
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1),
+              0 4px 6px rgba(0, 0, 0, 0.1);
+  filter: brightness(1.05);
+}
+
+.btnSubmit p{
+  color: var(--color-white);
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.btnSubmit figure{
+  height: 24px;
+}
+
+.btnSubmit figure img{
+  height: 100%;
+  width: auto;
+  transition: transform 0.25s ease-in-out;
+}
+
+.btnSubmit:hover img{
+  transform: rotate(360deg);
+}

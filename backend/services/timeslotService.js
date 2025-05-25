@@ -14,7 +14,7 @@ const createTimeslotService = async (timeslot, courtId) => {
 
 const getTimeslotService = async (id) => {
   try {
-    const timeslot = await timeslotCourtModel.find({ _id: id });
+    const timeslot = await timeslotCourtModel.findOne({ _id: id });
     return timeslot;
   } catch (error) {
     console.log(error);

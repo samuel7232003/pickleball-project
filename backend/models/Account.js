@@ -6,6 +6,7 @@ const accountSchema = mongoose.Schema({
     first_name: String,
     last_name: String,
     avatar: String,
+    role: String,
 })
 
 const accountModel = mongoose.model("Account", accountSchema)
