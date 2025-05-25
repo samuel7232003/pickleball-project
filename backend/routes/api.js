@@ -10,11 +10,13 @@ const {
   handleLogout,
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
-const { createCourt, getCourt } = require("../controllers/courtController");
+const { createCourt, getCourt, searchCourt, getAllCourt } = require("../controllers/courtController");
 const {
   createTimeslotCourt,
   getTimeslotCourt,
 } = require("../controllers/timeslotController");
+const { getImageCourt } = require("../controllers/imageCourtController");
+const { createInvoice } = require("../controllers/invoiceController");
 
 const routerAPI = express.Router();
 
@@ -33,8 +35,14 @@ routerAPI.get("/getAllUser", getUsers);
 
 routerAPI.post("/createCourt", createCourt);
 routerAPI.get("/getCourt", getCourt);
+routerAPI.get("/searchCourt", searchCourt);
+routerAPI.get("/getAllCourt", getAllCourt);
 
 routerAPI.post("/createTimeslot", createTimeslotCourt);
 routerAPI.get("/getTimeslot", getTimeslotCourt);
+
+routerAPI.get("/getImageCourt", getImageCourt);
+
+routerAPI.post("/createInvoice", createInvoice);
 
 module.exports = routerAPI;

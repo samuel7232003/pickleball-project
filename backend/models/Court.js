@@ -7,7 +7,7 @@ const courtSchema = mongoose.Schema({
   location: String,
   number: Number,
   description: String,
-  owner_id: String,
+  ownerId: String,
 })
 
 const courtModel = mongoose.model('Court', courtSchema);

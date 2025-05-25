@@ -4,11 +4,19 @@
   border: 1px solid var(--color-default);
   padding: 10px;
   box-sizing: border-box;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cardElement:hover{
+  background-color: var(--color-gray-light);
 }
 
 .cardElement figure{
-  height: 100%;
-  width: 105px;
+  min-width: 80px;
+  max-width: 80px;
+  aspect-ratio: 1/1;
   overflow: hidden;
 }
 
@@ -28,6 +36,6 @@
   font-weight: var(--fontWeightBold);
 }
 
-.addressElement{
+.locationElement{
   font-size: 12px;
 }

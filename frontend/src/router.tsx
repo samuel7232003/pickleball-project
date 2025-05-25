@@ -5,6 +5,7 @@ import NewFeed from "./pages/newFeed/NewFeed";
 import SearchPage from "./pages/search/SearchPage";
 import LoginPage from "./pages/login/LoginPage";
 import CreateCourt from "./pages/createCourt/CreateCourt";
+import DetailCourt from "./pages/detailCourt/DetailCourt";
 
 export const pages = {
   NEW_FEED_PAGE: "FEED",
@@ -13,6 +14,7 @@ export const pages = {
   LOGIN_PAGE_LOGIN: "LOGIN",
   LOGIN_PAGE_SIGNUP: "SIGNUP",
   CREATE_COURT_PAGE: "CREATE_COURT",
+  DETAIL_COURT_PAGE: "DETAIL_COURT",
 };
 
 export const router = createBrowserRouter([
@@ -43,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "createCourt",
         element: <CreateCourt />,
+      },
+      {
+        path: "detailCourt/:id",
+        element: <DetailCourt />,
       },
     ],
   },

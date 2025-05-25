@@ -26,6 +26,7 @@ import trash from "../assets/icons/trash-03.png";
 import add from "../assets/icons/x-circle-contained.png"
 import send from "../assets/icons/send-02.png";
 import edit from "../assets/icons/edit-contained.png";
+import checkSquare from "../assets/icons/check-square-broken (1).png"
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -46,6 +47,7 @@ export const iconsName = {
   ADD: "add",
   SEND: "send",
   EDIT: "edit",
+  CHECK_SQUARE: "checkSquare",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -74,6 +76,7 @@ const iconMap: Record<IconName, string> = {
   add,
   send,
   edit,
+  checkSquare,
 };
 
 const iconPreMap: Record<IconName, string> = {

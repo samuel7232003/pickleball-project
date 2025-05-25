@@ -47,3 +47,13 @@
   flex-grow: 1;
   overflow: auto;
 }
+
+.empty{
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-gray);
+  text-align: center;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+}

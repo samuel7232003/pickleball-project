@@ -1,3 +1,6 @@
+import { delay } from "../../common/functions";
+import navigateToPage from "../../config/navigate";
+import { pages } from "../../router";
 import { createCourtService } from "../../services/court";
 import text from "../../util/text";
 
@@ -14,6 +17,7 @@ const initialState = {
   errorMessage: "",
   isDisabled: false,
   successMessage: "",
+  isSuccess: false,
 };
 
 export const ON_CHANGE_NAME = "ON_CHANGE_NAME";
@@ -52,7 +56,7 @@ export default function createCourtReducer(state = initialState, action: any) {
       return { ...state, isSubmitting: true };
     }
     case ON_SUBMIT_SUCCESS: {
-      return { ...state, isSubmitting: false, successMessage: action.payload };
+      return { ...state, isSubmitting: false, successMessage: action.payload, isSuccess: true };
     }
     case ON_SUBMIT_FAILURE: {
       return { ...state, isSubmitting: false, errorMessage: action.payload };
@@ -117,8 +121,9 @@ export const handleSubmit = (ownerId: string) => async(dispatch: any, getState: 
     try {
       const response = await createCourtService(courtData, ownerId);
       if (response) {
-        dispatch(onResetState());
         dispatch(onSubmitSuccess(text["CreateCourt.successCreateCourt"]));
+        await delay(1000);
+        dispatch(onResetState());
       } else {
         dispatch(onSubmitFailure(text["CreateCourt.errorCreateCourt"]));
       }
