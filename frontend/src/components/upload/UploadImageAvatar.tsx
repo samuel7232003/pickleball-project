@@ -1,20 +1,19 @@
 import { useRef } from "react";
 import { getIcon, getImage, iconsName, imagesName } from "../../util/getAssets";
 import text from "../../util/text";
-import css from "./UploadImages.module.css";
+import css from "./UploadImageAvatar.module.css";
 import classNames from "classnames";
-import CarouselBox from "../carousel/CarouselBox";
 
-export default function UploadImages(props: any) {
+export default function UploadImageAvatar(props: any) {
   const {
     mainElement,
     iconElement,
     icon = getIcon({ nameIcon: iconsName.IMAGE_ADD }),
     contentElement,
-    content = text["CreateCourt.upImages"],
+    content = text["PersonalPage.uploadAvatar"],
     infoElement,
     infoIcon = getIcon({ nameIcon: iconsName.INFO }),
-    listImage = [],
+    image,
     onChange,
     isEdit = true,
   } = props;
@@ -30,22 +29,21 @@ export default function UploadImages(props: any) {
     inputRef.current?.click();
   };
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const images = files.map((file, index) => ({
-      url: URL.createObjectURL(file),
-      order: index + 1,
-    }));
-    if (onChange) onChange(images);
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      if (onChange) onChange(imageUrl);
+    }
   };
-  
-  const listImageDefault = [{_id: "default", url:getImage(imagesName.DEFAULT_IMAGE)}];
+
+  const defaultImage = getImage(imagesName.DEFAULT_IMAGE);
 
   return (
     <>
-      {listImage.length > 0 ? (
-        <div className={css.carouselWrapper}>
-          <CarouselBox listImage={listImage} />
+      {image ? (
+        <div className={css.avatarWrapper}>
+          <img src={image} alt="avatar" className={css.avatar} />
           {isEdit && (
             <figure className={css.iconEdit} onClick={handleUpload}>
               <img src={getIcon({ nameIcon: iconsName.EDIT })} alt="icon" />
@@ -65,17 +63,16 @@ export default function UploadImages(props: any) {
           </div>
         </div>
       ) : (
-        <div className={css.carouselWrapper}>
-          <CarouselBox listImage={listImageDefault} />
+        <div className={css.avatarWrapper}>
+          <img src={defaultImage} alt="avatar" className={css.avatar} />
         </div>
       )}
       <input
         type="file"
         accept="image/*"
-        multiple
         style={{ display: "none" }}
         ref={inputRef}
-        onChange={handleFiles}
+        onChange={handleFile}
       />
     </>
   );

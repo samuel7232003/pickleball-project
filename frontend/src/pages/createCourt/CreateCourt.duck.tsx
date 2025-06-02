@@ -1,7 +1,5 @@
 import { delay } from "../../common/functions";
-import navigateToPage from "../../config/navigate";
-import { pages } from "../../router";
-import { createCourtService } from "../../services/court";
+import { createCourtService, getCourtByIdService, updateCourtService } from "../../services/court";
 import text from "../../util/text";
 
 const initialState = {
@@ -31,6 +29,7 @@ export const ON_SUBMIT_SUCCESS = "ON_SUBMIT_SUCCESS";
 export const ON_SUBMIT_FAILURE = "ON_SUBMIT_FAILURE";
 export const ON_RESET_STATE = "ON_RESET_STATE";
 export const ON_CHANGE_DISABLED = "ON_CHANGE_DISABLED";
+export const ON_SET_COURT = "ON_SET_COURT";
 
 export default function createCourtReducer(state = initialState, action: any) {
   switch (action.type) {
@@ -66,6 +65,9 @@ export default function createCourtReducer(state = initialState, action: any) {
     }
     case ON_CHANGE_DISABLED: {
       return { ...state, isDisabled: action.payload };
+    }
+    case ON_SET_COURT: {
+      return { ...state, ...action.payload };
     }
     default:
       return state;
@@ -110,24 +112,49 @@ export const onChangeDisabled = (isDisabled: boolean) => ({
   payload: isDisabled,
 });
 
-export const handleSubmit = (ownerId: string) => async(dispatch: any, getState: any) => {
-    dispatch(onSubmitRequest());
-    const { name, location, lat, lng, description, number, images, listTimeslot } = getState().createCourt;
-    if(!name || !location || !lat || !lng || !description || !number || !images || !listTimeslot) {
-      dispatch(onSubmitFailure(text["CreateCourt.errorNotEnough"]));
-      return;
-    }
-    const courtData = { name, location, lat, lng, description, number, images, listTimeslot };
-    try {
-      const response = await createCourtService(courtData, ownerId);
+export const onSetCourt = (court: any) => ({
+  type: ON_SET_COURT,
+  payload: court,
+});
+
+export const getCourt = (id: string) => async (dispatch: any) => {
+  const response = await getCourtByIdService(id);
+  if(response){
+    const { name, location, lat, lng, description, number, images, timeslot: listTimeslot } = response;
+    dispatch(onSetCourt({ name, location, lat, lng, description, number, images, listTimeslot }));
+  }
+}
+
+export const handleSubmit = (ownerId: string, courtId?: string) => async(dispatch: any, getState: any) => {
+  dispatch(onSubmitRequest());
+  const { name, location, lat, lng, description, number, images, listTimeslot } = getState().createCourt;
+  if(!name || !location || !lat || !lng || !description || !number || !images || !listTimeslot) {
+    dispatch(onSubmitFailure(text["CreateCourt.errorNotEnough"]));
+    return;
+  }
+  const courtData = { name, location, lat, lng, description, number, images, listTimeslot };
+  try {
+    let response;
+    if (courtId) {
+      response = await updateCourtService(courtId, courtData);
+      if (response) {
+        dispatch(onSubmitSuccess(text["CreateCourt.successUpdateCourt"]));
+      } else {
+        dispatch(onSubmitFailure(text["CreateCourt.errorUpdateCourt"]));
+      }
+    } else {
+      response = await createCourtService(courtData, ownerId);
       if (response) {
         dispatch(onSubmitSuccess(text["CreateCourt.successCreateCourt"]));
-        await delay(1000);
-        dispatch(onResetState());
       } else {
         dispatch(onSubmitFailure(text["CreateCourt.errorCreateCourt"]));
       }
-    } catch (error) {
-      dispatch(onSubmitFailure(text["CreateCourt.errorCreateCourt"]));
     }
+    if (response) {
+      await delay(1000);
+      dispatch(onResetState());
+    }
+  } catch (error) {
+    dispatch(onSubmitFailure(courtId ? text["CreateCourt.errorUpdateCourt"] : text["CreateCourt.errorCreateCourt"]));
   }
+}

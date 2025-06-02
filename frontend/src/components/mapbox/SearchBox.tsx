@@ -25,10 +25,17 @@ const SearchBox = (props: any) => {
     isIcon = true,
     isSearchOnMap = true,
     handleCourtSelect,
+    value ="",
   } = props;
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(value);
   const [results, setResults] = useState<Feature[]>([]);
+  const [isInit, setIsInit] = useState(false);
+
+  useEffect(() => {
+    setQuery(value);
+    setIsInit(true);
+  }, [value]);
 
   const fetchSearch = async (text: string) => {
     const search = async () => {
@@ -57,8 +64,9 @@ const SearchBox = (props: any) => {
   };
 
   useEffect(() => {
-    if (query.trim().length === 0) {
+    if (query.trim().length === 0 || isInit) {
       setResults([]);
+      setIsInit(false); 
       return;
     }
 

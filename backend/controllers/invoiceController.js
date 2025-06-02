@@ -39,7 +39,15 @@ const getInvoicePending = async (req, res) => {
   try {
     const { userId } = req.query;
     const invoice = await getInvoicePendingService(userId);
+    if (!invoice) {
+      res.status(404).json({ message: "Invoice not found" });
+      return;
+    }
     const invoiceItems = await getInvoiceItemsService(invoice._id);
+    if (!invoiceItems) {
+      res.status(404).json({ message: "Invoice items not found" });
+      return;
+    }
 
     const timeslot = await Promise.all(
       invoiceItems.map(async (item) => {
@@ -59,6 +67,10 @@ const getInvoicePending = async (req, res) => {
     );
 
     const court = await getCourtService(timeslot[0].courtId);
+    if (!court) {
+      res.status(404).json({ message: "Court not found" });
+      return;
+    }
 
     const response = {
       invoice,
@@ -70,5 +82,6 @@ const getInvoicePending = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 module.exports = { createInvoice, getInvoicePending };

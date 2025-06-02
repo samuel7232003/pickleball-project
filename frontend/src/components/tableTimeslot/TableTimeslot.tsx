@@ -1,7 +1,7 @@
 import css from "./TableTimeslot.module.css";
 import classNames from "classnames";
 import text from "../../util/text";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import ItemTimeslot from "./itemTimeslot/ItemTimeslot";
 import { timeslotStatus } from "../../common/constants";
 
@@ -34,27 +34,16 @@ export default function TableTimeslot(props: any) {
   const tableListClass = classNames(css.list, tableListElement);
   const tableItemClass = classNames(css.item, tableItem);
 
-  const [dataShow, setDataShow] = useState(data);
-
-  useEffect(() => {
+  const sortedData = (data: any) => {
     const parseTime = (timeStr: string): number => {
       const [hours, minutes] = timeStr.split(":").map(Number);
       return hours * 60 + minutes;
     };
 
-    const sortedData = [...data].sort((a: any, b: any) => {
+    return [...data].sort((a: any, b: any) => {
       return parseTime(a.startTime) - parseTime(b.startTime);
     });
-    setDataShow(sortedData);
-  }, [data]);
-
-  useEffect(() => {
-    if (isChoiceMode) {
-      setDataShow(
-        data.filter((item: any) => item.status === timeslotStatus.AVAILABLE)
-      );
-    }
-  }, [isChoiceMode]);
+  };
 
   const handleChoose = (item: any) => {
     onChoose(item);
@@ -69,6 +58,11 @@ export default function TableTimeslot(props: any) {
   };
 
   const getStatus = (item: any) => {
+    if (item.status === "UNAVAILABLE") {
+      return timeslotStatus.UNAVAILABLE;
+    } else if (item.status === "PENDING") {
+      return timeslotStatus.PENDING;
+    }
     if (
       timeChoie.some((time: any) => {
         const { startTime, endTime, dateChoiced: dateChoiced_, numberChoie: numberChoie_ } = time;
@@ -85,7 +79,7 @@ export default function TableTimeslot(props: any) {
     return timeslotStatus.AVAILABLE;
   };
 
-  const ListItem = dataShow.map((item: any) => {
+  const ListItem = sortedData(data).map((item: any) => {
     const { startTime, endTime } = item;
     return (
       <ItemTimeslot

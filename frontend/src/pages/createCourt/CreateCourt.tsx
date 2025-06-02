@@ -8,6 +8,7 @@ import { InputNumber, message } from "antd";
 import TableTimeslot from "../../components/tableTimeslot/TableTimeslot";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getCourt,
   handleSubmit,
   ON_CHANGE_DESCRIPTION,
   ON_CHANGE_DISABLED,
@@ -27,10 +28,13 @@ import { AppDispatch } from "../../redux/store";
 import { useEffect } from "react";
 import navigateToPage from "../../config/navigate";
 import { pages } from "../../router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { roles } from "../../common/constants";
+import defaultStyles from '../../styles/default-styles.module.css';
 
 export default function CreateCourt() {
-  const { _id: ownerId } = useAppSelector((state: any) => state.user.user);
+  const { id } = useParams();
+  const { _id: ownerId, role } = useAppSelector((state: any) => state.user.user);
   const {
     listTimeslot,
     name,
@@ -46,14 +50,25 @@ export default function CreateCourt() {
   } = useSelector((state: any) => state.createCourt);
   const dispatch = useDispatch<AppDispatch>();
   const [messageApi, contextHolder] = message.useMessage();
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(role === roles.USER) {
+      navigate(navigateToPage(pages.SEARCH_PAGE));
+    }
+  }, [role]);
+
+  useEffect(() => {
+    if(id) {
+      dispatch(getCourt(id) as any);
+    }
+  }, [id]);
 
   useEffect(() =>{
     if(isSuccess){
       navigate(navigateToPage(pages.SEARCH_PAGE));
     }
-  },[isSuccess])
+  },[isSuccess]);
 
   useEffect(() => {
     if (
@@ -96,7 +111,6 @@ export default function CreateCourt() {
   };
 
   const handleImagesChange = (fileList: UploadFile[]) => {
-    console.log(fileList);
     dispatch(onChangeImages(fileList));
   };
 
@@ -141,7 +155,9 @@ export default function CreateCourt() {
   };
 
   const onSubmit = () => {
-    if (ownerId) dispatch(handleSubmit(ownerId));
+    if (ownerId) {
+      dispatch(handleSubmit(ownerId, id) as any);
+    }
   };
 
   return (
@@ -233,10 +249,11 @@ export default function CreateCourt() {
           </div>
           <div className={css.btnSubmitBlock}>
             <ButtonIcon
-              onClick={onSubmit}
-              mainElement={css.btnSubmit}
+              mainElement={`${css.btnSubmit} ${defaultStyles.submitButtonHover}`}
+              iconElement={css.icon}
               icon={getIcon({ nameIcon: iconsName.SEND })}
-              content={text["CreateCourt.button"]}
+              content={id ? text["CreateCourt.buttonEdit"] : text["CreateCourt.buttonCreate"]}
+              onClick={onSubmit}
               isDisabled={isDisabled}
               isLoading={isSubmitting}
             />

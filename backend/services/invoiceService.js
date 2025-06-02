@@ -10,4 +10,9 @@ const getInvoicePendingService = async (userId) => {
   return invoice;
 };
 
-module.exports = { createInvoiceService, getInvoicePendingService };
+const getInvoiceService = async (invoiceId) => {
+  const invoice = await invoiceModel.findOne({ _id: invoiceId });
+  return invoice;
+};
+
+module.exports = { createInvoiceService, getInvoicePendingService, getInvoiceService };

@@ -6,6 +6,7 @@ import loginPageReducer from "../pages/login/LoginPage.duck";
 import createCourtReducer from "../pages/createCourt/CreateCourt.duck";
 import { detailCourtReducer } from "../pages/detailCourt/DetailCourt.duck";
 import { paymentPageReducer } from "../pages/paymentPage/PaymentPage.duck";
+import { personalPageReducer } from "../pages/personal/PersonalPage.duck";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         createCourt: createCourtReducer,
         detailCourt: detailCourtReducer,
         paymentPage: paymentPageReducer,
+        personalPage: personalPageReducer,
         user: userSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),

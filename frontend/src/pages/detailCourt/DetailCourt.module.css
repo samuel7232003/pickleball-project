@@ -176,3 +176,27 @@
 .btnSubmit:hover img{
   transform: rotate(360deg);
 }
+
+.noTimeslot{
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  color: var(--color-gray);
+  font-style: italic;
+  margin: 20px;
+}
+
+.back{
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  height: 30px;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px solid var(--color-black);
+}
+
+.back img{
+  height: 100%;
+  width: auto;
+}

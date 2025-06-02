@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { createInvoice, getCourt, onSubmitFailure, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
+import { useNavigate, useParams } from "react-router-dom";
+import { createInvoice, getCourt, getStatusTimeslot, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/builder";
 import css from "./DetailCourt.module.css";
+import defaultStyles from "../../styles/default-styles.module.css";
 import UploadImages from "../../components/upload/UploadImages";
 import { getIcon, iconsName } from "../../util/getAssets";
 import Title from "../../components/titles/Title";
@@ -15,6 +16,9 @@ import NoteTimeslotChoice from "./noteTimeslotChoice/NoteTimeslotChoice";
 import TableInvoice from "../../components/tableInvoice/TableInvoice";
 import ButtonIcon from "../../components/buttons/ButtonIcon";
 import dayjs from "dayjs";
+import { delay } from "../../common/functions";
+import navigateToPage from "../../config/navigate";
+import { pages } from "../../router";
 
 const ListCourtNumber = (props: any) => {
   const { number, css, onChoose, numberChoie } = props;
@@ -49,6 +53,7 @@ export default function DetailCourt() {
     location,
     images,
     timeslot,
+    timeslotStatus,
     description,
     numberChoie,
     timeChoice,
@@ -60,18 +65,15 @@ export default function DetailCourt() {
   } = useAppSelector((state: any) => state.detailCourt);
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
 
   const [allowChoiceTimeslot, setAllowChoiceTimeslot] = useState(false);
 
   useEffect(() => {
     if (id) {
-      dispatch(getCourt(id as string) as any);
+      dispatch(getCourt(id as string, navigate ) as any);
     }
   }, [id]);
-
-  useEffect(() => {
-    console.log(timeslot);
-  }, [timeslot]);
 
   useEffect(() => {
     if (errorMessage!=="") {
@@ -82,6 +84,7 @@ export default function DetailCourt() {
   useEffect(() => {
     if (dateChoiced && numberChoie) {
       setAllowChoiceTimeslot(true);
+      dispatch(getStatusTimeslot() as any);
     } else {
       setAllowChoiceTimeslot(false);
     }
@@ -105,7 +108,11 @@ export default function DetailCourt() {
 
   const onSubmit = () => {
     dispatch(createInvoice() as any);
+    delay(1000);
+    navigate(navigateToPage(pages.PAYMENT_PAGE));
   };
+
+  const isHaveTimeslot = timeslot.length > 0 && number > 0;
 
   return (
     <main className={css.main}>
@@ -134,7 +141,7 @@ export default function DetailCourt() {
             />
             <p className={css.contentText}>{description}</p>
           </div>
-          <div className={css.timeslot}>
+          {isHaveTimeslot ? <div className={css.timeslot}>
             <div className={css.timeslotLeft}>
               <div className={css.timeslotTitle}>
                 <Title
@@ -159,7 +166,7 @@ export default function DetailCourt() {
               />
               <TableTimeslot
                 tableElement={css.tableTimeslot}
-                data={timeslot}
+                data={timeslotStatus}
                 isEditMode={false}
                 isChoiceMode={true}
                 isEmpty={!allowChoiceTimeslot}
@@ -194,8 +201,13 @@ export default function DetailCourt() {
                 />
               </div>
             </div>
-          </div>
+          </div> : <div className={css.timeslot}>
+              <p className={css.noTimeslot}>{text["DetailCourt.noTimeslot"]}</p>
+          </div>}
         </div>
+        <figure className={classNames(css.back, defaultStyles.backButtonHover)} onClick={() => navigate(-1)}>
+          <img src={getIcon({ nameIcon: iconsName.BACK })} alt="back" />
+        </figure>
       </div>
     </main>
   );

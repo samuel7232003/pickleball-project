@@ -97,6 +97,7 @@ export default function Header(props: any) {
 
   const handleClickLoginReady = () =>{
     dispatch(logoutAction());
+    navigate(navigateToPage(pages.WELCOME_PAGE));
   }
 
   return (
