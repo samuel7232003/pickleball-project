@@ -29,6 +29,9 @@ import edit from "../assets/icons/edit-contained.png";
 import checkSquare from "../assets/icons/check-square-broken (1).png";
 import receipt from "../assets/icons/receipt-lines.png";
 import user from "../assets/icons/user-profile-03.png";
+import defaultImage from "../assets/images/default.png";
+import back from "../assets/icons/chevron-left.png";
+import accountInfo from "../assets/icons/file-lock-03.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -52,6 +55,8 @@ export const iconsName = {
   CHECK_SQUARE: "checkSquare",
   RECEIPT: "receipt",
   USER: "user",
+  BACK: "back",
+  ACCOUNT_INFO: "accountInfo",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -83,6 +88,8 @@ const iconMap: Record<IconName, string> = {
   checkSquare,
   receipt,
   user,
+  back,
+  accountInfo,
 };
 
 const iconPreMap: Record<IconName, string> = {
@@ -117,6 +124,7 @@ export const imagesName = {
   WELCOME1: "welcome_1",
   WELCOME2: "welcome_2",
   WELCOME3: "welcome_3",
+  DEFAULT_IMAGE: "defaultImage",
 } as const;
 
 type ImageKey = typeof imagesName[keyof typeof imagesName];
@@ -127,6 +135,7 @@ const imageMap: Record<ImageKey, string> = {
   welcome_1,
   welcome_2,
   welcome_3,
+  defaultImage,
 };
 
 export function getImage(nameImage: ImageKey): string {

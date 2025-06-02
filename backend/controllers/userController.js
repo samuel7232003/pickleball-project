@@ -56,10 +56,10 @@ const getUser = async (req, res) => {
 };
 
 const editAccount = async (req, res) => {
-  const newAcc = req.body;
-  const data = await editAccountService(newAcc);
+  const { id, data } = req.body;
+  const response = await editAccountService(id, data);
 
-  return res.status(200).json(data);
+  return res.status(200).json(response);
 };
 
 const getUserById = async (req, res) => {

@@ -10,16 +10,26 @@ import text from "../../util/text";
 import TableInvoice from "../../components/tableInvoice/TableInvoice";
 import { formattedPrice } from "../../common/functions";
 import ButtonIcon from "../../components/buttons/ButtonIcon";
+import { useNavigate } from "react-router-dom";
 
 export default function PaymentPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const {_id: userId, first_name, last_name} = useAppSelector((state: any) => state.user.user);
-  const {isPaymentProcessing, timeslot, totalPrice} = useAppSelector((state: any) => state.paymentPage);
-  const {name, location} = useAppSelector((state: any) => state.paymentPage.court);
+  const navigate = useNavigate();
+  const {
+    _id: userId,
+    first_name,
+    last_name,
+  } = useAppSelector((state: any) => state.user.user);
+  const { isPaymentProcessing, timeslot, totalPrice } = useAppSelector(
+    (state: any) => state.paymentPage
+  );
+  const { name, location } = useAppSelector(
+    (state: any) => state.paymentPage.court
+  );
 
-  useEffect(()=>{
-    if(userId) dispatch(getInitialData(userId));
-  },[userId])
+  useEffect(() => {
+    if (userId) dispatch(getInitialData(userId, navigate));
+  }, [userId]);
 
   return (
     <main className={css.main}>
@@ -29,23 +39,32 @@ export default function PaymentPage() {
             mainElement={css.leftTitle}
             iconElement={css.leftIcon}
             icon={getIcon({ nameIcon: iconsName.RECEIPT })}
-            title= {text["PaymentPage.leftTitle"]}
+            title={text["PaymentPage.leftTitle"]}
           />
           <div className={css.userInfor}>
-            <figure><img src={getIcon({nameIcon: iconsName.USER})} alt="" /></figure>
+            <figure>
+              <img src={getIcon({ nameIcon: iconsName.USER })} alt="" />
+            </figure>
             <h3>{text["PaymentPage.title.nameBooking"]}</h3>
-            <p>{last_name} {first_name}</p>
+            <p>
+              {last_name} {first_name}
+            </p>
           </div>
           <div className={css.courtInfor}>
             <div className={css.courtInforItem}>
-              <figure><img src={getIcon({nameIcon: iconsName.DESCRIPTION})} alt="" /></figure>
+              <figure>
+                <img
+                  src={getIcon({ nameIcon: iconsName.DESCRIPTION })}
+                  alt=""
+                />
+              </figure>
               <div>
                 <h3>{text["PaymentPage.title.nameCourt"]}</h3>
                 <p>{name}</p>
               </div>
               <div>
                 <h3>{text["PaymentPage.title.nameAddress"]}</h3>
-                <p>{location}</p>  
+                <p>{location}</p>
               </div>
             </div>
             <TableInvoice
@@ -60,15 +79,14 @@ export default function PaymentPage() {
           </div>
           <div className={css.btnSubmitBlock}>
             <ButtonIcon
-              onClick={()=>{}}
+              onClick={() => {}}
               mainElement={css.btnSubmit}
               icon={getIcon({ nameIcon: iconsName.SEND })}
-              content={text["CreateCourt.button"]}
+              content={text["PaymentPage.button"]}
             />
           </div>
         </div>
-        {isPaymentProcessing && <div className={css.right}>
-        </div>}
+        {isPaymentProcessing && <div className={css.right}></div>}
       </div>
     </main>
   );

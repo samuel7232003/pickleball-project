@@ -28,6 +28,12 @@
   width: 72px;
 }
 
+.booked p,
+.available p{
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
 .available:hover p{
   border: none;
   background-color: var(--color-gray-light);

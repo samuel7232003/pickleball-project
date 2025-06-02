@@ -12,7 +12,7 @@ export default function CardCourtSearchItem(props: any) {
     locationElement = css.locationElement,
   } = props;
   const {_id, name, location, lng, lat, number } = court;
-  const [image, setImage] = useState(getImage(imagesName.AVATAR_TEST));
+  const [image, setImage] = useState(getImage(imagesName.DEFAULT_IMAGE));
 
   useEffect(() => {
     const fetchCourt = async () => {

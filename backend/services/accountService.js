@@ -1,18 +1,23 @@
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const { SignJWT } = require("jose");
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 const bcrypt = require("bcrypt");
 const accountModel = require("../models/Account");
-const { ERROR_LOGIN_CODE } = require('../common/constant');
+const { ERROR_LOGIN_CODE } = require("../common/constant");
 const saltRounds = 10;
 
-const createAccountService = async (username, password, first_name, last_name) => {
+const createAccountService = async (
+  username,
+  password,
+  first_name,
+  last_name
+) => {
   try {
     const user = await accountModel.findOne({ username });
     if (user) {
-      return {EC: 1};
+      return { EC: 1 };
     }
     const hashPassword = await bcrypt.hash(password, saltRounds);
 
@@ -22,10 +27,10 @@ const createAccountService = async (username, password, first_name, last_name) =
       first_name: first_name,
       last_name: last_name,
     });
-    return {EC: 0};
+    return { EC: 0 };
   } catch (error) {
     console.log(error);
-    return {EC: 1};
+    return { EC: 1 };
   }
 };
 
@@ -55,7 +60,7 @@ const loginService = async (username, password) => {
         return {
           EC: 0,
           access_token,
-          user: user
+          user: user,
         };
       }
     } else {
@@ -84,20 +89,20 @@ const getUserService = async (id, username) => {
   }
 };
 
-const editAccountService = async (newAcc) => {
+const editAccountService = async (accountId, updatedData) => {
   try {
-    const response = await accountModel.replaceOne(
-      { _id: newAcc._id },
-      {
-        first_name: newAcc.first_name,
-        last_name: newAcc.last_name,
-        email: newAcc.email,
-        password: newAcc.password,
-        role: newAcc.role,
-      }
-    );
-    return response;
+    const result = await accountModel.findById(accountId);
+    if (result) {
+      const updatedAccount = await accountModel.findByIdAndUpdate(
+        accountId,
+        { $set: updatedData },
+        { new: true }
+      );
+      return updatedAccount;
+    }
+    return null;
   } catch (error) {
+    console.log(error);
     return null;
   }
 };

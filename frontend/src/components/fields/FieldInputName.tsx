@@ -14,7 +14,7 @@ export default function FieldInputName(props: any) {
   } = props;
   return (
     <div className={blockElement}>
-      <p className={titleElement}>{title}</p>
+      {title && <p className={titleElement}>{title}</p>}
       <div className={inputElementBox}>
         <fieldset className={inputElement}>
           <input placeholder={inputPlaceholderLastName} onChange={onChangeLastName}  value={valueLastName}/>

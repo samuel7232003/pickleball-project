@@ -1,7 +1,6 @@
 const courtModel = require("../models/Court");
 
 const createCourtService = async (data) => {
-
   try {
     const newCourt = new courtModel(data);
     const result = await newCourt.save();
@@ -14,7 +13,7 @@ const createCourtService = async (data) => {
 
 const getCourtService = async (_id) => {
   try {
-    const court = await courtModel.findOne({_id});
+    const court = await courtModel.findOne({ _id });
     return court;
   } catch (error) {
     console.log(error);
@@ -44,7 +43,7 @@ const getAllCourtsService = async () => {
 
 const updateCourtService = async (courtId, updatedData) => {
   try {
-    const result = await courtModel.find(courtId);
+    const result = await courtModel.findById(courtId);
     if (result) {
       const updatedCourt = await courtModel.findByIdAndUpdate(
         courtId,
@@ -81,8 +80,8 @@ const searchCourtsService = async (text) => {
     const courts = await courtModel.find({
       $or: [
         { name: { $regex: keyword, $options: "i" } },
-        { location: { $regex: keyword, $options: "i" } }
-      ]
+        { location: { $regex: keyword, $options: "i" } },
+      ],
     });
 
     return courts;

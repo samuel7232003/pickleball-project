@@ -1,3 +1,5 @@
+import navigateToPage from "../../config/navigate";
+import { pages } from "../../router";
 import { getInvoicePendingService } from "../../services/invoice";
 
 const initialState = {
@@ -50,18 +52,30 @@ export const setTotalPrice = (totalPrice: number) => {
 };
 
 export const calculateTotalPrice = (timeslot: any) => {
-  const totalPrice = timeslot.reduce((acc: number, curr: any) => acc + curr.price, 0);
+  if(!timeslot) {
+    return setTotalPrice(0);
+  }
+  const totalPrice = timeslot.reduce(
+    (acc: number, curr: any) => acc + curr.price,
+    0
+  );
   return setTotalPrice(totalPrice);
 };
 
-export const getInitialData = (userId: string) => async (dispatch: any, getState: any) => {
-  try {
-    const response: any = await getInvoicePendingService(userId);
-    console.log(response);
-    const { invoice, timeslot, court } = response;
-    dispatch(getInvoicePending(invoice, timeslot, court));
-    dispatch(calculateTotalPrice(timeslot));
-  } catch (error) {
-    console.log(error);
-  }
-};
+export const getInitialData =
+  (userId: string, navigate: any) => async (dispatch: any, getState: any) => {
+    try {
+      const response: any = await getInvoicePendingService(userId);
+      
+      if(response === null) {
+        navigate(navigateToPage(pages.WELCOME_PAGE));
+        return;
+      }
+      console.log(response);
+      const { invoice, timeslot, court } = response;
+      dispatch(getInvoicePending(invoice, timeslot, court));
+      dispatch(calculateTotalPrice(timeslot));
+    } catch (error) {
+      console.log(error);
+    }
+  };

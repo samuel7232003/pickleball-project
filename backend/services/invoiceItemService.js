@@ -10,4 +10,13 @@ const getInvoiceItemsService = async (invoiceId) => {
   return invoiceItems;
 };
 
-module.exports = { createInvoiceItemsService, getInvoiceItemsService };
+const getInvoiceItemsByTimeslotIdService = async (timeslotId, date, numChoie) => {
+  const invoiceItems = await invoiceItemModel.find({ timeslotId, dateChoiced: date, numberChoie: numChoie });
+  return invoiceItems;
+};
+
+module.exports = {
+  createInvoiceItemsService,
+  getInvoiceItemsService,
+  getInvoiceItemsByTimeslotIdService,
+};

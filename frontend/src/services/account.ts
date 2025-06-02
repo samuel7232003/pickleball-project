@@ -26,3 +26,21 @@ export const logout = async () => {
     console.log(error);
   }
 }
+
+export const getUserProfileService = async (userId: string): Promise<any> => {
+  try {
+    const response = await apiInstance.get(`/getAccount?id=${userId}`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
+export const updateUserProfileService = async (id: string, data: any): Promise<any> => {
+  try {
+    const response = await apiInstance.post(`/editAccount`, { id, data });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};

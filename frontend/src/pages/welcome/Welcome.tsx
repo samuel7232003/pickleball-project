@@ -21,8 +21,8 @@ export function Welcome() {
   }, []);
 
   function handleButtonClick() {
-    if(role===roles.USER) navigate(navigateToPage(pages.SEARCH_PAGE));
-    else navigate(navigateToPage(pages.CREATE_COURT_PAGE)); 
+    if(role===roles.OWNER) navigate(navigateToPage(pages.CREATE_COURT_PAGE, ""));
+    else navigate(navigateToPage(pages.SEARCH_PAGE)); 
   }
 
   const ListImage = () => {
@@ -47,7 +47,7 @@ export function Welcome() {
         />
         <ButtonTextLink
           buttonElement={css.buttonLink}
-          content={text[`Welcome.${role}.buttonContent` as keyof typeof text]}
+          content={role ? text[`Welcome.${role}.buttonContent` as keyof typeof text] : text["Welcome.buttonContent"]}
           contentElement={css.buttonContent}
           icon={getIcon({ nameIcon: iconsName.ARROW_LINK })}
           iconElement={css.buttonIcon}
