@@ -7,6 +7,7 @@ export default function navigateToPage(page:string, extra?: string){
     case "CREATE_COURT": return `/createCourt/${extra}`;
     case "DETAIL_COURT": return `/detailCourt/${extra}`;
     case "PERSONAL": return `/personal/${extra}`;
+    case "PAYMENT": return `/payment`;
     default: return "/";
   }
 }

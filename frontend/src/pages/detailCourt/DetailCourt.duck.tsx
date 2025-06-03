@@ -209,7 +209,7 @@ export const getCourt = (id: string, navigate: any) => async (dispatch: any, get
   }
 };
 
-export const createInvoice = () =>
+export const createInvoice = (navigate: any) =>
   async (dispatch: any, getState: any) => {
     dispatch(onSubmitRequest());
     await delay(1000);
@@ -232,6 +232,7 @@ export const createInvoice = () =>
       const response = await createInvoiceService(userId, ownerId, timeChoice);
       if (response) {
         dispatch(onSubmitSuccess());
+        navigate(navigateToPage(pages.PAYMENT_PAGE));
       }
     } catch (error) {
       console.log(error);

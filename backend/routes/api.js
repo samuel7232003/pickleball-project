@@ -26,6 +26,7 @@ const {
   createInvoice,
   getInvoicePending,
 } = require("../controllers/invoiceController");
+const { createPaymaentUrl, onStatusPayment } = require("../controllers/payosController");
 
 const routerAPI = express.Router();
 
@@ -57,5 +58,8 @@ routerAPI.post("/createTimeslot", createTimeslotCourt);
 
 routerAPI.post("/createInvoice", createInvoice);
 routerAPI.get("/getInvoicePending", getInvoicePending);
+
+routerAPI.post("/create-embedded-payment-link", createPaymaentUrl);
+routerAPI.post("/payment-status", onStatusPayment);
 
 module.exports = routerAPI;

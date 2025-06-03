@@ -107,9 +107,7 @@ export default function DetailCourt() {
   };
 
   const onSubmit = () => {
-    dispatch(createInvoice() as any);
-    delay(1000);
-    navigate(navigateToPage(pages.PAYMENT_PAGE));
+    dispatch(createInvoice(navigate) as any);
   };
 
   const isHaveTimeslot = timeslot.length > 0 && number > 0;
