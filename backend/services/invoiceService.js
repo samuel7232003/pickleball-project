@@ -15,4 +15,17 @@ const getInvoiceService = async (invoiceId) => {
   return invoice;
 };
 
-module.exports = { createInvoiceService, getInvoicePendingService, getInvoiceService };
+const setDoneInvoiceService = async (orderCode)=>{
+  try {
+      const responce = await invoiceModel.updateOne(
+          {orderCode: orderCode},
+          { $set: {paymentStatus: "PAID"}}
+      )
+      return responce;
+  } catch (error) {
+      console.log(error);
+      return null;
+  }
+}
+
+module.exports = { createInvoiceService, getInvoicePendingService, getInvoiceService, setDoneInvoiceService };
