@@ -28,6 +28,7 @@ const {
 } = require("../controllers/invoiceController");
 const { createPaymaentUrl, onStatusPayment } = require("../controllers/payosController");
 
+
 const routerAPI = express.Router();
 
 module.exports = routerAPI;
@@ -38,6 +39,9 @@ routerAPI.get("/getAllCourt", getAllCourt);
 
 routerAPI.get("/getImageCourt", getImageCourt);
 routerAPI.get("/getTimeslot", getTimeslotCourt);
+
+routerAPI.post("/create-embedded-payment-link", createPaymaentUrl);
+routerAPI.post("/payment-status", onStatusPayment);
 
 routerAPI.all("*", auth);
 
@@ -58,8 +62,5 @@ routerAPI.post("/createTimeslot", createTimeslotCourt);
 
 routerAPI.post("/createInvoice", createInvoice);
 routerAPI.get("/getInvoicePending", getInvoicePending);
-
-routerAPI.post("/create-embedded-payment-link", createPaymaentUrl);
-routerAPI.post("/payment-status", onStatusPayment);
 
 module.exports = routerAPI;
