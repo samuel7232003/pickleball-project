@@ -160,3 +160,8 @@
 .btnSubmit:hover img{
   transform: rotate(360deg);
 }
+
+.paymentContainer{
+  width: 100%;
+  height: 100%;
+}

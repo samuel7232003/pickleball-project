@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import css from "./PaymentPage.module.css";
 import { getInitialData } from "./PaymentPage.duck";
 import { useDispatch } from "react-redux";
@@ -11,6 +11,8 @@ import TableInvoice from "../../components/tableInvoice/TableInvoice";
 import { formattedPrice } from "../../common/functions";
 import ButtonIcon from "../../components/buttons/ButtonIcon";
 import { useNavigate } from "react-router-dom";
+import { PayOSConfig, usePayOS } from "@payos/payos-checkout";
+import { doPayment } from "../../services/payment";
 
 export default function PaymentPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,9 +29,50 @@ export default function PaymentPage() {
     (state: any) => state.paymentPage.court
   );
 
+  const { _id: invoiceId, orderCode, amount, paymentStatus } = useAppSelector(
+    (state: any) => state.paymentPage.invoice
+  );
+
+  const [payOSConfig, setPayOSConfig] = useState<PayOSConfig>({
+    RETURN_URL: window.location.origin,
+    ELEMENT_ID: "embedded-payment-container",
+    CHECKOUT_URL: "",
+    embedded: true,
+    onSuccess: (e: any) => {handleSuccess()},
+    onExit: (e: any) => {handleTimeout()},
+  });
+  const { open, exit } = usePayOS(payOSConfig);
+
   useEffect(() => {
     if (userId) dispatch(getInitialData(userId, navigate));
   }, [userId]);
+
+  useEffect(() => {
+    console.log(payOSConfig);
+    if (payOSConfig.CHECKOUT_URL !== ""){
+        open();
+        // setTimeLeft(300);
+        // setPayMode(true);
+        // message.info("Vị trí chỉ sẽ được giữ cho bạn trong 5 phút, vui lòng thanh toán trong khoảng thời gian này!");
+    }
+    // eslint-disable-next-line
+}, [payOSConfig]);
+
+  const handleGetPaymentLink = async () => {
+    const response = await doPayment(userId, invoiceId, amount, `${last_name} ${first_name}`);
+    setPayOSConfig((oldConfig) => ({
+        ...oldConfig,
+        CHECKOUT_URL: response.checkoutUrl,
+    }));
+  };
+
+  const handleSuccess = () => {
+    console.log("success");
+  }
+
+  const handleTimeout = () => {
+    console.log("timeout");
+  }
 
   return (
     <main className={css.main}>
@@ -79,14 +122,19 @@ export default function PaymentPage() {
           </div>
           <div className={css.btnSubmitBlock}>
             <ButtonIcon
-              onClick={() => {}}
+              onClick={handleGetPaymentLink}
               mainElement={css.btnSubmit}
               icon={getIcon({ nameIcon: iconsName.SEND })}
               content={text["PaymentPage.button"]}
             />
           </div>
         </div>
-        {isPaymentProcessing && <div className={css.right}></div>}
+        <div className={css.right}>
+          <div className={css.paymentContainer} id="embedded-payment-container"></div>
+          {/* <p className='back-btn' onClick={handleCloseLink}>Trở lại</p>
+          <p className='clock'>{formatTime(timeLeft)}</p> */}
+          {/* </div> */}
+        </div>
       </div>
     </main>
   );

@@ -1,8 +1,8 @@
 import { apiInstance } from "./api";
 import { InvoiceHistory } from '../pages/personal/PersonalPage.duck';
 
-const createInvoiceService = async (userId: string, ownerId: string, timeChoice: any) => {
-  const response = await apiInstance.post("/createInvoice", {userId, ownerId, timeChoice});
+const createInvoiceService = async (userId: string, ownerId: string, timeChoice: any, amount: number) => {
+  const response = await apiInstance.post("/createInvoice", {userId, ownerId, timeChoice, amount});
   return response;
 };
 

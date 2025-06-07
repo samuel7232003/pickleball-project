@@ -213,7 +213,7 @@ export const createInvoice = (navigate: any) =>
   async (dispatch: any, getState: any) => {
     dispatch(onSubmitRequest());
     await delay(1000);
-    const { ownerId, timeChoice } = getState().detailCourt;
+    const { ownerId, timeChoice, totalPrice } = getState().detailCourt;
     const { _id: userId } = getState().user.user;
     if(!userId){
       dispatch(onSubmitFailure(text["DetailCourt.errorMessage.noLogin"]));
@@ -229,7 +229,7 @@ export const createInvoice = (navigate: any) =>
     }
     try {
       console.log(userId, ownerId, timeChoice);
-      const response = await createInvoiceService(userId, ownerId, timeChoice);
+      const response = await createInvoiceService(userId, ownerId, timeChoice, totalPrice);
       if (response) {
         dispatch(onSubmitSuccess());
         navigate(navigateToPage(pages.PAYMENT_PAGE));

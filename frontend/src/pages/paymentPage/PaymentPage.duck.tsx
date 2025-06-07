@@ -3,7 +3,12 @@ import { pages } from "../../router";
 import { getInvoicePendingService } from "../../services/invoice";
 
 const initialState = {
-  invoice: null,
+  invoice:{
+    _id: "",
+    orderCode: "",
+    amount: 0,
+    paymentStatus: "",
+  },
   timeslot: [],
   court: {
     name: "",

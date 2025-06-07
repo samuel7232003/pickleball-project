@@ -105,14 +105,18 @@ export const handleLoginClick =
     if (password.trim() === "")
       return dispatch(loginFail(text["LoginPage.errorMissingFieldPassword"]));
     const res: any = await login(username, password);
+    console.log("res", res);
     if (res) {
       const { EC, EM } = res;
-      if (EC === 2)
+      if (EC === 2 || EC === 1)
         return dispatch(loginFail((text as any)[`LoginPage.${EM}`]));
       if (EC === 0) {
         const backPage = sessionStorage.getItem("backPage");
+        console.log("backPage", backPage);
         await dispatch(getProfile());
-        navigate(navigateToPage(backPage || "/"));
+        console.log("backPage", backPage);
+        if (backPage) navigate(navigateToPage(backPage));
+        else navigate(navigateToPage("/"));
         return dispatch(loginSuccess());
       }
     }

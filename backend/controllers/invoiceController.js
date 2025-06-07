@@ -11,10 +11,12 @@ const { getTimeslotService } = require("../services/timeslotService");
 
 const createInvoice = async (req, res) => {
   try {
-    const { userId, ownerId, timeChoice } = req.body;
+    const { userId, ownerId, timeChoice, orderCode, amount } = req.body;
     const newInvoice = await createInvoiceService({
       userId,
       ownerId,
+      orderCode,
+      amount,
       paymentStatus: "pending",
     });
 
