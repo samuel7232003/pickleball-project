@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { setDoneInvoiceService } = require("../services/invoiceService");
+const { setDoneInvoiceService, updateOrderCodeToInvoiceService } = require("../services/invoiceService");
 const crypto = require("crypto");
 const { createLinkService } = require("../services/payosService");
 
@@ -19,9 +19,10 @@ const createPaymaentUrl = async(req, res)=>{
     expiredAt: Math.floor((Date.now() + 300000)/1000)
   };
 
+  const res = await updateOrderCodeToInvoiceService(body.orderCode, invoiceId);
+
   try {
       const url = await createLinkService(body);
-      console.log(url);
       res.send(url);
   } catch (error) {
       console.log(error);

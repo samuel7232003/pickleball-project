@@ -1,15 +1,19 @@
-.header{
+.header {
   height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   width: 100%;
+  z-index: 1000;
 }
 
-.headerInner{
-  background-color: var(--color-white-opa);
-  backdrop-filter: blur(5px);
+.headerInner {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   justify-content: center;
   align-items: center;
   height: 50px;
@@ -17,14 +21,23 @@
   padding: 10px;
   display: flex;
   gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.headerInner:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
 }
 
 /* Module button weather */
 
-.buttonWeather{
+.buttonWeather {
   height: 100%;
   border-radius: 1000px;
-  background-color: var(--color-default);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: var(--color-black);
   font-size: var(--fontSizeMedium);
   display: flex;
@@ -32,47 +45,60 @@
   gap: 5px;
   padding: 5px 20px 5px 10px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
-.iconWeather{
+.buttonWeather:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.iconWeather {
   height: 100%;
 }
 
-.iconWeather img{
+.iconWeather img {
   height: 100%;
   width: auto;
 }
 
-.textCity{
+.textCity {
   font-weight: var(--fontWeightBold);
 }
 
 /* Module button circle */
 
 .buttonCirclePre,
-.buttonCircle{
+.buttonCircle {
   box-sizing: border-box;
   height: 100%;
   aspect-ratio: 1;
-  background-color: var(--color-default);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1000px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.25s ease-in-out;
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-.buttonCirclePre{
-  background-color: var(--color-primary);
+.buttonCirclePre {
+  background: rgba(var(--color-primary-rgb), 0.8);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
-.buttonCircle:hover{
-  background-color: var(--color-primary);
+.buttonCircle:hover {
+  transform: scale(1.1);
+  background: rgba(var(--color-primary-rgb), 0.8);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
 }
 
 .buttonCirclePre img,
-.buttonCircle img{
+.buttonCircle img {
   height: 60%;
   width: auto;
 }
@@ -80,10 +106,13 @@
 /* Module button login */
 
 .buttonLoginPre,
-.buttonLogin{
+.buttonLogin {
   box-sizing: border-box;
   height: 100%;
-  background-color: var(--color-default);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 1000px;
   display: flex;
   align-items: center;
@@ -91,27 +120,39 @@
   gap: 10px;
   padding: 5px 20px;
   font-weight: var(--fontWeightBold);
-  transition: color 0.25s ease-in-out;
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .buttonLoginPre {
-  background-color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.8);
   color: var(--color-white);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
-.buttonLogin:hover{
-  color: var(--color-primary);
+.buttonLogin:hover {
+  transform: scale(1.05);
+  color: var(--color-primary-rgb);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
 }
 
-.avatar{
+.avatar {
   height: 100%;
   aspect-ratio: 1;
   border-radius: 1000px;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
-.avatar img{
+.avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.avatar img {
   height: 100%;
   width: 100%;
   object-fit: cover;

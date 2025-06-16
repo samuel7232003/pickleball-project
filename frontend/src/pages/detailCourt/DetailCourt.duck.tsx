@@ -2,7 +2,7 @@ import { delay } from "../../common/functions";
 import navigateToPage from "../../config/navigate";
 import { pages } from "../../router";
 import { getCourtByIdService, getStatusTimeslotService } from "../../services/court";
-import { createInvoiceService } from "../../services/invoice";
+import { createInvoiceService, invoiceStatusService } from "../../services/invoice";
 import text from "../../util/text";
 
 const initialState = {
@@ -185,6 +185,7 @@ export const getCanSubmit = () => {
 export const getCourt = (id: string, navigate: any) => async (dispatch: any, getState: any) => {
   try {
     const response = await getCourtByIdService(id);
+    console.log(response);
     if (response) {
       const { _id: courtId, name, location, number, ownerId, images, description, timeslot } =
         response;
@@ -213,7 +214,7 @@ export const createInvoice = (navigate: any) =>
   async (dispatch: any, getState: any) => {
     dispatch(onSubmitRequest());
     await delay(1000);
-    const { ownerId, timeChoice, totalPrice } = getState().detailCourt;
+    const { ownerId, timeChoice, totalPrice, courtId } = getState().detailCourt;
     const { _id: userId } = getState().user.user;
     if(!userId){
       dispatch(onSubmitFailure(text["DetailCourt.errorMessage.noLogin"]));
@@ -228,8 +229,7 @@ export const createInvoice = (navigate: any) =>
       return;
     }
     try {
-      console.log(userId, ownerId, timeChoice);
-      const response = await createInvoiceService(userId, ownerId, timeChoice, totalPrice);
+      const response = await createInvoiceService(userId, ownerId, timeChoice, totalPrice, courtId);
       if (response) {
         dispatch(onSubmitSuccess());
         navigate(navigateToPage(pages.PAYMENT_PAGE));
@@ -239,9 +239,19 @@ export const createInvoice = (navigate: any) =>
     }
   };
 
-export const getStatusTimeslot = () =>
+// export const getStatusTimeslot = () =>
+//   async (dispatch: any, getState: any) => {
+//     const { courtId, dateChoiced, numberChoie } = getState().detailCourt;
+//     const response = await getStatusTimeslotService(courtId, dateChoiced, numberChoie);
+//     dispatch(setTimeslotStatus(response));
+//   };
+
+export const checkInvoiceStatus = () =>
   async (dispatch: any, getState: any) => {
+    await invoiceStatusService();
     const { courtId, dateChoiced, numberChoie } = getState().detailCourt;
+    console.log(courtId, dateChoiced, numberChoie);
     const response = await getStatusTimeslotService(courtId, dateChoiced, numberChoie);
+    console.log(response);
     dispatch(setTimeslotStatus(response));
   };

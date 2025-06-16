@@ -1,4 +1,4 @@
-import { getInvoiceHistoryService } from "../../services/invoice";
+import { getInvoiceServiceByIdUser, invoiceStatusService } from "../../services/invoice";
 import { delay } from "../../common/functions";
 import {
   getUserProfileService,
@@ -13,16 +13,6 @@ export interface UserProfile {
   avatar: string;
   username: string;
   password: string;
-}
-
-export interface InvoiceHistory {
-  id: string;
-  courtName: string;
-  address: string;
-  sessions: number;
-  price: number;
-  status: "pending" | "completed";
-  date: string;
 }
 
 const initialState = {
@@ -82,7 +72,7 @@ export const setUserProfile = (
   payload: { profile, successMessage },
 });
 
-export const setInvoiceHistory = (history: InvoiceHistory[]) => ({
+export const setInvoiceHistory = (history: any[]) => ({
   type: SET_INVOICE_HISTORY,
   payload: history,
 });
@@ -132,7 +122,7 @@ export const fetchInvoiceHistory =
       dispatch(setError(null));
 
       await delay(500); // Simulate network delay
-      const response = await getInvoiceHistoryService(userId);
+      const response: any = await getInvoiceServiceByIdUser(userId);
 
       if (response) {
         dispatch(setInvoiceHistory(response));
@@ -146,6 +136,7 @@ export const fetchInvoiceHistory =
 
 export const initializePersonalPage =
   (userId: string, currentUserId: string) => async (dispatch: any) => {
+    await invoiceStatusService();
     dispatch(setEditMode(userId === currentUserId));
     await Promise.all([
       dispatch(fetchUserProfile(userId)),

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createInvoice, getCourt, getStatusTimeslot, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
+import { checkInvoiceStatus, createInvoice, getCourt, setDateChoiced, setNumberChoiced, setTimeChoiced, setTimeChoicedRe } from "./DetailCourt.duck";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/builder";
 import css from "./DetailCourt.module.css";
@@ -16,9 +16,6 @@ import NoteTimeslotChoice from "./noteTimeslotChoice/NoteTimeslotChoice";
 import TableInvoice from "../../components/tableInvoice/TableInvoice";
 import ButtonIcon from "../../components/buttons/ButtonIcon";
 import dayjs from "dayjs";
-import { delay } from "../../common/functions";
-import navigateToPage from "../../config/navigate";
-import { pages } from "../../router";
 
 const ListCourtNumber = (props: any) => {
   const { number, css, onChoose, numberChoie } = props;
@@ -83,8 +80,8 @@ export default function DetailCourt() {
 
   useEffect(() => {
     if (dateChoiced && numberChoie) {
+      dispatch(checkInvoiceStatus() as any);
       setAllowChoiceTimeslot(true);
-      dispatch(getStatusTimeslot() as any);
     } else {
       setAllowChoiceTimeslot(false);
     }

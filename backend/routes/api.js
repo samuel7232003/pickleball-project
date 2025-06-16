@@ -25,6 +25,9 @@ const { getImageCourt } = require("../controllers/imageCourtController");
 const {
   createInvoice,
   getInvoicePending,
+  updateInvoice,
+  checkInvoiceStatus,
+  getInvoiceByIdUser,
 } = require("../controllers/invoiceController");
 const { createPaymaentUrl, onStatusPayment } = require("../controllers/payosController");
 
@@ -62,5 +65,8 @@ routerAPI.post("/createTimeslot", createTimeslotCourt);
 
 routerAPI.post("/createInvoice", createInvoice);
 routerAPI.get("/getInvoicePending", getInvoicePending);
+routerAPI.post("/updateInvoice", updateInvoice);
+routerAPI.post("/checkInvoiceStatus", checkInvoiceStatus);
+routerAPI.get("/getInvoiceByIdUser", getInvoiceByIdUser);
 
 module.exports = routerAPI;

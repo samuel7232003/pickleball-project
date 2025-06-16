@@ -42,10 +42,10 @@ export default function ProfileCard(props:any) {
           onChange={onChange}
         />
         <div className={styles.name}>
-          <h2>{first_name} {last_name}</h2>
+          <h2>{last_name} {first_name}</h2>
           <p>{text[`PersonalPage.role.${role}` as keyof typeof text]}</p>
           {isEdit && (
-            <figure className={styles.iconEdit} onClick={() => setIsEditName(true)}>
+            <figure className={styles.iconEditName} onClick={() => setIsEditName(true)}>
               <img src={getIcon({nameIcon: iconsName.EDIT})} alt="edit" />
             </figure>
           )}

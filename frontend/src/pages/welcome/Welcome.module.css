@@ -1,4 +1,4 @@
-.main{
+.main {
   background-image: url("../../assets/images/background.png");
   background-position: center;
   background-size: cover;
@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 
-.mainInner{
+.mainInner {
   max-width: 1200px;
   margin: 50px auto 0;
   position: relative;
@@ -16,47 +16,67 @@
 
 /* Welcome panel */
 
-.panel{
-  background-color: var(--color-white-opa);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
+.panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-radius: 16px;
   padding: 40px 70px;
   max-width: 660px;
+  transition: all 0.3s ease;
 }
 
-.panelTitle{
+.panel:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+}
+
+.panelTitle {
   font-size: var(--fontSizeMainTitle);
   color: var(--color-white);
   margin-bottom: 30px;
   line-height: 1.2;
   letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.panelContent{
+.panelContent {
   color: var(--color-white);
 }
 
-.panelContent > div{
+.panelContent > div {
   display: flex;
   gap: 10px;
   align-items: center;
   font-size: var(--fontSizeMedium);
   font-style: italic;
   margin-bottom: 30px;
+  transition: all 0.3s ease;
 }
 
-.panelIcon{
+.panelContent > div:hover {
+  transform: translateX(10px);
+}
+
+.panelIcon {
   height: 24px;
+  transition: all 0.3s ease;
 }
 
-.panelIcon img{
+.panelContent > div:hover .panelIcon {
+  transform: scale(1.2);
+}
+
+.panelIcon img {
   height: 100%;
   width: auto;
 }
 
 /* button link */
 
-.buttonLink{
+.buttonLink {
   height: 70px;
   width: fit-content;
   padding: 0 20px 0 30px;
@@ -64,69 +84,89 @@
   gap: 10px;
   align-items: center;
   border-radius: 1000px;
-  border: 1px solid white;
-  background-color: var(--color-primary);
+  background: rgba(var(--color-primary-rgb), 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
   position: absolute;
   bottom: -45px;
   left: 650px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.buttonLink:hover img{
+.buttonLink:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  background: rgba(var(--color-primary-rgb), 0.9);
+}
+
+.buttonLink:hover img {
   transform: rotate(360deg);
 }
 
-.buttonContent{
+.buttonContent {
   color: var(--color-white);
   font-size: var(--fontSizeBig);
   font-weight: var(--fontWeightBold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.buttonIcon{
+.buttonIcon {
   height: 37px;
 }
 
-.buttonIcon img{
+.buttonIcon img {
   height: 100%;
   width: auto;
-  transition: transform 0.25s ease-in-out;
+  transition: transform 0.3s ease;
 }
 
 /* list image */
 
-.listImage{
+.listImage {
   position: absolute;
   bottom: -115px;
   left: -20px;
 }
 
-.listImage figure{
-  border: 7px solid white;
+.listImage figure {
+  border: 7px solid rgba(255, 255, 255, 0.8);
   height: 115px;
   width: 200px;
   position: absolute;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
 }
 
-.listImage figure:nth-child(1){
+.listImage figure:hover {
+  transform: scale(1.1) rotate(0deg) !important;
+  z-index: 1;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+}
+
+.listImage figure:nth-child(1) {
   transform: rotate(1deg);
   bottom: 20px;
   left: -30px;
 }
 
-.listImage figure:nth-child(2){
+.listImage figure:nth-child(2) {
   transform: rotate(9deg);
   bottom: -70px;
   left: 50px;
 }
 
-.listImage figure:nth-child(3){
+.listImage figure:nth-child(3) {
   transform: rotate(-5deg);
   bottom: 20px;
   right: -340px;
 }
 
-.listImage figure img{
+.listImage figure img {
   height: 100%;
   width: 100%;
   object-fit: cover;
+  transition: all 0.3s ease;
 }

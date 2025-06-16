@@ -1,26 +1,49 @@
-.main{
-  background-color: var(--color-white);
-  border-radius: 5px;
+.main {
+  background: rgba(255, 255, 255, 0.632);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
   padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s ease;
 }
 
-.main h3{
+.main:hover {
+  transform: scale(1.01);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+}
+
+.main h3 {
   font-weight: var(--fontWeightBold);
   font-size: 14px;
+  color: var(--color-black);
 }
 
-.part{
+.part {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
   font-size: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.3s ease;
 }
 
-.price{
+.part:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.price {
   display: flex;
   gap: 10px;
   align-items: center;
@@ -30,33 +53,41 @@
   color: var(--color-gray);
 }
 
-.btnAddTime{
+.btnAddTime {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
-  background-color: var(--color-success);
-  transition: all 0.25s ease-in-out;
+  border-radius: 12px;
+  background: rgba(var(--color-success-rgb), 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 }
 
-.btnAddTime figure{
-  height: 16px;
+.btnAddTime figure {
+  height: 20px;
 }
 
-.btnAddTime figure img{
+.btnAddTime figure img {
   height: 100%;
   width: auto;
+  transition: transform 0.3s ease;
 }
 
 .btnAddTime:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1),
-              0 4px 6px rgba(0, 0, 0, 0.1);
-  filter: brightness(1.05);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  background: rgba(var(--color-success-rgb), 0.9);
+}
+
+.btnAddTime:hover img {
+  transform: rotate(360deg);
 }

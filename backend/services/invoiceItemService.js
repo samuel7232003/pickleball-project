@@ -6,7 +6,7 @@ const createInvoiceItemsService = async (invoiceItems) => {
 };
 
 const getInvoiceItemsService = async (invoiceId) => {
-  const invoiceItems = await invoiceItemModel.find({ invoiceId });
+  const invoiceItems = await invoiceItemModel.find({invoiceId});
   return invoiceItems;
 };
 

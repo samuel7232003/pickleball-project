@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
         element: <DetailCourt />,
       },
       {
-        path: "payment",
+        path: "payment/:invoiceId",
         element: <PaymentPage />,
       },
       {

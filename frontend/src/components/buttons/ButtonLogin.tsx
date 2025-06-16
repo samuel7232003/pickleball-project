@@ -33,11 +33,13 @@ export default function ButtonLogin(props: any) {
       key: 'account',
       label: text["Header.myAccount"],
       onClick: handleClickPersonal,
+      extra: "⌘P",
     },
     {
       key: 'logout',
       label: text["Header.logout"],
       onClick: handleClickLoginReady,
+      extra: "⌘Q",
     },
   ];
 

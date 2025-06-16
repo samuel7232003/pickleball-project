@@ -34,8 +34,7 @@ export const getAllCourtService = async () => {
 
 export const getCourtByIdService = async (id: string) => {
   const response: any = await apiInstance.get(`/getCourt?_id=${id}`);
-  const { timeslot, images, _doc } = response;
-  return { ..._doc, timeslot, images };
+  return response;
 }
 
 export const getImageCourtService = async (courtId: string) => {
@@ -67,13 +66,14 @@ export const updateCourtService = async (courtId: string, courtData: any) => {
 };
 
 export const getStatusTimeslotService = async (courtId: string, date: string, num: string) => {
-  console.log("courtId", courtId);
-  console.log("date", date);
-  console.log("num", num);
   const response: any = await apiInstance.get(`/getTimeslot?court_id=${courtId}&date=${date}&num=${num}`);
-  const timeslotStatus = response.map((item: any) => ({
-    ...item._doc,
-    status: item.status,
-  }));
-  return timeslotStatus;
+  if(response.length === 0) {
+    return [];
+  }
+  return response;
+}
+
+export const getCourtService = async (courtId: string) => {
+  const response: any = await apiInstance.get(`/getCourt?_id=${courtId}`);
+  return response;
 }

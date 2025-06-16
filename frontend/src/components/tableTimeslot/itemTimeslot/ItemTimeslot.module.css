@@ -9,7 +9,7 @@
 }
 
 .main p{
-  border: 1px solid var(--color-gray);
+  outline: 1px solid var(--color-gray);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,7 +35,6 @@
 }
 
 .available:hover p{
-  border: none;
   background-color: var(--color-gray-light);
   color: var(--color-black);
 }

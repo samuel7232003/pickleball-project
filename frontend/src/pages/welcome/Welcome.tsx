@@ -21,7 +21,7 @@ export function Welcome() {
   }, []);
 
   function handleButtonClick() {
-    if(role===roles.OWNER) navigate(navigateToPage(pages.CREATE_COURT_PAGE, ""));
+    if(role===roles.OWNER) navigate(navigateToPage(pages.CREATE_COURT_PAGE,"new"));
     else navigate(navigateToPage(pages.SEARCH_PAGE)); 
   }
 

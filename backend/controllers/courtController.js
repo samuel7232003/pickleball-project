@@ -46,7 +46,7 @@ const getCourt = async (req, res) => {
     const timeslot = await getTimeslotsByCourtIdService(response._id);
     response.timeslot = timeslot;
     const images = await getImageCourtService(response._id);
-    response = { ...response, timeslot, images };
+    response = { ...response._doc, timeslot, images };
   } else if (ownerId) response = await getCourtsByOwnerIdService(ownerId);
   else response = await getAllCourtsService();
 

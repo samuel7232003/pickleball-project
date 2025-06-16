@@ -6,17 +6,23 @@ const {
 const {
   createInvoiceService,
   getInvoicePendingService,
+  updateInvoiceService,
+  checkInvoiceStatusService,
+  getInvoiceByIdUserService,
+  getInvoiceService,
 } = require("../services/invoiceService");
 const { getTimeslotService } = require("../services/timeslotService");
+const invoiceModel = require("../models/Invoice");
 
 const createInvoice = async (req, res) => {
   try {
-    const { userId, ownerId, timeChoice, orderCode, amount } = req.body;
+    const { userId, ownerId, timeChoice, orderCode, amount, courtId } = req.body;
     const newInvoice = await createInvoiceService({
       userId,
       ownerId,
       orderCode,
       amount,
+      courtId,
       paymentStatus: "pending",
     });
 
@@ -39,8 +45,13 @@ const createInvoice = async (req, res) => {
 
 const getInvoicePending = async (req, res) => {
   try {
-    const { userId } = req.query;
-    const invoice = await getInvoicePendingService(userId);
+    const { userId, invoiceId } = req.query;
+    let invoice;
+    if (invoiceId !== "") {
+      invoice = await getInvoiceService(invoiceId);
+    } else {
+      invoice = await getInvoicePendingService(userId);
+    }
     if (!invoice) {
       res.status(404).json({ message: "Invoice not found" });
       return;
@@ -85,5 +96,39 @@ const getInvoicePending = async (req, res) => {
   }
 };
 
+const updateInvoice = async (req, res) => {
+  const { invoiceId, status } = req.body;
+  const invoice = await updateInvoiceService(invoiceId, status);
+  res.status(200).json(invoice);
+};
 
-module.exports = { createInvoice, getInvoicePending };
+const checkInvoiceStatus = async (req, res) => {
+  try {
+    const result = await checkInvoiceStatusService();
+
+    if (result.success) {
+      res.status(200).json({
+        message: "Invoice status check completed",
+        updatedCount: result.updatedCount,
+      });
+    } else {
+      res.status(500).json({ message: result.error });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getInvoiceByIdUser = async (req, res) => {
+  const { userId } = req.query;
+  const invoice = await getInvoiceByIdUserService(userId);
+  res.status(200).json(invoice);
+};
+
+module.exports = {
+  createInvoice,
+  getInvoicePending,
+  updateInvoice,
+  checkInvoiceStatus,
+  getInvoiceByIdUser,
+};
