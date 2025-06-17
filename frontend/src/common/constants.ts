@@ -18,6 +18,7 @@ export const timeslotStatus = {
 export const roles = {
   USER: "USER",
   OWNER: "OWNER",
+  ADMIN: "ADMIN",
 };
 
 export const initialTimeslot = {

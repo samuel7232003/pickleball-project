@@ -8,6 +8,8 @@ export default function navigateToPage(page:string, extra?: string){
     case "DETAIL_COURT": return `/detailCourt/${extra}`;
     case "PERSONAL": return `/personal/${extra}`;
     case "PAYMENT": return `/payment/${extra}`;
+    case "ADMIN": return "/admin";
+    case "MANAGE": return "/manage";
     default: return "/";
   }
 }

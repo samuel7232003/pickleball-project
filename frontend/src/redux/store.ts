@@ -7,6 +7,8 @@ import createCourtReducer from "../pages/createCourt/CreateCourt.duck";
 import { detailCourtReducer } from "../pages/detailCourt/DetailCourt.duck";
 import { paymentPageReducer } from "../pages/paymentPage/PaymentPage.duck";
 import { personalPageReducer } from "../pages/personal/PersonalPage.duck";
+import { adminPageReducer } from "../pages/admin/AdminPage.duck";
+import { managePageReducer } from "../pages/managePage/ManagePage.duck";
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +19,8 @@ export const store = configureStore({
         paymentPage: paymentPageReducer,
         personalPage: personalPageReducer,
         user: userSlice.reducer,
+        adminPage: adminPageReducer,
+        managePage: managePageReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 })

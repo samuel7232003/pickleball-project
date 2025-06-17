@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import navigateToPage from "../../config/navigate";
 import { pages } from "../../router";
 import { useAppSelector } from "../../redux/builder";
+import { roles } from "../../common/constants";
 
 export default function ButtonLogin(props: any) {
   const {
@@ -20,11 +21,29 @@ export default function ButtonLogin(props: any) {
   } = props;
 
   const navigate = useNavigate();
-  const { _id: id } = useAppSelector((state: any) => state.user.user);
+  const { _id: id, role } = useAppSelector((state: any) => state.user.user);
 
   const handleClickPersonal = () => {
     if(id){
       navigate(navigateToPage(pages.PERSONAL_PAGE, id));
+    }
+  }
+
+  const handleClickAdmin = () => {
+    if(id){
+      navigate(navigateToPage(pages.ADMIN_PAGE));
+    }
+  }
+
+  const handleClickCreateCourt = () => {
+    if(id){
+      navigate(navigateToPage(pages.CREATE_COURT_PAGE, "new"));
+    }
+  }
+
+  const handleClickManage = () => {
+    if(id){
+      navigate(navigateToPage(pages.MANAGE_PAGE));
     }
   }
 
@@ -43,8 +62,36 @@ export default function ButtonLogin(props: any) {
     },
   ];
 
+  const itemsAdmin: MenuProps['items'] = [
+    ...items,
+    {
+      key: 'admin',
+      label: text["Header.admin"],
+      onClick: handleClickAdmin,
+      extra: "⌘A",
+    },
+  ];
+
+  const itemsOwner: MenuProps['items'] = [
+    {
+      key: 'createCourt',
+      label: text["Header.createCourt"],
+      onClick: handleClickCreateCourt,
+      extra: "⌘C",
+    },
+    {
+      key: 'manage',
+      label: text["Header.manage"],
+      onClick: handleClickManage,
+      extra: "⌘M",
+    },
+    ...items,
+  ];
+
+  const itemsChoice = role === roles.ADMIN ? itemsAdmin : role === roles.OWNER ? itemsOwner : items;
+
   return isLogin ? (
-    <Dropdown menu={{ items }}>
+    <Dropdown menu={{ items: itemsChoice }}>
       <div className={buttonElement}>
         <p className={textElement}>{buttonText}</p>
         <figure className={avatarElement}>

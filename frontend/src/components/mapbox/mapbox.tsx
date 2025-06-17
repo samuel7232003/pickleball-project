@@ -110,7 +110,7 @@ export default function Mapbox(props: any) {
     }
   };
 
-  const handleCourtSelect = (lng: number, lat: number) => {
+  const handleCourtSelect = (lng: number, lat: number, id: string) => {
     if (mapInstance) {
       mapInstance.flyTo({ center: [lng, lat], zoom: 16 });
       const listMarker = mapInstance._markers;

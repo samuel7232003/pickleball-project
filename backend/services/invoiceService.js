@@ -98,8 +98,18 @@ const checkInvoiceStatusService = async () => {
 };
 
 
-const getInvoiceByIdUserService = async (userId) => {
-  const invoice = await invoiceModel.find({ userId });
+const getInvoiceByIdUserService = async (userId, role) => {
+  if(role === "USER") { 
+    const invoice = await invoiceModel.find({ userId });
+    return invoice;
+  } else {
+    const invoice = await invoiceModel.find({ ownerId: userId, paymentStatus: 'paid' });
+    return invoice;
+  }
+};
+
+const cancelInvoiceService = async (invoiceId) => {
+  const invoice = await invoiceModel.deleteOne({ _id: invoiceId });
   return invoice;
 };
 
@@ -112,4 +122,5 @@ module.exports = {
   checkInvoiceStatusService,
   getInvoiceByIdUserService,
   updateOrderCodeToInvoiceService,
+  cancelInvoiceService,
 };

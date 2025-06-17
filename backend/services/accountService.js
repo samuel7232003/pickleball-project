@@ -5,7 +5,7 @@ const { SignJWT } = require("jose");
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 const bcrypt = require("bcrypt");
 const accountModel = require("../models/Account");
-const { ERROR_LOGIN_CODE } = require("../common/constant");
+const { ERROR_LOGIN_CODE, ERROR_BAN_CODE } = require("../common/constant");
 const saltRounds = 10;
 
 const createAccountService = async (
@@ -45,6 +45,12 @@ const loginService = async (username, password) => {
           EM: ERROR_LOGIN_CODE,
         };
       } else {
+        if (user.isBanned) {
+          return {
+            EC: 3,
+            EM: ERROR_BAN_CODE,
+          };
+        }
         const payload = {
           username: user.username,
           first_name: user.first_name,
@@ -119,7 +125,16 @@ const getUsersByIdService = async (listId) => {
 
 const getUsersService = async () => {
   try {
-    const response = await accountModel.find({ role: "user" });
+    const response = await accountModel.find({ role: "USER" });
+    return response;
+  } catch (error) {
+    return null;
+  }
+};
+
+const getOwnersService = async () => {
+  try {
+    const response = await accountModel.find({ role: "OWNER" });
     return response;
   } catch (error) {
     return null;
@@ -133,4 +148,5 @@ module.exports = {
   editAccountService,
   getUsersByIdService,
   getUsersService,
+  getOwnersService,
 };

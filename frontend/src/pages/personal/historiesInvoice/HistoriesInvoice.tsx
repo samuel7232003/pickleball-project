@@ -6,7 +6,7 @@ import classNames from "classnames";
 import navigateToPage from "../../../config/navigate";
 
 const ListInvoice = (props: any) => {
-  const { invoiceHistory, role } = props;
+  const { invoiceHistory, role, onCancel } = props;
   const navigate = useNavigate();
   if (!Array.isArray(invoiceHistory) || invoiceHistory.length === 0) {
     return (
@@ -19,6 +19,10 @@ const ListInvoice = (props: any) => {
     );
   }
 
+  const handleCancel = (invoiceId: string) => {
+    onCancel(invoiceId);
+  }
+
   return (
     <div className={styles.invoiceList}>
       {invoiceHistory.map((invoice: any) => (
@@ -28,7 +32,7 @@ const ListInvoice = (props: any) => {
           court={invoice.court}
           onViewDetail={() => console.log("View detail", invoice.id)}
           onPay={() => navigate(navigateToPage("PAYMENT", invoice.invoce._id))}
-          onCancel={() => console.log("Cancel", invoice.id)}
+          onCancel={handleCancel}
         /> 
       ))}
     </div>
@@ -37,13 +41,13 @@ const ListInvoice = (props: any) => {
 
 
 export default function HistoriesInvoice(props: any) {
-  const { mainElement, invoiceHistory, role } = props;
+  const { mainElement, invoiceHistory, role, onCancel } = props;
   const mainClass = classNames(styles.main, mainElement);
 
   return (
     <div className={mainClass}>
-      <h2>Thông tin đặt sân của bạn</h2>
-      <ListInvoice invoiceHistory={invoiceHistory} role={role} />
+      <h2>{text[`PersonalPage.title.${role}.invoiceHistory` as keyof typeof text]}</h2>
+      <ListInvoice invoiceHistory={invoiceHistory} role={role} onCancel={onCancel} />
     </div>
   );
 }

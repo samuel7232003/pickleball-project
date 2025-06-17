@@ -44,3 +44,21 @@ export const updateUserProfileService = async (id: string, data: any): Promise<a
     console.log(error);
   }
 };
+
+export const getAllUserService = async (): Promise<any> => {
+  try {
+    const response = await apiInstance.get(`/getAllUser`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllOwnerService = async (): Promise<any> => {
+  try {
+    const response = await apiInstance.get(`/getAllOwner`);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -15,8 +15,8 @@ export const getInvoicePendingService = async (userId: string, invoiceId: string
   return {invoice, timeslot, court};
 };
 
-export const getInvoiceServiceByIdUser = async (userId: string) => {
-  const response: any[] = await apiInstance.get(`/getInvoiceByIdUser?userId=${userId}`);
+export const getInvoiceServiceByIdUser = async (userId: string, role: string) => {
+  const response: any[] = await apiInstance.get(`/getInvoiceByIdUser?userId=${userId}&role=${role}`);
   if(response.length === 0) {
     return [];
   }
@@ -37,5 +37,10 @@ export const updateInvoiceService = async (invoiceId: string, status: string) =>
 
 export const invoiceStatusService = async () => {
   const response = await apiInstance.post(`/checkInvoiceStatus`);
+  return response;
+};
+
+export const cancelInvoiceService = async (invoiceId: string) => {
+  const response = await apiInstance.get(`/cancelInvoice?invoiceId=${invoiceId}`);
   return response;
 };

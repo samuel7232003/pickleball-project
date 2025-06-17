@@ -2,6 +2,7 @@ const { getCourtService } = require("../services/courtService");
 const {
   createInvoiceItemsService,
   getInvoiceItemsService,
+  cancelInvoiceItemService,
 } = require("../services/invoiceItemService");
 const {
   createInvoiceService,
@@ -10,6 +11,7 @@ const {
   checkInvoiceStatusService,
   getInvoiceByIdUserService,
   getInvoiceService,
+  cancelInvoiceService,
 } = require("../services/invoiceService");
 const { getTimeslotService } = require("../services/timeslotService");
 const invoiceModel = require("../models/Invoice");
@@ -120,8 +122,15 @@ const checkInvoiceStatus = async (req, res) => {
 };
 
 const getInvoiceByIdUser = async (req, res) => {
-  const { userId } = req.query;
-  const invoice = await getInvoiceByIdUserService(userId);
+  const { userId, role } = req.query;
+  const invoice = await getInvoiceByIdUserService(userId, role);
+  res.status(200).json(invoice);
+};
+
+const cancelInvoice = async (req, res) => {
+  const { invoiceId } = req.query;
+  const invoice = await cancelInvoiceService(invoiceId);
+  const invoiceItems = await cancelInvoiceItemService(invoiceId);
   res.status(200).json(invoice);
 };
 
@@ -131,4 +140,5 @@ module.exports = {
   updateInvoice,
   checkInvoiceStatus,
   getInvoiceByIdUser,
+  cancelInvoice,
 };

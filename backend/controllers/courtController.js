@@ -43,6 +43,7 @@ const getCourt = async (req, res) => {
   let response;
   if (_id) {
     response = await getCourtService(_id);
+    if(!response) return res.status(404).json({ message: "Court not found" });
     const timeslot = await getTimeslotsByCourtIdService(response._id);
     response.timeslot = timeslot;
     const images = await getImageCourtService(response._id);
@@ -63,7 +64,7 @@ const searchCourt = async (req, res) => {
 };
 
 const getAllCourt = async (req, res) => {
-  const response = await getAllCourtService();
+  const response = await getAllCourtsService();
   return res.status(200).json(response);
 };
 

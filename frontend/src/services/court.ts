@@ -77,3 +77,8 @@ export const getCourtService = async (courtId: string) => {
   const response: any = await apiInstance.get(`/getCourt?_id=${courtId}`);
   return response;
 }
+
+export const getListCourtServiceForOwner = async (userId: string) => {
+  const response: any = await apiInstance.get(`/getListCourt?ownerId=${userId}`);
+  return response;
+}

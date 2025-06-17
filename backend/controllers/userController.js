@@ -4,6 +4,7 @@ const {
   getUserService,
   editAccountService,
   getUsersService,
+  getOwnersService,
 } = require("../services/accountService");
 
 const createUser = async (req, res) => {
@@ -73,6 +74,11 @@ const getUsers = async (req, res) => {
   return res.status(200).json(data);
 };
 
+const getOwners = async (req, res) => {
+  const data = await getOwnersService();
+  return res.status(200).json(data);
+};
+
 module.exports = {
   createUser,
   handleLogin,
@@ -82,4 +88,5 @@ module.exports = {
   editAccount,
   getUserById,
   getUsers,
+  getOwners,
 };

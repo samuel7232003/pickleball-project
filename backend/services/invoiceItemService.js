@@ -15,8 +15,14 @@ const getInvoiceItemsByTimeslotIdService = async (timeslotId, date, numChoie) =>
   return invoiceItems;
 };
 
+const cancelInvoiceItemService = async (invoiceId) => {
+  const invoiceItem = await invoiceItemModel.deleteMany({ invoiceId });
+  return invoiceItem;
+};
+
 module.exports = {
   createInvoiceItemsService,
   getInvoiceItemsService,
   getInvoiceItemsByTimeslotIdService,
+  cancelInvoiceItemService,
 };

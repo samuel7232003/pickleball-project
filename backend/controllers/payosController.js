@@ -19,7 +19,7 @@ const createPaymaentUrl = async(req, res)=>{
     expiredAt: Math.floor((Date.now() + 300000)/1000)
   };
 
-  const res = await updateOrderCodeToInvoiceService(body.orderCode, invoiceId);
+  const response = await updateOrderCodeToInvoiceService(body.orderCode, invoiceId);
 
   try {
       const url = await createLinkService(body);

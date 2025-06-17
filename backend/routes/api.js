@@ -8,6 +8,7 @@ const {
   getUserById,
   getUsers,
   handleLogout,
+  getOwners,
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 const {
@@ -29,8 +30,12 @@ const {
   checkInvoiceStatus,
   getInvoiceByIdUser,
 } = require("../controllers/invoiceController");
-const { createPaymaentUrl, onStatusPayment } = require("../controllers/payosController");
-
+const {
+  createPaymaentUrl,
+  onStatusPayment,
+} = require("../controllers/payosController");
+const { getStatistics } = require("../controllers/statisticsController");
+const { getCalendarEvents } = require("../controllers/calendarController");
 
 const routerAPI = express.Router();
 
@@ -57,9 +62,11 @@ routerAPI.get("/getAccount", getUser);
 routerAPI.post("/editAccount", editAccount);
 routerAPI.post("/getUsersById", getUserById);
 routerAPI.get("/getAllUser", getUsers);
+routerAPI.get("/getAllOwner", getOwners);
 
 routerAPI.post("/createCourt", createCourt);
 routerAPI.put("/updateCourt/:courtId", updateCourt);
+routerAPI.get("/getListCourt", getCourt);
 
 routerAPI.post("/createTimeslot", createTimeslotCourt);
 
@@ -68,5 +75,9 @@ routerAPI.get("/getInvoicePending", getInvoicePending);
 routerAPI.post("/updateInvoice", updateInvoice);
 routerAPI.post("/checkInvoiceStatus", checkInvoiceStatus);
 routerAPI.get("/getInvoiceByIdUser", getInvoiceByIdUser);
+
+// Statistics routes
+routerAPI.get("/manage/statistics", getStatistics);
+routerAPI.get("/manage/events", getCalendarEvents);
 
 module.exports = routerAPI;

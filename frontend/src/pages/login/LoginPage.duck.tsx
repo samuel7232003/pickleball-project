@@ -110,6 +110,9 @@ export const handleLoginClick =
       const { EC, EM } = res;
       if (EC === 2 || EC === 1)
         return dispatch(loginFail((text as any)[`LoginPage.${EM}`]));
+      if (EC === 3) {
+        return dispatch(loginFail(text["LoginPage.errorBan"]));
+      }
       if (EC === 0) {
         const backPage = sessionStorage.getItem("backPage");
         console.log("backPage", backPage);

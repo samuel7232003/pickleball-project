@@ -229,10 +229,10 @@ export const createInvoice = (navigate: any) =>
       return;
     }
     try {
-      const response = await createInvoiceService(userId, ownerId, timeChoice, totalPrice, courtId);
+      const response: any = await createInvoiceService(userId, ownerId, timeChoice, totalPrice, courtId);
       if (response) {
         dispatch(onSubmitSuccess());
-        navigate(navigateToPage(pages.PAYMENT_PAGE));
+        navigate(navigateToPage(pages.PAYMENT_PAGE, response._id));
       }
     } catch (error) {
       console.log(error);

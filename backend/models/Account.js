@@ -7,6 +7,7 @@ const accountSchema = mongoose.Schema({
     last_name: String,
     avatar: String,
     role: String,
+    isBanned: Boolean,
 })
 
 const accountModel = mongoose.model("Account", accountSchema)

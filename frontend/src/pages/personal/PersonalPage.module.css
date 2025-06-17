@@ -43,4 +43,42 @@
   border-radius: 15px;
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  position: relative;
+  justify-content: space-between;
+}
+
+.listResult {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow-x: auto;
+  position: relative;
+  width: 100%;
+  padding-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  top: 0;
+}
+
+/* Add custom scrollbar styling */
+.listResult::-webkit-scrollbar {
+  height: 6px;
+}
+
+.listResult::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.listResult::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.listResult::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
 }

@@ -31,6 +31,8 @@ export interface PaymentPageState {
   errorMessage: string | null;
   isPaymentProcessing: boolean;
   totalPrice: number;
+  isPaymentSuccess: boolean;
+  isViewMode: boolean;
 }
 
 const initialState: PaymentPageState = {
@@ -48,6 +50,8 @@ const initialState: PaymentPageState = {
   errorMessage: null,
   isPaymentProcessing: false,
   totalPrice: 0,
+  isPaymentSuccess: false,
+  isViewMode: false,
 };
 
 const paymentPageSlice = createSlice({
@@ -67,6 +71,9 @@ const paymentPageSlice = createSlice({
       state.court = action.payload.court;
       state.errorMessage = null;
     },
+    setIsPaymentSuccess: (state, action: PayloadAction<{ isPaymentSuccess: boolean }>) => {
+      state.isPaymentSuccess = action.payload.isPaymentSuccess;
+    },
     setTotalPrice: (state, action: PayloadAction<{ totalPrice: number }>) => {
       state.totalPrice = action.payload.totalPrice;
     },
@@ -79,6 +86,9 @@ const paymentPageSlice = createSlice({
     setError: (state, action: PayloadAction<{ errorMessage: string | null }>) => {
       state.errorMessage = action.payload.errorMessage;
     },
+    setIsViewMode: (state, action: PayloadAction<{ isViewMode: boolean }>) => {
+      state.isViewMode = action.payload.isViewMode;
+    },
   },
 });
 
@@ -87,6 +97,8 @@ export const {
   setTotalPrice,
   paymentProcessing,
   setError,
+  setIsPaymentSuccess,
+  setIsViewMode,
 } = paymentPageSlice.actions;
 
 export const paymentPageReducer = paymentPageSlice.reducer;
@@ -111,8 +123,14 @@ export const getInitialData =
       }
 
       const { invoice, timeslot, court } = response;
+      if (invoice.paymentStatus === invoiceStatus.PAID || invoice.paymentStatus === invoiceStatus.EXPIRED) {
+        dispatch(setIsPaymentSuccess({ isPaymentSuccess: true }));
+      }
       dispatch(getInvoicePending({ invoice, timeslot, court }));
       dispatch(calculateTotalPrice(timeslot));
+      if(invoice.userId !== userId){
+        dispatch(setIsViewMode({ isViewMode: true }));
+      }
     } catch (error) {
       dispatch(
         setError({

@@ -46,6 +46,8 @@ export default function PaymentPage() {
     errorMessage,
     court,
     invoice,
+    isPaymentSuccess,
+    isViewMode,
   } = useAppSelector((state: RootState) => state.paymentPage as PaymentPageState);
 
   const [payOSConfig, setPayOSConfig] = useState<PayOSConfig>({
@@ -194,7 +196,7 @@ export default function PaymentPage() {
               totalPrice={totalPrice}
             />
           </div>
-          <div className={css.btnSubmitBlock}>
+          {!isPaymentSuccess && !isViewMode && <div className={css.btnSubmitBlock}>
             <ButtonIcon
               onClick={handleGetPaymentLink}
               mainElement={css.btnSubmit}
@@ -202,7 +204,7 @@ export default function PaymentPage() {
               content={text["PaymentPage.button"] as string}
               isDisabled={isPaymentProcessing}
             />
-          </div>
+          </div>}
         </div>
         <div className={isInitialized ? css.right : css.rightHidden}>
           {isInitialized && (
