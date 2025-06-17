@@ -6,7 +6,7 @@ const createInvoiceItemsService = async (invoiceItems) => {
 };
 
 const getInvoiceItemsService = async (invoiceId) => {
-  const invoiceItems = await invoiceItemModel.find({ invoiceId });
+  const invoiceItems = await invoiceItemModel.find({invoiceId});
   return invoiceItems;
 };
 
@@ -15,8 +15,14 @@ const getInvoiceItemsByTimeslotIdService = async (timeslotId, date, numChoie) =>
   return invoiceItems;
 };
 
+const cancelInvoiceItemService = async (invoiceId) => {
+  const invoiceItem = await invoiceItemModel.deleteMany({ invoiceId });
+  return invoiceItem;
+};
+
 module.exports = {
   createInvoiceItemsService,
   getInvoiceItemsService,
   getInvoiceItemsByTimeslotIdService,
+  cancelInvoiceItemService,
 };

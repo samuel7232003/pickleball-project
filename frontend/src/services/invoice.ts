@@ -1,13 +1,13 @@
 import { apiInstance } from "./api";
-import { InvoiceHistory } from '../pages/personal/PersonalPage.duck';
+import { getCourtService } from "./court";
 
-const createInvoiceService = async (userId: string, ownerId: string, timeChoice: any) => {
-  const response = await apiInstance.post("/createInvoice", {userId, ownerId, timeChoice});
+export const createInvoiceService = async (userId: string, ownerId: string, timeChoice: any, amount: number, courtId: string) => {
+  const response = await apiInstance.post("/createInvoice", {userId, ownerId, timeChoice, amount, courtId});
   return response;
 };
 
-const getInvoicePendingService = async (userId: string) => {
-  const response: any = await apiInstance.get(`/getInvoicePending?userId=${userId}`);
+export const getInvoicePendingService = async (userId: string, invoiceId: string) => {
+  const response: any = await apiInstance.get(`/getInvoicePending?userId=${userId}&invoiceId=${invoiceId}`);
   const {invoice, timeslot, court} = response;
   if(!invoice || !timeslot || !court) {
     return null;
@@ -15,13 +15,32 @@ const getInvoicePendingService = async (userId: string) => {
   return {invoice, timeslot, court};
 };
 
-export const getInvoiceHistoryService = async (userId: string): Promise<InvoiceHistory[]> => {
-  // TODO: Replace with actual API call
-  const response = await fetch(`/api/users/${userId}/invoices`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch invoice history');
+export const getInvoiceServiceByIdUser = async (userId: string, role: string) => {
+  const response: any[] = await apiInstance.get(`/getInvoiceByIdUser?userId=${userId}&role=${role}`);
+  if(response.length === 0) {
+    return [];
   }
-  return response.json();
+  const invoice = response.map(async (item: any) => {
+    const {_id, courtId, createdAt, paymentStatus, amount} = item;
+    const court = await getCourtService(courtId);
+    return {invoce: {_id, courtId, createdAt, paymentStatus, amount}, court};
+  });
+
+  const result = await Promise.all(invoice);
+  return result;
 };
 
-export { createInvoiceService, getInvoicePendingService }; 
+export const updateInvoiceService = async (invoiceId: string, status: string) => {
+  const response = await apiInstance.post(`/updateInvoice`, {invoiceId, status});
+  return response;
+};
+
+export const invoiceStatusService = async () => {
+  const response = await apiInstance.post(`/checkInvoiceStatus`);
+  return response;
+};
+
+export const cancelInvoiceService = async (invoiceId: string) => {
+  const response = await apiInstance.get(`/cancelInvoice?invoiceId=${invoiceId}`);
+  return response;
+};

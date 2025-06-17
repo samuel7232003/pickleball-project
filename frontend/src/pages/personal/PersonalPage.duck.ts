@@ -1,4 +1,4 @@
-import { getInvoiceHistoryService } from "../../services/invoice";
+import { cancelInvoiceService, getInvoiceServiceByIdUser, invoiceStatusService } from "../../services/invoice";
 import { delay } from "../../common/functions";
 import {
   getUserProfileService,
@@ -6,6 +6,7 @@ import {
 } from "../../services/account";
 import { uploadCloudinary } from "../../services/cloudinary";
 import text from "../../util/text";
+import { getListCourtServiceForOwner } from "../../services/court";
 
 export interface UserProfile {
   id: string;
@@ -15,16 +16,6 @@ export interface UserProfile {
   password: string;
 }
 
-export interface InvoiceHistory {
-  id: string;
-  courtName: string;
-  address: string;
-  sessions: number;
-  price: number;
-  status: "pending" | "completed";
-  date: string;
-}
-
 const initialState = {
   userProfile: {},
   invoiceHistory: [],
@@ -32,6 +23,7 @@ const initialState = {
   error: null,
   isEditMode: false,
   successMessage: "",
+  listCourt: [],
 };
 
 // Action Types
@@ -42,6 +34,7 @@ export const SET_ERROR = "SET_ERROR";
 export const SET_EDIT_MODE = "SET_EDIT_MODE";
 export const RESET_STATE = "RESET_STATE";
 export const UPDATE_USER_PROFILE_AVATAR = "UPDATE_USER_PROFILE_AVATAR";
+export const SET_LIST_COURT = "SET_LIST_COURT";
 
 // Reducer
 export const personalPageReducer = (state = initialState, action: any) => {
@@ -68,6 +61,8 @@ export const personalPageReducer = (state = initialState, action: any) => {
         userProfile: { ...state.userProfile, avatar: action.payload.avatar },
         successMessage: action.payload.successMessage,
       };
+    case SET_LIST_COURT:
+      return { ...state, listCourt: action.payload };
     default:
       return state;
   }
@@ -82,7 +77,7 @@ export const setUserProfile = (
   payload: { profile, successMessage },
 });
 
-export const setInvoiceHistory = (history: InvoiceHistory[]) => ({
+export const setInvoiceHistory = (history: any[]) => ({
   type: SET_INVOICE_HISTORY,
   payload: history,
 });
@@ -106,6 +101,11 @@ export const resetState = () => ({
   type: RESET_STATE,
 });
 
+export const setListCourt = (listCourt: any[]) => ({
+  type: SET_LIST_COURT,
+  payload: listCourt,
+});
+
 // Thunk Actions
 export const fetchUserProfile = (userId: string) => async (dispatch: any) => {
   try {
@@ -126,13 +126,13 @@ export const fetchUserProfile = (userId: string) => async (dispatch: any) => {
 };
 
 export const fetchInvoiceHistory =
-  (userId: string) => async (dispatch: any) => {
+  (userId: string, role: string) => async (dispatch: any) => {
     try {
       dispatch(setLoading(true));
       dispatch(setError(null));
 
       await delay(500); // Simulate network delay
-      const response = await getInvoiceHistoryService(userId);
+      const response: any = await getInvoiceServiceByIdUser(userId, role);
 
       if (response) {
         dispatch(setInvoiceHistory(response));
@@ -144,13 +144,29 @@ export const fetchInvoiceHistory =
     }
   };
 
+export const fetchListCourt = (userId: string) => async (dispatch: any) => {
+  try {
+    const response: any = await getListCourtServiceForOwner(userId);
+    if (response) {
+      dispatch(setListCourt(response));
+    }
+  } catch (error: any) {
+    dispatch(setError(error.message || "Failed to fetch list court"));
+  }
+};
+
 export const initializePersonalPage =
-  (userId: string, currentUserId: string) => async (dispatch: any) => {
+  (userId: string, currentUserId: string) => async (dispatch: any, getState: any) => {
+    const { role } = getState().user.user;
+    await invoiceStatusService();
     dispatch(setEditMode(userId === currentUserId));
     await Promise.all([
       dispatch(fetchUserProfile(userId)),
-      dispatch(fetchInvoiceHistory(userId)),
+      dispatch(fetchInvoiceHistory(userId, role)),
     ]);
+    if(role === "OWNER") {
+      dispatch(fetchListCourt(userId));
+    }
   };
 
 export const updateUserProfileAvatar =
@@ -190,5 +206,15 @@ export const updateUserProfile =
       dispatch(setLoading(false));
     }
   };
+
+export const cancelInvoice = (invoiceId: string) => async (dispatch: any, getState: any) => {
+  const { _id: userId, role } = getState().personalPage.userProfile;
+  try {
+    const response:any = await cancelInvoiceService(invoiceId);
+  } catch (error: any) {
+    dispatch(setError(error.message || "Failed to cancel invoice"));
+  }
+  dispatch(fetchInvoiceHistory(userId, role)); 
+}
 
 export default personalPageReducer;

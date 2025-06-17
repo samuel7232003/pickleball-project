@@ -27,7 +27,7 @@ export default function CardCourtSearchItem(props: any) {
   }, [_id]);
 
   const handleClick = () => {
-    onClick(lng, lat);
+    onClick(lng, lat, _id);
   }
 
   return (

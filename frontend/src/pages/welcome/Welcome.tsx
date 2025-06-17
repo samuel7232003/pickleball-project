@@ -7,7 +7,6 @@ import { getIcon, getImage, iconsName, imagesName } from "../../util/getAssets";
 import ButtonTextLink from "../../components/buttons/ButtonTextLink";
 import text from "../../util/text";
 import navigateToPage from "../../config/navigate";
-import { useSelector } from "react-redux";
 import { useAppSelector } from "../../redux/builder";
 import { roles } from "../../common/constants";
 
@@ -21,7 +20,7 @@ export function Welcome() {
   }, []);
 
   function handleButtonClick() {
-    if(role===roles.OWNER) navigate(navigateToPage(pages.CREATE_COURT_PAGE, ""));
+    if(role===roles.OWNER) navigate(navigateToPage(pages.CREATE_COURT_PAGE,"new"));
     else navigate(navigateToPage(pages.SEARCH_PAGE)); 
   }
 

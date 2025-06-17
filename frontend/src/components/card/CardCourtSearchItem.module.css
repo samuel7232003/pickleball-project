@@ -1,4 +1,4 @@
-.cardElement{
+.cardElement {
   display: flex;
   border-radius: 5px;
   border: 1px solid var(--color-default);
@@ -7,35 +7,36 @@
   gap: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  min-width: 250px;
 }
 
-.cardElement:hover{
+.cardElement:hover {
   background-color: var(--color-gray-light);
 }
 
-.cardElement figure{
+.cardElement figure {
   min-width: 80px;
   max-width: 80px;
   aspect-ratio: 1/1;
   overflow: hidden;
 }
 
-.cardElement figure img{
+.cardElement figure img {
   height: 100%;
   width: 100%;
   object-fit: cover;
 }
 
-.inforElement{
+.inforElement {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.inforElement h3{
+.inforElement h3 {
   font-weight: var(--fontWeightBold);
 }
 
-.locationElement{
+.locationElement {
   font-size: 12px;
 }

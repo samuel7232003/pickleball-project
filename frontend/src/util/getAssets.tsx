@@ -145,3 +145,8 @@ export function getImage(nameImage: ImageKey): string {
 export function getImageAvatar(urlImg: string|undefined){
   return !urlImg ? avatar : urlImg;
 }
+
+export function getImageCourt(urlImg: string|undefined){
+  console.log(urlImg);
+  return !urlImg ? defaultImage : urlImg;
+}

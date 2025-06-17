@@ -1,12 +1,12 @@
-.main{
+.main {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   justify-content: space-between;
 }
 
-.main p{
-  width:45%;
+.main p {
+  width: 45%;
   border-radius: 5px;
   color: var(--color-black);
   font-size: 12px;
@@ -17,7 +17,7 @@
   gap: 10px;
 }
 
-.main p:before{
+.main p:before {
   content: "";
   display: inline-block;
   min-width: 18px;
@@ -27,18 +27,18 @@
   border: 1px solid var(--color-gray);
 }
 
-.main p:nth-child(1):before{
+.main p:nth-child(1):before {
   background-color: var(--color-default);
 }
 
-.main p:nth-child(2):before{
+.main p:nth-child(2):before {
   background-color: var(--color-error-light);
 }
 
-.main p:nth-child(3):before{
+.main p:nth-child(3):before {
   background-color: var(--color-pending);
 }
 
-.main p:nth-child(4):before{
+.main p:nth-child(4):before {
   background-color: var(--color-success);
 }

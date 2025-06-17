@@ -1,0 +1,133 @@
+.main {
+  background-image: url("../../assets/images/background.png");
+  background-position: center;
+  background-size: cover;
+  width: 100vw;
+  padding-top: 90px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow: hidden;
+  min-height: 80vh;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 1;
+}
+
+.statisticsSection {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.statCard {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+}
+
+.statCard h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.statNumber {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2a9d8f;
+  margin: 0;
+}
+
+.calendarSection {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-grow: 1;
+}
+
+.calendarSection :global(.ant-picker-calendar) {
+  background: transparent;
+}
+
+.eventContainer {
+  padding: 2px 0;
+  max-height: 70px;
+  overflow-y: auto;
+}
+
+.eventItem {
+  margin: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventItem :global(.ant-badge) {
+  width: 100%;
+}
+
+.eventItem :global(.ant-badge-status-text) {
+  font-size: 0.8rem;
+  margin-left: 4px;
+  color: #333;
+}
+
+/* Custom scrollbar for event container */
+.eventContainer::-webkit-scrollbar {
+  width: 4px;
+}
+
+.eventContainer::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.eventContainer::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.eventContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .statisticsSection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .statisticsSection {
+    grid-template-columns: 1fr;
+  }
+}

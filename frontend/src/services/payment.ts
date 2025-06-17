@@ -1,22 +1,59 @@
+import text from "../util/text";
 import { apiInstance } from "./api";
 
-export async function doPayment(userInfor: any) {
-  const {_id: userId, first_name, last_name, invoice, totalPrice, timeslot} = userInfor;
+interface PaymentRequest {
+  amount: number;
+  userId: string;
+  name: string;
+  invoiceId: string;
+  expiredAt?: number;
+}
+
+interface PaymentResponse {
+  checkoutUrl: string;
+}
+
+export async function doPayment(
+  userId: string,
+  invoiceId: string,
+  amount: number,
+  name: string
+): Promise<PaymentResponse> {
+  if (!userId || !invoiceId || !amount || !name) {
+    throw new Error(text["PaymentPage.message.error"]);
+  }
+
+  if (amount <= 0) {
+    throw new Error(text["PaymentPage.message.error.amount"]);
+  }
+
   try {
-    const data = {
-      amount: totalPrice,
-      userId: userId,
-      name: `${first_name} ${last_name}`,
-      idInvoice: invoice._id,
-      timeslot: timeslot,
+    // Set expiration time to 5 minutes from now
+    const expiredAt = Date.now() + 5 * 60 * 1000;
+
+    const data: PaymentRequest = {
+      amount,
+      userId,
+      name,
+      invoiceId,
+      expiredAt,
     };
-    const respone: any = await apiInstance.post(
+
+    const response = await apiInstance.post<PaymentResponse>(
       "/create-embedded-payment-link",
       data
-    );
-    return respone;
+    ) as unknown as PaymentResponse;
+
+    if (!response.checkoutUrl) {
+      throw new Error("Invalid payment response");
+    }
+
+    return response;
   } catch (error) {
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(`Payment failed: ${error.message}`);
+    }
+    throw new Error("Payment failed: Unknown error");
   }
 }
 

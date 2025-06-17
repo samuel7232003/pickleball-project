@@ -16,6 +16,7 @@ export default function Mapbox(props: any) {
     mapMainElement,
     initialCenter = [108.2208, 16.0471],
     initialZoom = 12,
+    placeholder = "Type to search",
   } = props;
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -109,7 +110,7 @@ export default function Mapbox(props: any) {
     }
   };
 
-  const handleCourtSelect = (lng: number, lat: number) => {
+  const handleCourtSelect = (lng: number, lat: number, id: string) => {
     if (mapInstance) {
       mapInstance.flyTo({ center: [lng, lat], zoom: 16 });
       const listMarker = mapInstance._markers;
@@ -145,6 +146,7 @@ export default function Mapbox(props: any) {
           onAddressSelect={handleAddressSelect}
           isSearchOnMap={false}
           handleCourtSelect={handleCourtSelect}
+          placeholder={placeholder}
         />
       </div>
     </div>
