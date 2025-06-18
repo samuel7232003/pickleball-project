@@ -89,6 +89,9 @@ const paymentPageSlice = createSlice({
     setIsViewMode: (state, action: PayloadAction<{ isViewMode: boolean }>) => {
       state.isViewMode = action.payload.isViewMode;
     },
+    setInvoiceStatus: (state, action: PayloadAction<{ paymentStatus: string }>) => {
+      state.invoice.paymentStatus = action.payload.paymentStatus;
+    },
   },
 });
 
@@ -99,6 +102,7 @@ export const {
   setError,
   setIsPaymentSuccess,
   setIsViewMode,
+  setInvoiceStatus,
 } = paymentPageSlice.actions;
 
 export const paymentPageReducer = paymentPageSlice.reducer;
@@ -141,10 +145,14 @@ export const getInitialData =
   };
 
 export const handlePaymentSuccess = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const { invoice } = getState().paymentPage;
     try {
-      // Add your payment success logic here
+      const response = await updateInvoiceService(invoice._id, invoiceStatus.PAID);
+      console.log(response);
+      dispatch(setIsPaymentSuccess({ isPaymentSuccess: true }));
       dispatch(paymentProcessing({ isPaymentProcessing: false }));
+      dispatch(setInvoiceStatus({ paymentStatus: invoiceStatus.PAID }));
     } catch (error) {
       dispatch(
         setError({

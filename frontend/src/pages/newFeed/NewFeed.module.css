@@ -1,0 +1,276 @@
+.main {
+  background-image: url("../../assets/images/background.png");
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  padding-top: 90px;
+  box-sizing: border-box;
+  position: relative;
+  overflow-y: auto;
+}
+
+.inner {
+  max-width: 700px;
+  margin: 0 auto;
+  backdrop-filter: blur(12px) saturate(180%);
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.postingArea {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 18px;
+  padding: 20px 18px 16px 18px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.postingAreaButtons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.postCard {
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  color: #222;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+
+.content {
+  font-size: 1.08rem;
+  color: #222;
+  opacity: 0.95;
+  margin-bottom: 6px;
+  white-space: pre-line;
+  line-height: 1.5;
+}
+
+.courtDetailEmbed {
+  margin-top: 8px;
+}
+
+.courtPreview {
+  display: flex;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #eee;
+  margin-top: 4px;
+  align-items: stretch;
+}
+
+.courtPreviewImg {
+  height: 200px;
+  width: 250px;
+  object-fit: cover;
+  border-radius: 12px 0 0 12px;
+}
+
+.courtPreviewInfo {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.courtPreviewName {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.courtPreviewLocation {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.courtPreviewDesc {
+  font-size: 13px;
+  color: #444;
+}
+
+.btnSubmit {
+  display: flex;
+  gap: 5px;
+  background: rgba(var(--color-success-rgb), 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  align-items: center;
+  padding: 10px 20px;
+  height: fit-content;
+  width: fit-content;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.btnSubmitAttach {
+  background: rgba(var(--color-default-rgb), 0.8);
+  color: black;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.btnSubmitAttach:hover {
+  background: rgba(var(--color-default-rgb), 0.9) !important;
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+  background: rgba(var(--color-success-rgb), 0.9);
+}
+
+.btnSubmitAttach p {
+  color: black !important;
+}
+
+.btnSubmit p {
+  color: var(--color-white);
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.btnSubmit figure {
+  height: 24px;
+}
+
+.btnSubmit figure img {
+  height: 100%;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.btnSubmit:hover img {
+  transform: rotate(360deg);
+}
+
+.postingArea textarea::placeholder {
+  font-family: inherit;
+  font-style: italic;
+  color: #888;
+  opacity: 1;
+}
+
+.contentClamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+  word-break: break-word;
+  font-size: 1.08rem;
+  line-height: 1.5;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalBox {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  padding: 28px 24px 20px 24px;
+  min-width: 340px;
+  max-width: 95vw;
+  height: 650px;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.modalClose {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #888;
+  cursor: pointer;
+  font-weight: 400;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s;
+}
+
+.modalClose:hover {
+  color: #22c55e;
+}
+
+.postCardButton {
+  background: none;
+  border: none;
+  color: var(--color-gray);
+  cursor: pointer;
+  font-size: 14px;
+  font-style: italic;
+}

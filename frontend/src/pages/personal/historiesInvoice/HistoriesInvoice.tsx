@@ -4,6 +4,7 @@ import text from "../../../util/text";
 import styles from "./HistoriesInvoice.module.css";
 import classNames from "classnames";
 import navigateToPage from "../../../config/navigate";
+import { pages } from "../../../router";
 
 const ListInvoice = (props: any) => {
   const { invoiceHistory, role, onCancel } = props;
@@ -30,8 +31,8 @@ const ListInvoice = (props: any) => {
           key={invoice.invoce._id}
           invoice={invoice.invoce}
           court={invoice.court}
-          onViewDetail={() => console.log("View detail", invoice.id)}
-          onPay={() => navigate(navigateToPage("PAYMENT", invoice.invoce._id))}
+          onViewDetail={() => navigate(navigateToPage(pages.PAYMENT_PAGE, invoice.invoce._id))}
+          onPay={() => navigate(navigateToPage(pages.PAYMENT_PAGE, invoice.invoce._id))}
           onCancel={handleCancel}
         /> 
       ))}
