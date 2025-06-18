@@ -100,10 +100,10 @@ const checkInvoiceStatusService = async () => {
 
 const getInvoiceByIdUserService = async (userId, role) => {
   if(role === "USER") { 
-    const invoice = await invoiceModel.find({ userId });
+    const invoice = await invoiceModel.find({ userId }).sort({ createdAt: -1 });
     return invoice;
   } else {
-    const invoice = await invoiceModel.find({ ownerId: userId, paymentStatus: 'paid' });
+    const invoice = await invoiceModel.find({ ownerId: userId, paymentStatus: 'paid' }).sort({ createdAt: -1 });
     return invoice;
   }
 };

@@ -249,3 +249,10 @@
 .countdownWarning {
   color: #ff4d4f;
 }
+
+.paymentSuccess {
+  font-size: 20px;
+  font-weight: var(--fontWeightBold);
+  color: var(--color-success);
+  text-align: center;
+}

@@ -196,7 +196,7 @@ export default function PaymentPage() {
               totalPrice={totalPrice}
             />
           </div>
-          {!isPaymentSuccess && !isViewMode && <div className={css.btnSubmitBlock}>
+          {!isPaymentSuccess && !isViewMode && invoice.paymentStatus !== "paid" && <div className={css.btnSubmitBlock}>
             <ButtonIcon
               onClick={handleGetPaymentLink}
               mainElement={css.btnSubmit}
@@ -205,6 +205,7 @@ export default function PaymentPage() {
               isDisabled={isPaymentProcessing}
             />
           </div>}
+          {invoice.paymentStatus === "paid" && <p className={css.paymentSuccess}>{text["PaymentPage.paymentSuccess"]}</p>}
         </div>
         <div className={isInitialized ? css.right : css.rightHidden}>
           {isInitialized && (
