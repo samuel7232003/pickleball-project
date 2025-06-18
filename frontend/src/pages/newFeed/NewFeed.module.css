@@ -75,6 +75,7 @@
   border-radius: 50%;
   object-fit: cover;
   background: #eee;
+  cursor: pointer;
 }
 
 .content {
@@ -88,6 +89,7 @@
 
 .courtDetailEmbed {
   margin-top: 8px;
+  cursor: pointer;
 }
 
 .courtPreview {

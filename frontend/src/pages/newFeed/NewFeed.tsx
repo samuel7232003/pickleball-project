@@ -3,7 +3,7 @@ import styles from "./NewFeed.module.css";
 import css from "../detailCourt/DetailCourt.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import SearchBox from "../../components/mapbox/SearchBox";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { pages } from "../../router";
 import { createPost, fetchPosts, fetchSearchCourt, setCourtModal } from "./NewFeed.duck";
 import { AppDispatch } from "../../redux/store";
@@ -12,6 +12,8 @@ import { getIcon, getImageCourt, iconsName } from "../../util/getAssets";
 import text from "../../util/text";
 import dayjs from "dayjs";
 import Title from "../../components/titles/Title";
+import navigateToPage from "../../config/navigate";
+import { message } from "antd";
 // import { fetchPosts, createPost } from "./NewFeed.duck"; // logic to be implemented
 // import DetailCourt from "../detailCourt/DetailCourt";
 
@@ -56,7 +58,9 @@ const CourtModal = (props: any) => {
 function PostCard({ post }: { post: any }) {
   const { userData, createdAt, content, courtData } = post;
   const [expanded, setExpanded] = React.useState(false);
-
+  const navigate = useNavigate();
+  const { _id: userId } = useSelector((state: any) => state.user.user);
+  const [messageApi, contextHolder] = message.useMessage();
   // Utility to check if content is more than 4 lines (approximate by char count)
   // For a more robust solution, measure rendered height, but here we use a simple heuristic
   const LINE_CHAR_LIMIT = 60; // adjust as needed for your font/width
@@ -64,11 +68,28 @@ function PostCard({ post }: { post: any }) {
   const maxChars = LINE_CHAR_LIMIT * MAX_LINES;
   const isLong = content.length > maxChars;
 
+  const handleViewProfile = () => {
+    if(!userId) {
+      messageApi.error(text["NewFeed.errorLogin"]);
+    } else {
+      navigate(navigateToPage(pages.PERSONAL_PAGE, userData._id));
+    }
+  }
+
+  const handleViewCourt = () => {
+    if(!courtData) {
+      messageApi.error(text["NewFeed.errorLogin"]);
+    } else {
+      navigate(navigateToPage(pages.DETAIL_COURT_PAGE, courtData._id));
+    }
+  }
+
   return (
     <div className={styles.postCard}>
-      {userData && <div className={styles.userInfo}>
-        <img src={userData.avatar} alt="avatar" className={styles.avatar} />
-        <div>
+      {contextHolder}
+      {userData && <div className={styles.userInfo} >
+        <img src={userData.avatar} alt="avatar" className={styles.avatar} onClick={handleViewProfile}/>
+        <div onClick={handleViewProfile} style={{ cursor: "pointer" }}>
           <div style={{ fontWeight: 600, marginBottom: 5 }}>{userData.first_name} {userData.last_name}</div>
           <div style={{ fontSize: 13, color: "#888" }}>{text["PersonalPage.role." + userData.role as keyof typeof text]}</div>
         </div>
@@ -88,7 +109,7 @@ function PostCard({ post }: { post: any }) {
           {text["NewFeed.buttonExpand"]}
         </button>
       )}
-      <div className={styles.courtDetailEmbed}>
+      <div className={styles.courtDetailEmbed} onClick={handleViewCourt}>
         <CourtModal courtData={courtData} />
       </div>
     </div>
@@ -100,6 +121,8 @@ export default function NewFeed() {
   const { courtModal, posts, loading, hasMore, page, limit } = useSelector((state: any) => state.newFeed);
   const [content, setContent] = useState("");
   const { setCurPage }: any = useOutletContext();
+  const { _id: userId } = useSelector((state: any) => state.user.user);
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     setCurPage(pages.NEW_FEED_PAGE);
@@ -124,6 +147,10 @@ export default function NewFeed() {
   const [showCourtModal, setShowCourtModal] = useState(false);
 
   const handlePost = () => {
+    if(!userId) {
+      messageApi.error(text["NewFeed.errorLogin"]);
+      return;
+    }
     dispatch(createPost({
       content,
       courtId: courtModal?._id,
@@ -142,6 +169,7 @@ export default function NewFeed() {
 
   return (
     <main className={styles.main}>
+      {contextHolder}
       <div className={styles.inner}>
         {/* Posting Area */}
         <div className={styles.postingArea}>

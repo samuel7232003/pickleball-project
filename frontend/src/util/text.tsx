@@ -128,7 +128,7 @@ export default {
   "PaymentPage.message.timeout": "Thanh toán đã hết hạn!",
   "PaymentPage.message.error": "Thanh toán thất bại!",
   "PaymentPage.message.error.amount": "Số tiền thanh toán phải lớn hơn 0!",
-  "PaymentPage.paymentSuccess": "Bạn đã thanh toán cho hoá đơn này!",
+  "PaymentPage.paymentSuccess": "Đã thanh toán cho hoá đơn này!",
   "Countdown.title": "Thời gian thanh toán còn lại",
   "Countdown.minutes": "phút",
   "Countdown.seconds": "giây",
@@ -147,4 +147,5 @@ export default {
   "NewFeed.buttonExpand": "Xem thêm",
   "NewFeed.loading": "Đang tải...",
   "NewFeed.searchCourt": "Tìm kiếm sân",
+  "NewFeed.errorLogin": "Vui lòng đăng nhập để xem chi tiết!",
 }
