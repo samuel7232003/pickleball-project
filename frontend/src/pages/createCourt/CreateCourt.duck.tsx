@@ -92,7 +92,7 @@ export const onChangeImages = (images: any[]) => ({
 export const onSubmitRequest = () => ({
   type: ON_SUBMIT_REQUEST,
 });
-
+ 
 export const onSubmitSuccess = (successMessage: string) => ({
   type: ON_SUBMIT_SUCCESS,
   payload: successMessage,
@@ -120,7 +120,8 @@ export const onSetCourt = (court: any) => ({
 export const getCourt = (id: string) => async (dispatch: any) => {
   const response = await getCourtByIdService(id);
   if(response){
-    const { name, location, lat, lng, description, number, images, timeslot: listTimeslot } = response;
+    const { name, location, lat, lng, description, number, images, timeslot } = response;
+    const listTimeslot = timeslot ? timeslot : [];
     dispatch(onSetCourt({ name, location, lat, lng, description, number, images, listTimeslot }));
   }
 }
@@ -130,12 +131,12 @@ export const handleSubmit = (ownerId: string, courtId?: string) => async(dispatc
   const { name, location, lat, lng, description, number, images, listTimeslot } = getState().createCourt;
   if(!name || !location || !lat || !lng || !description || !number || !images || !listTimeslot) {
     dispatch(onSubmitFailure(text["CreateCourt.errorNotEnough"]));
-    return;
+    return; 
   }
   const courtData = { name, location, lat, lng, description, number, images, listTimeslot };
   try {
     let response;
-    if (courtId) {
+    if (courtId && courtId !== "new") {
       response = await updateCourtService(courtId, courtData);
       if (response) {
         dispatch(onSubmitSuccess(text["CreateCourt.successUpdateCourt"]));
