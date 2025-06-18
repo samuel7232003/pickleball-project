@@ -146,11 +146,6 @@
 
 /* btn submit */
 
-.btnSubmitBlock {
-  display: flex;
-  justify-content: end;
-}
-
 .btnSubmit {
   display: flex;
   gap: 5px;

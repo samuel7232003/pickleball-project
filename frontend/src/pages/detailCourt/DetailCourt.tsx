@@ -58,7 +58,7 @@ export default function DetailCourt() {
     dateChoiced,
     isLoading,
     canSubmit,
-    errorMessage,
+    errorMessage
   } = useAppSelector((state: any) => state.detailCourt);
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();

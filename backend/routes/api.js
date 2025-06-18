@@ -36,6 +36,7 @@ const {
 } = require("../controllers/payosController");
 const { getStatistics } = require("../controllers/statisticsController");
 const { getCalendarEvents } = require("../controllers/calendarController");
+const { createPost, getPosts, getPost } = require("../controllers/postController");
 
 const routerAPI = express.Router();
 
@@ -50,6 +51,9 @@ routerAPI.get("/getTimeslot", getTimeslotCourt);
 
 routerAPI.post("/create-embedded-payment-link", createPaymaentUrl);
 routerAPI.post("/payment-status", onStatusPayment);
+
+routerAPI.get("/getPosts", getPosts);
+routerAPI.get("/getPost", getPost);
 
 routerAPI.all("*", auth);
 
@@ -79,5 +83,8 @@ routerAPI.get("/getInvoiceByIdUser", getInvoiceByIdUser);
 // Statistics routes
 routerAPI.get("/manage/statistics", getStatistics);
 routerAPI.get("/manage/events", getCalendarEvents);
+
+// Post routes
+routerAPI.post("/createPost", createPost);
 
 module.exports = routerAPI;

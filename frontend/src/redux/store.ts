@@ -9,6 +9,7 @@ import { paymentPageReducer } from "../pages/paymentPage/PaymentPage.duck";
 import { personalPageReducer } from "../pages/personal/PersonalPage.duck";
 import { adminPageReducer } from "../pages/admin/AdminPage.duck";
 import { managePageReducer } from "../pages/managePage/ManagePage.duck";
+import { newFeedReducer } from "../pages/newFeed/NewFeed.duck";
 
 export const store = configureStore({
     reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
         user: userSlice.reducer,
         adminPage: adminPageReducer,
         managePage: managePageReducer,
+        newFeed: newFeedReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),
 })

@@ -32,6 +32,7 @@ import user from "../assets/icons/user-profile-03.png";
 import defaultImage from "../assets/images/default.png";
 import back from "../assets/icons/chevron-left.png";
 import accountInfo from "../assets/icons/file-lock-03.png";
+import attach from "../assets/icons/link-angled.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -57,6 +58,7 @@ export const iconsName = {
   USER: "user",
   BACK: "back",
   ACCOUNT_INFO: "accountInfo",
+  ATTACH: "attach",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -90,6 +92,7 @@ const iconMap: Record<IconName, string> = {
   user,
   back,
   accountInfo,
+  attach,
 };
 
 const iconPreMap: Record<IconName, string> = {
@@ -147,6 +150,5 @@ export function getImageAvatar(urlImg: string|undefined){
 }
 
 export function getImageCourt(urlImg: string|undefined){
-  console.log(urlImg);
   return !urlImg ? defaultImage : urlImg;
 }
