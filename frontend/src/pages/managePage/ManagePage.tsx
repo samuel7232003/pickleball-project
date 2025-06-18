@@ -17,7 +17,7 @@ interface Event {
   title: string;
   date: string;
   time: string;
-  status: string;
+  paymentStatus: string;
   amount: number;
   courtName: string;
   userName: string;
@@ -108,7 +108,7 @@ export default function ManagePage() {
               return dayEvents.length > 0 ? (
                 <div className={styles.eventContainer}>
                   {dayEvents.map((event: Event) => {
-                    const badgeProps = getStatusBadgeProps(event.status);
+                    const badgeProps = getStatusBadgeProps(event.paymentStatus);
                     return (
                       <Tooltip 
                         key={event._id} 
