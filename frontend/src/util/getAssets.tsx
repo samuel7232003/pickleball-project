@@ -33,6 +33,7 @@ import defaultImage from "../assets/images/default.png";
 import back from "../assets/icons/chevron-left.png";
 import accountInfo from "../assets/icons/file-lock-03.png";
 import attach from "../assets/icons/link-angled.png";
+import money from "../assets/icons/coin-hand.png";
 
 // <<<<<<<<<< icon >>>>>>>>>>>>>>
 
@@ -57,8 +58,9 @@ export const iconsName = {
   RECEIPT: "receipt",
   USER: "user",
   BACK: "back",
-  ACCOUNT_INFO: "accountInfo",
+  ACCOUNT_INFO: "accountInfo",  
   ATTACH: "attach",
+  MONEY: "money",
 } as const;
 
 type IconName = (typeof iconsName)[keyof typeof iconsName];
@@ -93,6 +95,7 @@ const iconMap: Record<IconName, string> = {
   back,
   accountInfo,
   attach,
+  money,
 };
 
 const iconPreMap: Record<IconName, string> = {

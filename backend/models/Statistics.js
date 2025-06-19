@@ -22,6 +22,10 @@ const statisticsSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  totalPayout: {
+    type: Number,
+    default: 0,
+  },
   lastUpdated: {
     type: Date,
     default: Date.now,

@@ -4,26 +4,36 @@ import navigateToPage from "../../config/navigate";
 import { pages } from "../../router";
 import styles from "./AdminPage.module.css";
 import { useEffect, useState } from "react";
+import { message } from "antd";
 import { 
   initializeAdminPage,
   banAccount,
+  updateRequestStatusAction,
   selectLoading,
   selectError,
+  selectRequests,
+  selectLoadingRequests,
+  selectRequestsError,
   User,
   Owner,
-  Court
+  Court,
+  RequestWithOwner
 } from "./AdminPage.duck";
 import { roles } from "../../common/constants";
+import { REQUEST_STATUS } from "../../services/request";
 import text from "../../util/text";
 
 export default function AdminPage() {
   const { role } = useAppSelector((state: any) => state.user.user);
   const { users, owners, courts } = useAppSelector((state: any) => state.adminPage);
+  const requests = useAppSelector(selectRequests);
   const loading = useAppSelector(selectLoading);
   const error = useAppSelector(selectError);
+  const isLoadingRequests = useAppSelector(selectLoadingRequests);
+  const requestsError = useAppSelector(selectRequestsError);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [selectedSection, setSelectedSection] = useState('users');
+  const [selectedSection, setSelectedSection] = useState('requests');
 
   useEffect(() => {
     if(role !== roles.ADMIN){
@@ -38,6 +48,20 @@ export default function AdminPage() {
       return;
     }
     dispatch(banAccount(id, isCurrentlyBanned));
+  };
+
+  const handleUpdateRequestStatus = async (requestId: string, status: string) => {
+    const actionText = status === REQUEST_STATUS.APPROVE ? 'duyệt' : 'từ chối';
+    if (!window.confirm(`Bạn có thực sự muốn ${actionText} yêu cầu này?`)) {
+      return;
+    }
+    try {
+      await dispatch(updateRequestStatusAction(requestId, status as any));
+      message.success(`Đã ${actionText} yêu cầu thành công!`);
+    } catch (error) {
+      console.error('Failed to update request status:', error);
+      message.error(`Không thể ${actionText} yêu cầu. Vui lòng thử lại.`);
+    }
   };
 
   const getFullName = (user: User | Owner) => {
@@ -56,6 +80,50 @@ export default function AdminPage() {
     navigate(navigateToPage(pages.DETAIL_COURT_PAGE, court._id));
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case REQUEST_STATUS.PENDING:
+        return 'processing';
+      case REQUEST_STATUS.APPROVE:
+        return 'success';
+      case REQUEST_STATUS.DENINE:
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case REQUEST_STATUS.PENDING:
+        return 'Chờ xét duyệt';
+      case REQUEST_STATUS.APPROVE:
+        return 'Đã duyệt';
+      case REQUEST_STATUS.DENINE:
+        return 'Từ chối';
+      default:
+        return status;
+    }
+  };
+
+  const formatDate = (dateString: string | Date) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(amount);
+  };
+
   return (
     <main className={styles.adminMain}>
       <div className={styles.adminContainer}>
@@ -68,6 +136,7 @@ export default function AdminPage() {
             <option value="users">{text["AdminPage.users"]}</option>
             <option value="owners">{text["AdminPage.owners"]}</option>
             <option value="courts">{text["AdminPage.courts"]}</option>
+            <option value="requests">Yêu cầu rút tiền</option>
           </select>
         </div>
 
@@ -167,6 +236,63 @@ export default function AdminPage() {
                 </div>
               ))}
             </div>
+          </section>
+        )}
+
+        {/* Requests Section */}
+        {selectedSection === 'requests' && (
+          <section className={styles.section}>
+            <h2 className={styles.sectionTitle}>Yêu cầu rút tiền</h2>
+            {isLoadingRequests ? (
+              <div className={styles.loadingContainer}>
+                <p>Đang tải danh sách yêu cầu...</p>
+              </div>
+            ) : requests.length === 0 ? (
+              <div className={styles.emptyContainer}>
+                <p>Chưa có yêu cầu rút tiền nào</p>
+              </div>
+            ) : (
+              <div className={styles.listContainer}>
+                {requests.map((request: RequestWithOwner) => (
+                  <div key={request._id} className={styles.itemCard}>
+                    <div className={styles.itemInfo}>
+                      <div className={styles.itemName}>
+                        {request.ownerName}
+                        <span className={`${styles.statusBadge} ${styles[`status${request.status}`]}`}>
+                          {getStatusText(request.status)}
+                        </span>
+                      </div>
+                      <div className={styles.itemDetails}>
+                        <div>Ngân hàng: {request.bankName}</div>
+                        <div>Số tài khoản: {request.accountNumber}</div>
+                        <div>Chủ tài khoản: {request.accountHolderName}</div>
+                        <div>Số tiền: <strong>{formatAmount(request.amount)}</strong></div>
+                        <div>Thời gian tạo: {formatDate(request.createdAt || '')}</div>
+                        {request.updatedAt && request.updatedAt !== request.createdAt && (
+                          <div>Cập nhật lần cuối: {formatDate(request.updatedAt)}</div>
+                        )}
+                      </div>
+                    </div>
+                    {request.status === REQUEST_STATUS.PENDING && (
+                      <div className={styles.buttonGroup}>
+                        <button
+                          className={`${styles.button} ${styles.approveButton}`}
+                          onClick={() => handleUpdateRequestStatus(request._id!, REQUEST_STATUS.APPROVE)}
+                        >
+                          Duyệt
+                        </button>
+                        <button
+                          className={`${styles.button} ${styles.denyButton}`}
+                          onClick={() => handleUpdateRequestStatus(request._id!, REQUEST_STATUS.DENINE)}
+                        >
+                          Từ chối
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </div>

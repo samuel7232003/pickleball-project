@@ -1,5 +1,6 @@
 import { getAllCourtService } from '../../services/court';
 import { getAllUserService, getAllOwnerService, updateUserProfileService } from '../../services/account';
+import { getRequestsService, updateRequestService, REQUEST_STATUS, Request, RequestStatus } from '../../services/request';
 import { delay } from "../../common/functions";
 import { roles } from '../../common/constants';
 
@@ -29,12 +30,19 @@ export interface Court {
   };
 }
 
+export interface RequestWithOwner extends Request {
+  ownerName?: string;
+}
+
 interface AdminState {
   users: User[];
   owners: Owner[];
   courts: Court[];
+  requests: RequestWithOwner[];
   loading: boolean;
   error: string | null;
+  isLoadingRequests: boolean;
+  requestsError: string | null;
 }
 
 // Initial State
@@ -42,8 +50,11 @@ const initialState: AdminState = {
   users: [],
   owners: [],
   courts: [],
+  requests: [],
   loading: false,
   error: null,
+  isLoadingRequests: false,
+  requestsError: null,
 };
 
 // Action Types
@@ -54,6 +65,10 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR';
 export const RESET_STATE = 'RESET_STATE';
 export const UPDATE_ACCOUNT_STATUS = 'UPDATE_ACCOUNT_STATUS';
+export const SET_REQUESTS = 'SET_REQUESTS';
+export const SET_LOADING_REQUESTS = 'SET_LOADING_REQUESTS';
+export const SET_REQUESTS_ERROR = 'SET_REQUESTS_ERROR';
+export const UPDATE_REQUEST_STATUS = 'UPDATE_REQUEST_STATUS';
 
 // Action Creators
 export const setUsers = (users: User[]) => ({
@@ -81,6 +96,21 @@ export const setError = (error: string | null) => ({
   payload: error,
 });
 
+export const setRequests = (requests: RequestWithOwner[]) => ({
+  type: SET_REQUESTS,
+  payload: requests,
+});
+
+export const setLoadingRequests = (isLoading: boolean) => ({
+  type: SET_LOADING_REQUESTS,
+  payload: isLoading,
+});
+
+export const setRequestsError = (error: string | null) => ({
+  type: SET_REQUESTS_ERROR,
+  payload: error,
+});
+
 export const resetState = () => ({
   type: RESET_STATE,
 });
@@ -88,6 +118,11 @@ export const resetState = () => ({
 export const updateAccountStatus = (accountId: string, isBanned: boolean) => ({
   type: UPDATE_ACCOUNT_STATUS,
   payload: { accountId, isBanned },
+});
+
+export const updateRequestStatus = (requestId: string, status: RequestStatus) => ({
+  type: UPDATE_REQUEST_STATUS,
+  payload: { requestId, status },
 });
 
 // Thunk Actions
@@ -156,6 +191,60 @@ export const fetchCourts = () => async (dispatch: any) => {
   }
 };
 
+export const fetchRequests = () => async (dispatch: any) => {
+  try {
+    dispatch(setLoadingRequests(true));
+    dispatch(setRequestsError(null));
+
+    const response = await getRequestsService();
+    const requests = Array.isArray(response) ? response : (response?.data || []);
+    
+    // Get owners to add owner names to requests
+    const ownersResponse = await getAllOwnerService();
+    const owners = ownersResponse || [];
+    
+    const requestsWithOwnerNames = requests.map((request: Request) => {
+      const owner = owners.find((owner: User) => owner._id === request.ownerId);
+      return {
+        ...request,
+        ownerName: owner ? `${owner.first_name} ${owner.last_name}`.trim() || owner.username : 'Unknown Owner'
+      };
+    });
+
+    dispatch(setRequests(requestsWithOwnerNames));
+  } catch (error: any) {
+    const errorMessage = error.message || "Failed to fetch requests";
+    dispatch(setRequestsError(errorMessage));
+  } finally {
+    dispatch(setLoadingRequests(false));
+  }
+};
+
+export const updateRequestStatusAction = (requestId: string, status: RequestStatus) => async (dispatch: any) => {
+  try {
+    dispatch(setLoadingRequests(true));
+    dispatch(setRequestsError(null));
+
+    await updateRequestService(requestId, { status });
+    
+    // Update the request status in local state
+    dispatch(updateRequestStatus(requestId, status));
+    
+    // Refresh the requests list
+    dispatch(fetchRequests());
+    
+    // If request was approved, we might want to refresh other data
+    // Note: Statistics are per-owner, so we don't need to refresh them here
+    // as they're managed on the owner's manage page
+  } catch (error: any) {
+    const errorMessage = error.message || "Failed to update request status";
+    dispatch(setRequestsError(errorMessage));
+    throw error;
+  } finally {
+    dispatch(setLoadingRequests(false));
+  }
+};
+
 export const initializeAdminPage = () => async (dispatch: any) => {
   dispatch(setLoading(true));
   dispatch(setError(null));
@@ -164,7 +253,8 @@ export const initializeAdminPage = () => async (dispatch: any) => {
     await Promise.all([
       dispatch(fetchUsers()),
       dispatch(fetchOwners()),
-      dispatch(fetchCourts())
+      dispatch(fetchCourts()),
+      dispatch(fetchRequests())
     ]);
   } catch (error: any) {
     dispatch(setError(error.message || 'Failed to initialize admin page'));
@@ -204,8 +294,12 @@ export const adminPageReducer = (state = initialState, action: any) => {
       return { ...state, loading: action.payload };
     case SET_ERROR:
       return { ...state, error: action.payload };
-    case RESET_STATE:
-      return initialState;
+    case SET_REQUESTS:
+      return { ...state, requests: action.payload };
+    case SET_LOADING_REQUESTS:
+      return { ...state, isLoadingRequests: action.payload };
+    case SET_REQUESTS_ERROR:
+      return { ...state, requestsError: action.payload };
     case UPDATE_ACCOUNT_STATUS:
       return {
         ...state,
@@ -218,8 +312,19 @@ export const adminPageReducer = (state = initialState, action: any) => {
           owner._id === action.payload.accountId 
             ? { ...owner, isBanned: action.payload.isBanned }
             : owner
-        ),
+        )
       };
+    case UPDATE_REQUEST_STATUS:
+      return {
+        ...state,
+        requests: state.requests.map(request => 
+          request._id === action.payload.requestId 
+            ? { ...request, status: action.payload.status, updatedAt: new Date() }
+            : request
+        )
+      };
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }
@@ -229,7 +334,10 @@ export const adminPageReducer = (state = initialState, action: any) => {
 export const selectUsers = (state: { adminPage: AdminState }) => state.adminPage.users;
 export const selectOwners = (state: { adminPage: AdminState }) => state.adminPage.owners;
 export const selectCourts = (state: { adminPage: AdminState }) => state.adminPage.courts;
+export const selectRequests = (state: { adminPage: AdminState }) => state.adminPage.requests;
 export const selectLoading = (state: { adminPage: AdminState }) => state.adminPage.loading;
 export const selectError = (state: { adminPage: AdminState }) => state.adminPage.error;
+export const selectLoadingRequests = (state: { adminPage: AdminState }) => state.adminPage.isLoadingRequests;
+export const selectRequestsError = (state: { adminPage: AdminState }) => state.adminPage.requestsError;
 
 export default adminPageReducer; 
