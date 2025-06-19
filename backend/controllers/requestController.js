@@ -59,51 +59,9 @@ const updateRequest = async (req, res) => {
       return res.status(404).json({ message: "Request not found" });
     }
 
-    // If request was approved, update the owner's statistics
-    if (status === STATUS.APPROVE) {
-      try {
-        // Use upsert to create statistics record if it doesn't exist
-        await Statistics.findOneAndUpdate(
-          { ownerId: updatedRequest.ownerId },
-          {
-            $inc: { totalPayout: updatedRequest.amount },
-            lastUpdated: new Date(),
-          },
-          { upsert: true, new: true }
-        );
-
-        console.log(
-          `Updated totalPayout for owner ${updatedRequest.ownerId}: +${updatedRequest.amount}`
-        );
-      } catch (statsError) {
-        console.error("Error updating statistics:", statsError);
-        // Don't fail the request update if statistics update fails
-      }
-    }
-
-    // If request was denied and was previously approved, subtract the amount
-    if (status === STATUS.DENINE && originalRequest.status === STATUS.APPROVE) {
-      try {
-        await Statistics.findOneAndUpdate(
-          { ownerId: updatedRequest.ownerId },
-          {
-            $inc: { totalPayout: -updatedRequest.amount },
-            lastUpdated: new Date(),
-          },
-          { upsert: true, new: true }
-        );
-
-        console.log(
-          `Reverted totalPayout for owner ${updatedRequest.ownerId}: -${updatedRequest.amount}`
-        );
-      } catch (statsError) {
-        console.error(
-          "Error updating statistics for denied request:",
-          statsError
-        );
-        // Don't fail the request update if statistics update fails
-      }
-    }
+    // Note: totalPayout is calculated dynamically in statistics controller
+    // as the sum of all requests with status "APPROVE"
+    console.log(`Request ${requestId} status updated to: ${status}`);
 
     res.status(200).json(updatedRequest);
   } catch (error) {
