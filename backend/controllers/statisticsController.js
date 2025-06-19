@@ -1,7 +1,8 @@
 const Statistics = require("../models/Statistics");
-const courtModel  = require("../models/Court");
+const courtModel = require("../models/Court");
 const accountModel = require("../models/Account");
 const invoiceModel = require("../models/Invoice");
+const Request = require("../models/Request");
 
 const getStatistics = async (req, res) => {
   const { _id: ownerId } = req.query;
@@ -14,30 +15,49 @@ const getStatistics = async (req, res) => {
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [totalCourts, totalUsers, activeBookings, monthlyRevenue] =
-      await Promise.all([
-        courtModel.countDocuments({ ownerId }),
-        accountModel.countDocuments({ role: "USER" }),
-        invoiceModel.countDocuments({
-          ownerId, // Only count bookings for this owner
-          paymentStatus: { $in: ["waiting", "paid"] },
-        }),
-        invoiceModel.aggregate([
-          {
-            $match: {
-              ownerId,
-              paymentStatus: "paid",
-              createdAt: { $gte: firstDayOfMonth },
-            },
+    const [
+      totalCourts,
+      totalUsers,
+      activeBookings,
+      monthlyRevenue,
+      totalPayout,
+    ] = await Promise.all([
+      courtModel.countDocuments({ ownerId }),
+      accountModel.countDocuments({ role: "USER" }),
+      invoiceModel.countDocuments({
+        ownerId, // Only count bookings for this owner
+        paymentStatus: { $in: ["waiting", "paid"] },
+      }),
+      invoiceModel.aggregate([
+        {
+          $match: {
+            ownerId,
+            paymentStatus: "paid",
+            createdAt: { $gte: firstDayOfMonth },
           },
-          {
-            $group: {
-              _id: null,
-              total: { $sum: "$amount" },
-            },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amount" },
           },
-        ]),
-      ]);
+        },
+      ]),
+      Request.aggregate([
+        {
+          $match: {
+            ownerId,
+            status: "APPROVE",
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$amount" },
+          },
+        },
+      ]),
+    ]);
 
     const statistics = {
       ownerId,
@@ -45,6 +65,7 @@ const getStatistics = async (req, res) => {
       totalUsers,
       activeBookings,
       monthlyRevenue: monthlyRevenue[0]?.total || 0,
+      totalPayout: totalPayout[0]?.total || 0,
       lastUpdated: now,
     };
 
@@ -61,7 +82,6 @@ const getStatistics = async (req, res) => {
     res.status(500).json({ message: "Error fetching statistics" });
   }
 };
-
 
 module.exports = {
   getStatistics,

@@ -76,9 +76,21 @@
 }
 
 .itemDetails {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.itemDetails div {
+  line-height: 1.4;
+}
+
+.itemDetails strong {
+  color: #1890ff;
+  font-weight: 600;
 }
 
 .buttonGroup {
@@ -176,4 +188,95 @@
 .select option {
   background: #764ba2;
   color: white;
+}
+
+/* Requests Section Styles */
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #8c8c8c;
+}
+
+.emptyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #8c8c8c;
+  font-style: italic;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 8px;
+  text-transform: uppercase;
+}
+
+.statusPENDING {
+  background-color: #fff7e6;
+  color: #fa8c16;
+  border: 1px solid #ffd591;
+}
+
+.statusAPPROVE {
+  background-color: #f6ffed;
+  color: #52c41a;
+  border: 1px solid #b7eb8f;
+}
+
+.statusDENINE {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+  border: 1px solid #ffccc7;
+}
+
+.approveButton {
+  background-color: #52c41a;
+  color: white;
+  border: 1px solid #52c41a;
+}
+
+.approveButton:hover {
+  background-color: #389e0d;
+  border-color: #389e0d;
+}
+
+.denyButton {
+  background-color: #ff4d4f;
+  color: white;
+  border: 1px solid #ff4d4f;
+}
+
+.denyButton:hover {
+  background-color: #cf1322;
+  border-color: #cf1322;
+}
+
+/* Responsive adjustments for requests */
+@media (max-width: 768px) {
+  .itemDetails {
+    font-size: 12px;
+  }
+
+  .statusBadge {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .approveButton,
+  .denyButton {
+    width: 100%;
+    padding: 8px 12px;
+  }
 }

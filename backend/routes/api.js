@@ -36,7 +36,16 @@ const {
 } = require("../controllers/payosController");
 const { getStatistics } = require("../controllers/statisticsController");
 const { getCalendarEvents } = require("../controllers/calendarController");
-const { createPost, getPosts, getPost } = require("../controllers/postController");
+const {
+  createPost,
+  getPosts,
+  getPost,
+} = require("../controllers/postController");
+const {
+  createRequest,
+  getRequests,
+  updateRequest,
+} = require("../controllers/requestController");
 
 const routerAPI = express.Router();
 
@@ -86,5 +95,10 @@ routerAPI.get("/manage/events", getCalendarEvents);
 
 // Post routes
 routerAPI.post("/createPost", createPost);
+
+// Request routes
+routerAPI.post("/createRequest", createRequest);
+routerAPI.get("/getRequests", getRequests);
+routerAPI.put("/updateRequest/:requestId", updateRequest);
 
 module.exports = routerAPI;
