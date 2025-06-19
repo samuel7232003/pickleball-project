@@ -115,7 +115,8 @@ export const createPost = (postData: any) => async (dispatch: any, getState: any
   try {
     const response: any = await createPostService({content, courtId, userId});
     dispatch(setCourtModal(false));
-    return dispatch(addPost(response));
+
+    fetchPosts(1, 10)(dispatch, getState);
   } catch (error) {
     console.log(error)
     return null
