@@ -12,7 +12,8 @@ const createAccountService = async (
   username,
   password,
   first_name,
-  last_name
+  last_name,
+  role
 ) => {
   try {
     const user = await accountModel.findOne({ username });
@@ -26,6 +27,7 @@ const createAccountService = async (
       password: hashPassword,
       first_name: first_name,
       last_name: last_name,
+      role: role,
     });
     return { EC: 0 };
   } catch (error) {
