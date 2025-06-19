@@ -3,6 +3,7 @@ const courtModel = require("../models/Court");
 const accountModel = require("../models/Account");
 const invoiceModel = require("../models/Invoice");
 const Request = require("../models/Request");
+const { Types } = require("mongoose");
 
 const getStatistics = async (req, res) => {
   const { _id: ownerId } = req.query;
@@ -15,49 +16,51 @@ const getStatistics = async (req, res) => {
     const now = new Date();
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-    const [
-      totalCourts,
-      totalUsers,
-      activeBookings,
-      monthlyRevenue,
-      totalPayout,
-    ] = await Promise.all([
-      courtModel.countDocuments({ ownerId }),
-      accountModel.countDocuments({ role: "USER" }),
-      invoiceModel.countDocuments({
-        ownerId, // Only count bookings for this owner
-        paymentStatus: { $in: ["waiting", "paid"] },
-      }),
-      invoiceModel.aggregate([
-        {
-          $match: {
-            ownerId,
-            paymentStatus: "paid",
-            createdAt: { $gte: firstDayOfMonth },
-          },
+    const ownerObjectId = new Types.ObjectId(ownerId);
+
+    // Calculate totalPayout: sum of all approved requests for this owner
+    const totalPayoutResult = await Request.aggregate([
+      {
+        $match: {
+          ownerId: ownerObjectId,
+          status: "APPROVE",
+        }, 
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$amount" },
         },
-        {
-          $group: {
-            _id: null,
-            total: { $sum: "$amount" },
-          },
-        },
-      ]),
-      Request.aggregate([
-        {
-          $match: {
-            ownerId,
-            status: "APPROVE",
-          },
-        },
-        {
-          $group: {
-            _id: null,
-            total: { $sum: "$amount" },
-          },
-        },
-      ]),
+      },
     ]);
+
+    const totalPayout =
+      totalPayoutResult.length > 0 ? totalPayoutResult[0].total : 0;
+
+    const [totalCourts, totalUsers, activeBookings, monthlyRevenue] =
+      await Promise.all([
+        courtModel.countDocuments({ ownerId }),
+        accountModel.countDocuments({ role: "USER" }),
+        invoiceModel.countDocuments({
+          ownerId, // Only count bookings for this owner
+          paymentStatus: { $in: ["waiting", "paid"] },
+        }),
+        invoiceModel.aggregate([
+          {
+            $match: {
+              ownerId,
+              paymentStatus: "paid",
+              createdAt: { $gte: firstDayOfMonth },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$amount" },
+            },
+          },
+        ]),
+      ]);
 
     const statistics = {
       ownerId,
@@ -65,7 +68,7 @@ const getStatistics = async (req, res) => {
       totalUsers,
       activeBookings,
       monthlyRevenue: monthlyRevenue[0]?.total || 0,
-      totalPayout: totalPayout[0]?.total || 0,
+      totalPayout: totalPayout,
       lastUpdated: now,
     };
 
@@ -74,6 +77,10 @@ const getStatistics = async (req, res) => {
       { ownerId }, // Ensure per-owner stats
       statistics,
       { upsert: true, new: true }
+    );
+
+    console.log(
+      `Statistics calculated for owner ${ownerId}: totalPayout = ${totalPayout}`
     );
 
     res.status(200).json(statistics);
