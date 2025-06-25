@@ -22,6 +22,7 @@ const {
   createTimeslotCourt,
   getTimeslotCourt,
   getTimeslotByCourtId,
+  updateTimeslotOfCourt,
 } = require("../controllers/timeslotController");
 const { getImageCourt } = require("../controllers/imageCourtController");
 const {
@@ -85,6 +86,7 @@ routerAPI.get("/getListCourt", getCourt);
 
 routerAPI.post("/createTimeslot", createTimeslotCourt);
 routerAPI.get("/getTimeslotByCourtId", getTimeslotByCourtId);
+routerAPI.post("/updateTimeslotOfCourt", updateTimeslotOfCourt);
 
 routerAPI.post("/createInvoice", createInvoice);
 routerAPI.get("/getInvoicePending", getInvoicePending);

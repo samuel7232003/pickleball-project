@@ -1,6 +1,7 @@
 const imageCourtModel = require("../models/ImageCourt");
 
 const createImageCourtService = async (images, courtId) => {
+  await imageCourtModel.deleteMany({ courtId: courtId });
   const newImage = await imageCourtModel.insertMany(
     images.map((item) => ({ ...item, courtId }))
   );

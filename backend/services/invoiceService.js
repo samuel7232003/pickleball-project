@@ -31,6 +31,7 @@ const setDoneInvoiceService = async (orderCode) => {
 };
 
 const updateInvoiceService = async (invoiceId, status) => {
+  console.log(invoiceId, status);
   let invoice;
   if (status === "waiting") {
     invoice = await invoiceModel.updateOne(
@@ -65,7 +66,7 @@ const checkInvoiceStatusService = async () => {
       timeStartWaiting: { $lt: fiveMinutesAgo },
     });
 
-    const updatePendingPromises = invoicesToPending.map(async (invoice) =>{
+    const updatePendingPromises = invoicesToPending.map(async (invoice) => {
       await updateInvoiceService(invoice._id, "pending");
       await updateOrderCodeToInvoiceService("", invoice._id);
     });
@@ -97,15 +98,20 @@ const checkInvoiceStatusService = async () => {
   }
 };
 
-
 const getInvoiceByIdUserService = async (userId, role) => {
-  if(role === "USER") { 
-    const invoice = await invoiceModel.find({ userId }).sort({ createdAt: -1 });
-    return invoice;
+  let invoices;
+  if (role === "USER") {
+    invoices = await invoiceModel.find({ userId }).sort({ createdAt: -1 });
   } else {
-    const invoice = await invoiceModel.find({ ownerId: userId, paymentStatus: 'paid' }).sort({ createdAt: -1 });
-    return invoice;
+    invoices = await invoiceModel
+      .find({ ownerId: userId, paymentStatus: "paid" })
+      .sort({ createdAt: -1 });
   }
+  // Filter out invoices where userId === ownerId
+  const filteredInvoices = invoices.filter(
+    (inv) => String(inv.userId) !== String(inv.ownerId)
+  );
+  return filteredInvoices;
 };
 
 const cancelInvoiceService = async (invoiceId) => {

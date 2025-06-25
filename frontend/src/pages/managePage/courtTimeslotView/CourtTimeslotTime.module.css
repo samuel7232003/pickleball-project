@@ -112,17 +112,17 @@ th.timeCol {
   z-index: 4;
 }
 
-.available {
+.AVAILABLE {
   background: rgba(224, 224, 224, 0.55) !important;
   color: #444 !important;
 }
 
-.pending {
+.PENDING {
   background: rgba(255, 243, 205, 0.7) !important;
   color: #856404 !important;
 }
 
-.unavailable {
+.UNAVAILABLE {
   background: rgba(212, 237, 218, 0.7) !important;
   color: #155724 !important;
 }
