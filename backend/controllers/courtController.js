@@ -13,6 +13,7 @@ const {
 const {
   createTimeslotService,
   getTimeslotsByCourtIdService,
+  updateTimeslotOfCourtService,
 } = require("../services/timeslotService");
 
 const createCourt = async (req, res) => {
@@ -85,7 +86,7 @@ const updateCourt = async (req, res) => {
   try {
     const response = await updateCourtService(courtId, data);
     if (response) {
-      await createTimeslotService(listTimeslot, courtId);
+      await updateTimeslotOfCourtService(courtId, listTimeslot);
       await createImageCourtService(images, courtId);
       return res.status(200).json(response);
     }

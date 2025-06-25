@@ -101,6 +101,7 @@ const getInvoicePending = async (req, res) => {
 const updateInvoice = async (req, res) => {
   const { invoiceId, status } = req.body;
   const invoice = await updateInvoiceService(invoiceId, status);
+  console.log(invoice);
   res.status(200).json(invoice);
 };
 

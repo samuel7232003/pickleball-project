@@ -43,7 +43,7 @@ export const getImageCourtService = async (courtId: string) => {
 }
 
 export const updateCourtService = async (courtId: string, courtData: any) => {
-  const {images, ...rest} = courtData;
+  const {images, listTimeslot, ...rest} = courtData;
   const uploadedUrls = await Promise.all(
     images.map(async (img: any) => {
       if (img.url.startsWith('http')) {
@@ -60,6 +60,7 @@ export const updateCourtService = async (courtId: string, courtData: any) => {
   const response: any = await apiInstance.put(`/updateCourt/${courtId}`, {
     ...rest,
     images: uploadedUrls,
+    listTimeslot,
   });
   
   return response;
@@ -80,5 +81,15 @@ export const getCourtService = async (courtId: string) => {
 
 export const getListCourtServiceForOwner = async (userId: string) => {
   const response: any = await apiInstance.get(`/getListCourt?ownerId=${userId}`);
+  return response;
+}
+
+export const getTimeslotByCourtIdService = async (courtId: string) => {
+  const response: any = await apiInstance.get(`/getTimeslotByCourtId?courtId=${courtId}`);
+  return response;
+}
+
+export const updateTimeslotOfCourtService = async (courtId: string, timeslots: any) => {
+  const response: any = await apiInstance.post(`/updateTimeslotOfCourt`, { courtId, timeslots });
   return response;
 }
