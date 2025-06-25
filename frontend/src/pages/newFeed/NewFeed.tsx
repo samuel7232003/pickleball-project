@@ -210,9 +210,14 @@ export default function NewFeed() {
               {text["NewFeed.loading"]}
             </div>
           )}
-          {!loading && !hasMore && (
+          {!loading && !hasMore && posts.length > 0 && (
             <div style={{ textAlign: "center", padding: 16, color: "#666" }}>
-              {posts.length === 0 ? text["NewFeed.noPost"] : text["NewFeed.noMorePost"]}
+              {text["NewFeed.noMorePost"]}
+            </div>
+          )}
+          {!loading && posts.length === 0 && (
+            <div style={{ textAlign: "center", padding: 16, color: "#666" }}>
+              {text["NewFeed.noPost"]}
             </div>
           )}
         </div>

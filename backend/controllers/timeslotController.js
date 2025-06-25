@@ -7,6 +7,7 @@ const {
   createTimeslotService,
   getTimeslotsByCourtIdService,
   getTimeslotService,
+  updateTimeslotOfCourtService,
 } = require("../services/timeslotService");
 
 const createTimeslotCourt = async (req, res) => {
@@ -33,7 +34,11 @@ const getTimeslotCourt = async (req, res) => {
   for (let i = 0; i < response.length; i++) {
     let status = "AVAILABLE";
     const timeslot = response[i];
-    const invoiceItems = await getInvoiceItemsByTimeslotIdService(timeslot._id, date, num);
+    const invoiceItems = await getInvoiceItemsByTimeslotIdService(
+      timeslot._id,
+      date,
+      num
+    );
 
     if (invoiceItems.length !== 0) {
       for (let j = 0; j < invoiceItems.length; j++) {
@@ -63,7 +68,21 @@ const getTimeslotCourt = async (req, res) => {
   return res.status(404).json({ message: "Timeslot not found" });
 };
 
+const getTimeslotByCourtId = async (req, res) => {
+  const { courtId } = req.query;
+  const response = await getTimeslotsByCourtIdService(courtId);
+  return res.status(200).json(response);
+};
+
+const updateTimeslotOfCourt = async (req, res) => {
+  const { courtId, timeslots } = req.body;
+  const response = await updateTimeslotOfCourtService(courtId, timeslots);
+  return res.status(200).json(response);
+};
+
 module.exports = {
   createTimeslotCourt,
   getTimeslotCourt,
+  getTimeslotByCourtId,
+  updateTimeslotOfCourt,
 };

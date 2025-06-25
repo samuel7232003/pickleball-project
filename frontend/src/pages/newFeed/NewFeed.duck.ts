@@ -22,6 +22,7 @@ export const SET_COURT_MODAL = "SET_COURT_MODAL";
 export const SET_LOADING = "SET_LOADING";
 export const SET_HAS_MORE = "SET_HAS_MORE";
 export const APPEND_POSTS = "APPEND_POSTS";
+export const SET_PAGE = "SET_PAGE";
 
 // Reducer
 export const newFeedReducer = (state = initialState, action: any) => {
@@ -42,6 +43,8 @@ export const newFeedReducer = (state = initialState, action: any) => {
       return { ...state, hasMore: action.payload };
     case APPEND_POSTS:
       return { ...state, posts: [...state.posts, ...action.payload] };
+    case SET_PAGE:
+      return { ...state, page: action.payload };
     default:
       return state;
   }
@@ -88,18 +91,27 @@ export const appendPosts = (posts: any[]) => ({
   payload: posts,
 });
 
+export const setPage = (page: number) => ({
+  type: SET_PAGE,
+  payload: page,
+});
+
 // Thunks (logic to be implemented)
 export const fetchPosts = (page = 1, limit = 10) => async (dispatch: any, getState: any) => {
   dispatch(setLoading(true));
   try {
     const response: any = await getPostsService(page, limit);
-    const posts = response;
+    const posts = response.posts;
+    const total = response.total;
     if (page === 1) {
       dispatch(setPosts(posts));
     } else {
       dispatch(appendPosts(posts));
     }
-    dispatch(setHasMore(posts.length === limit));
+    // hasMore is true if we haven't loaded all posts yet
+    const loadedPosts = (page - 1) * limit + posts.length;
+    dispatch(setHasMore(loadedPosts < total));
+    dispatch(setPage(page));
   } catch (error) {
     dispatch(setError("Failed to fetch posts"));
     dispatch(setHasMore(false));
