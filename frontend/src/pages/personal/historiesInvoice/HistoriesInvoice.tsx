@@ -33,7 +33,7 @@ const ListInvoice = (props: any) => {
           court={invoice.court}
           onViewDetail={() => navigate(navigateToPage(pages.PAYMENT_PAGE, invoice.invoce._id))}
           onPay={() => navigate(navigateToPage(pages.PAYMENT_PAGE, invoice.invoce._id))}
-          onCancel={handleCancel}
+          onCancel={() => handleCancel(invoice.invoce._id)}
         /> 
       ))}
     </div>
