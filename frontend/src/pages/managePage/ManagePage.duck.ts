@@ -1,10 +1,19 @@
-import { delay } from "../../common/functions";
-import { invoiceStatusService } from "../../services/invoice";
 import {
   getStatisticsService,
   getCalendarEventsService,
 } from "../../services/manage";
 import { createRequestService, getRequestsService, Request } from "../../services/request";
+import { getListCourtServiceForOwner, getStatusTimeslotService } from "../../services/court";
+import dayjs from "dayjs";
+
+interface Court {
+  _id: string;
+  name: string;
+  location: string;
+  images: { url: string; order: number }[];
+  number: number;
+  timeslot: any[];
+}
 
 interface Statistics {
   totalCourts: number;
@@ -35,6 +44,12 @@ interface ManagePageState {
   requests: Request[];
   isLoadingRequests: boolean;
   requestsError: string | null;
+  courts: Court[];
+  isLoadingCourts: boolean;
+  courtsError: string | null;
+  timeslotStatus: any[];
+  selectedCourtId: string | null;
+  selectedDate: string | null;
 }
 
 const initialState: ManagePageState = {
@@ -53,6 +68,12 @@ const initialState: ManagePageState = {
   requests: [],
   isLoadingRequests: false,
   requestsError: null,
+  courts: [],
+  isLoadingCourts: false,
+  courtsError: null,
+  timeslotStatus: [],
+  selectedCourtId: null,
+  selectedDate: dayjs(new Date()).format("DD-MM-YYYY"),
 };
 
 // Action Types
@@ -66,6 +87,12 @@ export const SET_REQUEST_ERROR = "SET_REQUEST_ERROR";
 export const SET_REQUESTS = "SET_REQUESTS";
 export const SET_LOADING_REQUESTS = "SET_LOADING_REQUESTS";
 export const SET_REQUESTS_ERROR = "SET_REQUESTS_ERROR";
+export const SET_COURTS = "SET_COURTS";
+export const SET_LOADING_COURTS = "SET_LOADING_COURTS";
+export const SET_COURTS_ERROR = "SET_COURTS_ERROR";
+export const SET_TIMESLOT_STATUS = "SET_TIMESLOT_STATUS";
+export const SET_SELECTED_COURT_ID = "SET_SELECTED_COURT_ID";
+export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
 
 // Action Creators
 export const setStatistics = (statistics: Statistics) => ({
@@ -111,6 +138,36 @@ export const setLoadingRequests = (isLoading: boolean) => ({
 export const setRequestsError = (error: string | null) => ({
   type: SET_REQUESTS_ERROR,
   payload: error,
+});
+
+export const setCourts = (courts: Court[]) => ({
+  type: SET_COURTS,
+  payload: courts,
+});
+
+export const setLoadingCourts = (isLoading: boolean) => ({
+  type: SET_LOADING_COURTS,
+  payload: isLoading,
+});
+
+export const setCourtsError = (error: string | null) => ({
+  type: SET_COURTS_ERROR,
+  payload: error,
+});
+
+export const setTimeslotStatus = (status: any[]) => ({
+  type: SET_TIMESLOT_STATUS,
+  payload: status,
+});
+
+export const setSelectedCourtId = (courtId: string | null) => ({
+  type: SET_SELECTED_COURT_ID,
+  payload: courtId,
+});
+
+export const setSelectedDate = (date: string | null) => ({
+  type: SET_SELECTED_DATE,
+  payload: date,
 });
 
 export const resetState = () => ({
@@ -168,6 +225,36 @@ export const managePageReducer = (
         ...state,
         requestsError: action.payload,
       };
+    case SET_COURTS:
+      return {
+        ...state,
+        courts: action.payload,
+      };
+    case SET_LOADING_COURTS:
+      return {
+        ...state,
+        isLoadingCourts: action.payload,
+      };
+    case SET_COURTS_ERROR:
+      return {
+        ...state,
+        courtsError: action.payload,
+      };
+    case SET_TIMESLOT_STATUS:
+      return {
+        ...state,
+        timeslotStatus: action.payload,
+      };
+    case SET_SELECTED_COURT_ID:
+      return {
+        ...state,
+        selectedCourtId: action.payload,
+      };
+    case SET_SELECTED_DATE:
+      return {
+        ...state,
+        selectedDate: action.payload,
+      };
     case RESET_STATE:
       return initialState;
     default:
@@ -192,13 +279,11 @@ export const fetchCalendarEvents = (id: string) => async (dispatch: any) => {
     const response: any = await getCalendarEventsService(id);
 
     if (response && Array.isArray(response)) {
-      // Gắn thêm date (YYYY-MM-DD) từ createdAt
       const eventsWithDate = response.map((event: any) => ({
         ...event,
-        date: event.createdAt.slice(0, 10), // Cắt "2025-06-17" từ ISO string
+        date: event.createdAt.slice(0, 10),
       }));
 
-      // Nhóm theo ngày
       const eventsByDate = eventsWithDate.reduce((acc: { [key: string]: Event[] }, event: any) => {
         if (!acc[event.date]) {
           acc[event.date] = [];
@@ -214,13 +299,27 @@ export const fetchCalendarEvents = (id: string) => async (dispatch: any) => {
   }
 };
 
+export const fetchCourtsByOwner = (ownerId: string) => async (dispatch: any) => {
+  try {
+    dispatch(setLoadingCourts(true));
+    dispatch(setCourtsError(null));
+    const response = await getListCourtServiceForOwner(ownerId);
+    if (response) {
+      dispatch(setCourts(response));
+    }
+  } catch (error: any) {
+    dispatch(setCourtsError(error.message || "Failed to fetch courts"));
+  } finally {
+    dispatch(setLoadingCourts(false));
+  }
+}
+
 export const fetchRequests = (ownerId: string) => async (dispatch: any) => {
   try {
     dispatch(setLoadingRequests(true));
     dispatch(setRequestsError(null));
     
     const response = await getRequestsService({ ownerId });
-    // Handle both direct array response and wrapped response
     const requests = Array.isArray(response) ? response : (response?.data || []);
     dispatch(setRequests(requests));
   } catch (error: any) {
@@ -241,14 +340,13 @@ export const createRequest = (requestData: Omit<Request, 'status' | '_id' | 'cre
       ownerId,
     });
     
-    // Refresh requests list after creating new request
     dispatch(fetchRequests(ownerId));
     
     return response;
   } catch (error: any) {
     const errorMessage = error.message || "Failed to create request";
     dispatch(setRequestError(errorMessage));
-    throw error;
+    throw new Error(errorMessage);
   } finally {
     dispatch(setCreatingRequest(false));
   }
@@ -257,20 +355,24 @@ export const createRequest = (requestData: Omit<Request, 'status' | '_id' | 'cre
 export const initializeManagePage = (id: string) => async (dispatch: any) => {
   dispatch(setLoading(true));
   dispatch(setError(null));
-  await invoiceStatusService();
-
   try {
-    await delay(500); // Simulate network delay
     await Promise.all([
       dispatch(fetchStatistics(id)),
       dispatch(fetchCalendarEvents(id)),
       dispatch(fetchRequests(id)),
+      dispatch(fetchCourtsByOwner(id)),
     ]);
   } catch (error: any) {
     dispatch(setError(error.message || "Failed to initialize manage page"));
   } finally {
     dispatch(setLoading(false));
   }
+};
+
+export const fetchTimeslotStatus = (courtId: string) => async (dispatch: any, getState:any ) => {
+  const { selectedDate } = getState().managePage;
+  const response = await getStatusTimeslotService(courtId, selectedDate, "1");
+  console.log(response);
 };
 
 export default managePageReducer;

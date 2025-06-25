@@ -157,6 +157,7 @@ export default {
   "ManagePage.amountRequired": "Vui lòng nhập số tiền",
   "ManagePage.amountPlaceholder": "Nhập số tiền muốn rút",
   "ManagePage.amountPattern": "Chỉ nhập số",
+  "ManagePage.noCourtSelected": "Vui lòng chọn một sân để xem lịch.",
   "NewFeed.buttonSubmit": "Đăng bài",
   "NewFeed.buttonAttach": "Đính kèm sân",
   "NewFeed.placeholder": "Hãy đăng bài viết mới cho hôm nay...",

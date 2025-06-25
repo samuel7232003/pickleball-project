@@ -79,10 +79,6 @@ const getStatistics = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    console.log(
-      `Statistics calculated for owner ${ownerId}: totalPayout = ${totalPayout}`
-    );
-
     res.status(200).json(statistics);
   } catch (error) {
     console.error("Error getting statistics:", error);
