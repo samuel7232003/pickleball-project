@@ -1,0 +1,128 @@
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  box-sizing: border-box;
+  overflow: auto;
+  /* Enable scroll for both axes */
+  max-height: 560px; /* or adjust as needed */
+  /* Glassmorphism effect */
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 18px;
+}
+
+.table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+  table-layout: fixed;
+}
+
+th,
+td {
+  text-align: center;
+  padding: 12px 0px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.35);
+  /* Glassmorphism for all cells */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+th {
+  background: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  /* Glassmorphism for header */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.timeCol,
+.timeCell {
+  min-width: 80px;
+  background: rgba(247, 247, 247, 0.7);
+  font-weight: 500;
+  font-size: 1rem;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  /* Glassmorphism for sticky col */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.timeCell {
+  background: rgba(247, 247, 247, 0.7);
+  font-size: 0.98rem;
+  font-weight: 500;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 50px;
+}
+
+.courtCol {
+  min-width: 90px;
+  background: rgba(250, 251, 252, 0.7);
+  font-weight: 600;
+}
+
+.slotCell {
+  border-radius: 12px;
+  min-width: 60px;
+  min-height: 40px;
+  transition: background 0.2s;
+  /* Glassmorphism for slots */
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Fix z-index for top-left cell (intersection of sticky row and column) */
+th.timeCol {
+  z-index: 4;
+}
+
+.available {
+  background: rgba(224, 224, 224, 0.55) !important;
+  color: #444 !important;
+}
+
+.pending {
+  background: rgba(255, 243, 205, 0.7) !important;
+  color: #856404 !important;
+}
+
+.unavailable {
+  background: rgba(212, 237, 218, 0.7) !important;
+  color: #155724 !important;
+}

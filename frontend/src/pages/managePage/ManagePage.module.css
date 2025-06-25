@@ -3,33 +3,41 @@
   background-position: center;
   background-size: cover;
   width: 100vw;
-  padding-top: 90px;
-  padding-bottom: 40px;
+  padding: 90px 20px 40px 20px !important;
   box-sizing: border-box;
   position: relative;
+  padding: 1rem 0;
+  height: 100vh;
+  overflow: auto;
 }
 
 .inner {
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 2rem;
   backdrop-filter: blur(10px);
   border-radius: 20px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
   overflow: hidden;
-  min-height: 80vh;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   z-index: 1;
 }
 
+.leftColumn {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .statisticsSection {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
   padding: 20px;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
@@ -40,10 +48,10 @@
 .statCard {
   background: rgba(255, 255, 255, 0.8);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 8px;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .statCard:hover {
@@ -52,25 +60,29 @@
 
 .statCard h3 {
   margin: 0;
-  color: #333;
+  font-weight: 500;
+  color: var(--gray-600);
   font-size: 1.1rem;
   margin-bottom: 10px;
 }
 
 .statNumber {
   font-size: 2rem;
-  font-weight: bold;
-  color: #2a9d8f;
+  font-weight: 700;
+  color: var(--primary-color);
   margin: 0;
 }
 
 .calendarSection {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
-  border-radius: 15px;
+  border-radius: 8px;
   padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  border: 1px solid var(--gray-300);
   flex-grow: 1;
+  display: flex;
+  gap: 10px;
 }
 
 .calendarSection :global(.ant-picker-calendar) {
@@ -79,7 +91,7 @@
 
 .eventContainer {
   padding: 2px 0;
-  max-height: 70px;
+  max-height: 100px;
   overflow-y: auto;
 }
 
@@ -179,6 +191,18 @@
   transform: rotate(360deg);
 }
 
+.rightColumn {
+  min-width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.listResult{
+  width: 350px;
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
 /* Requests List Styles */
 .requestsListContainer {
   background: white;
@@ -268,4 +292,20 @@
   .requestsTable .ant-table {
     font-size: 12px;
   }
+}
+
+.sectionTitle {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.activeCard{
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.775);
+  cursor: default;
 }

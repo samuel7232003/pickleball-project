@@ -114,28 +114,46 @@ export default function CreateCourt() {
     dispatch(onChangeImages(fileList));
   };
 
-  const handleAddTimeslot = (item: any) => {
-    const newStart = timeToMinutes(item.startTime);
-    const newEnd = timeToMinutes(item.endTime);
+  const handleAddTimeslots = (items: any[]) => {
+    const newListOfSlots = [...listTimeslot];
 
-    if (newStart >= newEnd) {
-      messageApi.error(text["CreateCourt.timeError"]);
-      return;
+    for (const item of items) {
+      const newStart = timeToMinutes(item.startTime);
+      let newEnd = timeToMinutes(item.endTime);
+
+      if (item.startTime === "23:00" && item.endTime === "00:00") {
+        newEnd = 24 * 60;
+      }
+
+      if (newStart >= newEnd) {
+        messageApi.error(
+          text["CreateCourt.timeError"] + ` (${item.startTime} - ${item.endTime})`
+        );
+        return;
+      }
+
+      const isOverlapping = newListOfSlots.some((slot: any) => {
+        const existingStart = timeToMinutes(slot.startTime);
+        let existingEnd = timeToMinutes(slot.endTime);
+        if (slot.endTime === "00:00" && slot.startTime === "23:00") {
+          existingEnd = 24 * 60;
+        }
+
+        return newStart < existingEnd && newEnd > existingStart;
+      });
+
+      if (isOverlapping) {
+        messageApi.error(
+          text["CreateCourt.isOverlapping"] +
+            ` (${item.startTime} - ${item.endTime})`
+        );
+        return;
+      }
+
+      newListOfSlots.push(item);
     }
 
-    const isOverlapping = listTimeslot.some((slot: any) => {
-      const existingStart = timeToMinutes(slot.startTime);
-      const existingEnd = timeToMinutes(slot.endTime);
-
-      return newStart < existingEnd && newEnd > existingStart;
-    });
-
-    if (isOverlapping) {
-      messageApi.error(text["CreateCourt.isOverlapping"]);
-      return;
-    }
-
-    dispatch(onChangeListTimeslot([...listTimeslot, item]));
+    dispatch(onChangeListTimeslot(newListOfSlots));
   };
 
   const handleRemoveTimeslot = (item: any) => {
@@ -243,7 +261,7 @@ export default function CreateCourt() {
               />
               <FormNewTime
                 title={text["CreateCourt.inputTimeslotTitle"]}
-                onSubmit={handleAddTimeslot}
+                onSubmit={handleAddTimeslots}
               />
             </div>
           </div>
