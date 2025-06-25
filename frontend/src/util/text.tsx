@@ -162,7 +162,7 @@ export default {
   "NewFeed.buttonAttach": "Đính kèm sân",
   "NewFeed.placeholder": "Hãy đăng bài viết mới cho hôm nay...",
   "NewFeed.noPost": "Không có bài viết nào",
-  "NewFeed.noMorePost": "Không còn kết quả nào",
+  "NewFeed.noMorePost": "Bạn đã xem hết bài viết",
   "NewFeed.buttonExpand": "Xem thêm",
   "NewFeed.loading": "Đang tải...",
   "NewFeed.searchCourt": "Tìm kiếm sân",

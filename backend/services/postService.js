@@ -17,7 +17,8 @@ const getPostsService = async (page = 1, limit = 10) => {
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(limit);
-  return posts;
+  const total = await postModel.countDocuments();
+  return { posts, total };
 };
 
 module.exports = {

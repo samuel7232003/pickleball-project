@@ -3,8 +3,9 @@ import {
   getCalendarEventsService,
 } from "../../services/manage";
 import { createRequestService, getRequestsService, Request } from "../../services/request";
-import { getListCourtServiceForOwner, getStatusTimeslotService } from "../../services/court";
+import { getListCourtServiceForOwner, getStatusTimeslotService, getTimeslotByCourtIdService } from "../../services/court";
 import dayjs from "dayjs";
+import { createInvoiceService, updateInvoiceService } from '../../services/invoice';
 
 interface Court {
   _id: string;
@@ -47,9 +48,11 @@ interface ManagePageState {
   courts: Court[];
   isLoadingCourts: boolean;
   courtsError: string | null;
+  timeslot: any[];
   timeslotStatus: any[];
   selectedCourtId: string | null;
   selectedDate: string | null;
+  numberCourt: number;
 }
 
 const initialState: ManagePageState = {
@@ -71,9 +74,11 @@ const initialState: ManagePageState = {
   courts: [],
   isLoadingCourts: false,
   courtsError: null,
-  timeslotStatus: [],
+  timeslot: [],
+  numberCourt: 0,
   selectedCourtId: null,
   selectedDate: dayjs(new Date()).format("DD-MM-YYYY"),
+  timeslotStatus: [],
 };
 
 // Action Types
@@ -90,9 +95,11 @@ export const SET_REQUESTS_ERROR = "SET_REQUESTS_ERROR";
 export const SET_COURTS = "SET_COURTS";
 export const SET_LOADING_COURTS = "SET_LOADING_COURTS";
 export const SET_COURTS_ERROR = "SET_COURTS_ERROR";
-export const SET_TIMESLOT_STATUS = "SET_TIMESLOT_STATUS";
 export const SET_SELECTED_COURT_ID = "SET_SELECTED_COURT_ID";
 export const SET_SELECTED_DATE = "SET_SELECTED_DATE";
+export const SET_TIMESLOT = "SET_TIMESLOT";
+export const SET_NUMBER_COURT = "SET_NUMBER_COURT";
+export const SET_TIMESLOT_STATUS = "SET_TIMESLOT_STATUS";
 
 // Action Creators
 export const setStatistics = (statistics: Statistics) => ({
@@ -155,11 +162,6 @@ export const setCourtsError = (error: string | null) => ({
   payload: error,
 });
 
-export const setTimeslotStatus = (status: any[]) => ({
-  type: SET_TIMESLOT_STATUS,
-  payload: status,
-});
-
 export const setSelectedCourtId = (courtId: string | null) => ({
   type: SET_SELECTED_COURT_ID,
   payload: courtId,
@@ -168,6 +170,21 @@ export const setSelectedCourtId = (courtId: string | null) => ({
 export const setSelectedDate = (date: string | null) => ({
   type: SET_SELECTED_DATE,
   payload: date,
+});
+
+export const setTimeslot = (timeslot: any[]) => ({
+  type: SET_TIMESLOT,
+  payload: timeslot,
+});
+
+export const setNumberCourt = (numberCourt: number) => ({
+  type: SET_NUMBER_COURT,
+  payload: numberCourt,
+});
+
+export const setTimeslotStatus = (timeslotStatus: any[]) => ({
+  type: SET_TIMESLOT_STATUS,
+  payload: timeslotStatus,
 });
 
 export const resetState = () => ({
@@ -240,11 +257,6 @@ export const managePageReducer = (
         ...state,
         courtsError: action.payload,
       };
-    case SET_TIMESLOT_STATUS:
-      return {
-        ...state,
-        timeslotStatus: action.payload,
-      };
     case SET_SELECTED_COURT_ID:
       return {
         ...state,
@@ -254,6 +266,21 @@ export const managePageReducer = (
       return {
         ...state,
         selectedDate: action.payload,
+      };
+    case SET_TIMESLOT:
+      return {
+        ...state,
+        timeslot: action.payload,
+      };
+    case SET_NUMBER_COURT:
+      return {
+        ...state,
+        numberCourt: action.payload,
+      };
+    case SET_TIMESLOT_STATUS:
+      return {
+        ...state,
+        timeslotStatus: action.payload,
       };
     case RESET_STATE:
       return initialState;
@@ -370,9 +397,49 @@ export const initializeManagePage = (id: string) => async (dispatch: any) => {
 };
 
 export const fetchTimeslotStatus = (courtId: string) => async (dispatch: any, getState:any ) => {
-  const { selectedDate } = getState().managePage;
-  const response = await getStatusTimeslotService(courtId, selectedDate, "1");
-  console.log(response);
+  const { selectedDate, courts } = getState().managePage;
+  const timeslots = await getTimeslotByCourtIdService(courtId);
+  const court = courts.find((court: any) => court._id === courtId);
+  dispatch(setNumberCourt(court.number));
+  if(timeslots.length > 0){
+    // Fetch timeslot status for each court number from 1 to court.number
+    let timeslotStatusWithCourtNumber: any[] = [];
+    for (let i = 1; i <= court.number; i++) {
+      const statusArr = await getStatusTimeslotService(courtId, selectedDate, i.toString());
+      const statusWithCourtNumber = statusArr.map((status: any) => ({
+        ...status,
+        courtNumber: i,
+      }));
+      timeslotStatusWithCourtNumber = timeslotStatusWithCourtNumber.concat(statusWithCourtNumber);
+    }
+    dispatch(setTimeslotStatus(timeslotStatusWithCourtNumber));
+    dispatch(setTimeslot(timeslots));
+  }
+};
+
+export const markCourtUnavailable = ({ date, courtId, startTime, endTime, courtNumber }: { date: string, courtId: string, startTime: string, endTime: string, courtNumber: number }) => async (dispatch: any, getState: any) => {
+  try {
+    // Get userId and ownerId from state if available
+    const state = getState();
+    const userId = state.user?.user?._id || 'admin';
+    const ownerId = state.user?.user?._id || 'admin';
+    // Compose timeChoice for invoice
+    const timeChoice = [{ _id: `${courtId}_${startTime}_${endTime}_${courtNumber}`, dateChoiced: date, numberChoie: courtNumber }];
+    // 1. Create invoice with amount=0
+    const invoiceRes: any = await createInvoiceService(userId, ownerId, timeChoice, 0, courtId);
+
+    const invoiceId = invoiceRes._id || invoiceRes.invoice?._id;
+    // 2. Update invoice status to 'paid'
+    if (invoiceId) {
+      await updateInvoiceService(invoiceId, 'paid');
+      console.log('update invoice success');
+    }
+    // 3. Refetch timeslot status for the court
+    await dispatch(fetchTimeslotStatus(courtId));
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 export default managePageReducer;

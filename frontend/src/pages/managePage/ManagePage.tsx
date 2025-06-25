@@ -23,6 +23,7 @@ import {
   setSelectedCourtId,
   fetchCalendarEvents,
   fetchTimeslotStatus,
+  markCourtUnavailable,
 } from "./ManagePage.duck";
 import { AppDispatch } from "../../redux/store";
 import { pages } from "../../router";
@@ -173,6 +174,8 @@ export default function ManagePage() {
     selectedCourtId,
     selectedDate,
     selectedCourtNumber,
+    timeslot,
+    numberCourt,
     timeslotStatus,
   } = managePageState;
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -182,6 +185,8 @@ export default function ManagePage() {
     { value: string; label: string; logo: string; shortName: string }[]
   >([]);
   const [isLoadingBanks, setIsLoadingBanks] = useState(false);
+  const [cellPopup, setCellPopup] = useState<null | { slot: any; courtNumber: number; status: string }>(null);
+  const [cellLoading, setCellLoading] = useState(false);
 
   // Fetch banks from VietQR API
   const fetchBanks = async () => {
@@ -299,6 +304,31 @@ export default function ManagePage() {
     dispatch(setSelectedCourtId(id));
   };
 
+  // Handler for cell click
+  const handleCellClick = (slot: any, courtNumber: number, status: string) => {
+    setCellPopup({ slot, courtNumber, status });
+  };
+
+  // Handler for confirming mark as unavailable
+  const handleCellConfirm = async () => {
+    if (!cellPopup) return;
+    setCellLoading(true);
+    try {
+      await dispatch(markCourtUnavailable({
+        date: selectedDate,
+        courtId: selectedCourtId,
+        startTime: cellPopup.slot.startTime,
+        endTime: cellPopup.slot.endTime,
+        courtNumber: cellPopup.courtNumber,
+      }));
+      setCellPopup(null);
+    } catch (err) {
+      message.error("Có lỗi xảy ra khi đánh dấu sân!");
+    } finally {
+      setCellLoading(false);
+    }
+  };
+
   return (
     <main className={styles.main}>
       <div className={styles.inner}>
@@ -356,7 +386,12 @@ export default function ManagePage() {
                 handleCourtSelect={handleCourtSelect}
                 selectedCourtId={selectedCourtId}
               />
-              <CourtTimeslotTime numberCourt={3} />
+              <CourtTimeslotTime
+                numberCourt={numberCourt}
+                timeslots={timeslot}
+                timeslotStatus={timeslotStatus}
+                onCellClick={handleCellClick}
+              />
             </div>
           </div>
           <RequestsList
@@ -469,6 +504,20 @@ export default function ManagePage() {
             />
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        open={!!cellPopup}
+        title={"Đánh dấu sân này đã bận?"}
+        onCancel={() => setCellPopup(null)}
+        onOk={handleCellConfirm}
+        confirmLoading={cellLoading}
+        okText={"Đồng ý"}
+        cancelText={"Hủy"}
+      >
+        <div style={{ fontSize: 16 }}>
+          Bạn có chắc muốn đánh dấu sân này đã bận không?
+        </div>
       </Modal>
     </main>
   );
